@@ -3,6 +3,8 @@ import random
 
 from constants import *
 
+LADDER_WIDTH = 50
+
 class Ladder(object):
     def __init__(self, x, y, width, height, colour, direction):
         self.x = x
@@ -25,6 +27,7 @@ class Level(object):
 
         self.floors = []
 
+        # create the floor objects and append them to the floor List
         for i in range(self.num_floors):
             colour = self.colour
             x = 0
@@ -38,21 +41,44 @@ class Level(object):
 
             self.floors.append((id, colour, rect, ladders))
 
+        # Once all the floors are create the ladders can be added
         self.init_ladders()
 
     def init_ladders(self):
+        ladder_locations = []
+
+        num = len(ladder_locations)
+
         for item in self.floors:
-            if (item[0] == 0):
-                pass
+            num_ladders = random.randint(1,2)
+            num_ladders = 2
 
-            x = random. randint(10, WINDOW_WIDTH - 150)
-            #x = item[2][0]
-            y = item[2][1]
-            width = 50
-            height = 165
+            # find an x co-ordinate for this ladder
+            for i in range(num_ladders):
+                x = random.randint(10, WINDOW_WIDTH - 150)
 
-            ladder = Ladder(x, y, width, height, self.colour, 1)
-            item[3].append(ladder)
+                found_dupe = False
+                keep_looking = True
+                counter = 0
+                while keep_looking == True and len(ladder_locations) > 0:
+                    # ensure this ladder X location is not too close to any existing ladder locations on this floor
+                    for ladder_location in ladder_locations:
+                        if x > ladder_location[0] and x < ladder_location[1]:
+                            found_dupe = True
+                            break
+                    if found_dupe == True:
+                            x = random.randint(10, WINDOW_WIDTH - 150)
+                    counter += 1
+                    if (counter == len(ladder_locations)):
+                        keep_looking = False
+
+                y = item[2][1]
+                width = LADDER_WIDTH
+                height = 165
+
+                ladder = Ladder(x, y, width, height, self.colour, 1)
+                item[3].append(ladder)
+                ladder_locations.append((x - LADDER_WIDTH - 20, x + LADDER_WIDTH + 20))  # 20 padding so not too close
 
 
     def draw(self, win):

@@ -50,6 +50,8 @@ if __name__ == '__main__':
 
     level.foo()
 
+    print("Hellow World!")
+
     run = True
     while run:
         clock.tick(27)
