@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="First implementation of Ladder">
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Randomized X location of ladders">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -121,7 +122,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705015997130</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Randomized X location of ladders">
+      <option name="closed" value="true" />
+      <created>1705099283206</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1705099283206</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -140,6 +149,7 @@
     <MESSAGE value="First Commit" />
     <MESSAGE value="Broke classes out into files&#10;First implementation of Level" />
     <MESSAGE value="First implementation of Ladder" />
-    <option name="LAST_COMMIT_MESSAGE" value="First implementation of Ladder" />
+    <MESSAGE value="Randomized X location of ladders" />
+    <option name="LAST_COMMIT_MESSAGE" value="Randomized X location of ladders" />
   </component>
 </project>

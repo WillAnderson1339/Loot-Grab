@@ -4,6 +4,9 @@ import random
 from constants import *
 
 LADDER_WIDTH = 50
+UP = -1
+DOWN = 1
+RUNG_HEIGHT = 25
 
 class Ladder(object):
     def __init__(self, x, y, width, height, colour, direction):
@@ -15,8 +18,25 @@ class Ladder(object):
         self.direction = direction
 
     def draw(self, win):
-        if self.direction == 1:
-            pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.height), 2)
+        if self.direction == UP:
+            # draw the vertical lines
+            point_start = (self.x, self.y)
+            point_end   = (self.x, self.y - self.height)
+            #print(point_start, point_end)
+            pygame.draw.line(win, self.colour,point_start, point_end, 3)
+            point_start = (self.x + LADDER_WIDTH, self.y)
+            point_end   = (self.x + LADDER_WIDTH, self.y - self.height)
+            pygame.draw.line(win, self.colour,point_start, point_end, 3)
+
+            # draw the rungs
+            x_start = self.x
+            y_start = self.y
+            num_rungs = self.height // RUNG_HEIGHT
+            for i in range(num_rungs):
+                point_start = (x_start, y_start - (RUNG_HEIGHT * (i + 1)))
+                point_end = (x_start + LADDER_WIDTH, y_start - (RUNG_HEIGHT * (i + 1)))
+                pygame.draw.line(win, self.colour, point_start, point_end, 3)
+
 
 
 class Level(object):
@@ -50,8 +70,13 @@ class Level(object):
         num = len(ladder_locations)
 
         for item in self.floors:
+            # don't add ladders to the top floor
+            if item[0] == 0:
+                continue
+
             num_ladders = random.randint(1,2)
-            num_ladders = 2
+            #num_ladders = 3
+            ladder_locations.clear()
 
             # find an x co-ordinate for this ladder
             for i in range(num_ladders):
@@ -67,18 +92,28 @@ class Level(object):
                             found_dupe = True
                             break
                     if found_dupe == True:
-                            x = random.randint(10, WINDOW_WIDTH - 150)
-                    counter += 1
+                        x = random.randint(10, WINDOW_WIDTH - 150)
+                    else:
+                        counter += 1
+                    found_dupe = False
+
                     if (counter == len(ladder_locations)):
                         keep_looking = False
 
                 y = item[2][1]
                 width = LADDER_WIDTH
-                height = 165
+                id = item[0]
+                id_floor_above = id - 1
+                row_above = self.floors[id_floor_above]
+                y_row_above = row_above[2][1]
+                height = y - y_row_above
+                # height = 165
 
-                ladder = Ladder(x, y, width, height, self.colour, 1)
+                ladder = Ladder(x, y, width, height, self.colour, UP)
                 item[3].append(ladder)
                 ladder_locations.append((x - LADDER_WIDTH - 20, x + LADDER_WIDTH + 20))  # 20 padding so not too close
+
+        # add the ground ladder up to the first floor
 
 
     def draw(self, win):

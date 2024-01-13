@@ -45,7 +45,7 @@ if __name__ == '__main__':
     levels = []
     colour = (50, 75, 175)
     colour = (100, 150, 200)
-    level = Level(2, 5, colour)
+    level = Level(4, 5, colour)
     levels.append(level)
 
     level.foo()
