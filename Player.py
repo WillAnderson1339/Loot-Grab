@@ -42,6 +42,7 @@ class Player(object):
         self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT-2)
         self.current_level = current_level
         self.current_floor = current_floor
+        self.target_floor = -1
 
     def draw(self, win):
         if self.walkCount + 1 >= 27:

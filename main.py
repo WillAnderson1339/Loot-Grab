@@ -102,7 +102,7 @@ def show_diagnotics():
     win.blit(print_text, (x, y))
 
     y += row_height
-    text = "Floor: " + str(player.current_floor)
+    text = "Floor: " + str(player.current_floor) + "  Target: " + str(player.target_floor)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
@@ -250,6 +250,7 @@ if __name__ == '__main__':
                 player.is_in_ladder = True
                 player.is_up = False
                 player.is_down = True
+                player.target_floor = player.current_floor + 1
 
                 # if reached bottom of ladder
                 #coords = level.get_floor_ladder_coords(player.current_floor)
@@ -263,6 +264,7 @@ if __name__ == '__main__':
                     player.is_down = False
                     player.is_standing = True
                     player.is_in_ladder = False
+                    player.target_floor = -1
                     print("Reached bottom of floor! New current floor is", player.current_floor)
                 kp_key_states[KP_DOWN] = 1
         else:
@@ -275,30 +277,44 @@ if __name__ == '__main__':
                 dims = player.get_image_idle_dims()
                 x = player.x + (dims[0] // 2)
                 y = player.y + dims[1]
-                if player.is_down == True:
-                    floor_number = player.current_floor + 1
-                else:
+
+                if player.current_floor > player.target_floor:      # normal going up
                     floor_number = player.current_floor
+                elif player.current_floor == player.target_floor:   # switched from down to up
+                    floor_number = player.current_floor + 1
+                else:                                               # switching from down to up
+                    floor_number = player.target_floor
                 in_ladder = level.is_location_in_ladder(floor_number, x, y)
-                # print("Position (", x, ",", y, ") In Ladder:", in_ladder, "floor =", player.current_floor)
                 if in_ladder == True:
                     player.y -= RUNG_HEIGHT
+                    # starting up set target to floor above
+                    if player.target_floor == -1:
+                        player.target_floor = player.current_floor - 1
+                    # if switching from down to up set floor we just left (the one above)
+                    elif player.is_down == True:
+                        player.target_floor = player.current_floor
+
+                    # change direction to up
                     player.is_up = True
                     player.is_down = False
 
                     # if reached top of ladder
-                    #coords = level.get_floor_ladder_coords(player.current_floor)
-                    y_of_floor_above = level.get_floor_y(player.current_floor -1)
+                    # normal up is to check the floor above
+                    if player.current_floor > player.target_floor:
+                        floor_number = player.current_floor - 1
+                    # if switching from down to up check the current floor
+                    else:
+                        floor_number = player.current_floor
+                    y_of_floor_above = level.get_floor_y(floor_number)
                     dims = player.get_image_idle_dims()
                     foot_y = player.y + dims[1]
-                    # print("checking foot y", foot_y, "and floor above y", y_of_floor_above)
-                    if foot_y <= y_of_floor_above: #+ FLOOR_HEIGHT:
-                        player.current_floor = level.get_floor_id(y_of_floor_above)
-                        player.y = y_of_floor_above - dims[1]
+                    if foot_y <= y_of_floor_above:
+                        player.current_floor = player.target_floor
+                        player.y = y_of_floor_above - dims[1]   # ensures the feet are exactly on the floor y
                         player.is_up = False
                         player.is_standing = True
                         player.is_in_ladder = False
-                        # print("Reached top of floor! New current floor is", player.current_floor)
+                        player.target_floor = -1
                 else:
                     player.is_jumping = True
 
