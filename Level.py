@@ -220,7 +220,7 @@ class Level(object):
 
         ladder_coords = self.get_floor_ladder_coords(floor_id)
         for coord in ladder_coords:
-            print("Checking (", x, ",", y, ") with coord (", coord[0], ",", coord[1], ",", coord[2], ",", coord[3], ")")
+            # print("Checking (", x, ",", y, ") with coord (", coord[0], ",", coord[1], ",", coord[2], ",", coord[3], ")")
             if x >= coord[0] and x <= coord[2] and y <= coord[1] and y >= coord[3]:
                 in_ladder = True
                 break

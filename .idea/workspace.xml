@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="getting up and down working">
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Up is working (not Down yet)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +42,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.main.executor": "Run",
+    "Python.main.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
@@ -146,7 +145,23 @@
       <option name="project" value="LOCAL" />
       <updated>1705473007050</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="getting up and down working">
+      <option name="closed" value="true" />
+      <created>1705520247944</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1705520247944</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Up is working (not Down yet)">
+      <option name="closed" value="true" />
+      <created>1705520290603</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1705520290603</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -168,15 +183,21 @@
     <MESSAGE value="Randomized X location of ladders" />
     <MESSAGE value="Ladder rungs and now draw UP" />
     <MESSAGE value="getting up and down working" />
-    <option name="LAST_COMMIT_MESSAGE" value="getting up and down working" />
+    <MESSAGE value="Up is working (not Down yet)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Up is working (not Down yet)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>235</line>
-          <option name="timeStamp" value="3" />
+          <line>237</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>302</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -184,7 +205,7 @@
       <configuration name="PythonConfigurationType">
         <watch expression="floor_number" language="Python" />
       </configuration>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="283">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="306">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>

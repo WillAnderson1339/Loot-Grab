@@ -220,52 +220,73 @@ if __name__ == '__main__':
             player.is_left = True
             player.is_right = False
             player.is_standing = False
+
         elif keys[pygame.K_RIGHT] and player.x < WINDOW_WIDTH - player.width - player.vel:
             player.x += player.vel
             player.is_right = True
             player.is_left = False
             player.is_standing = False
+
         elif keys[pygame.K_DOWN] and kp_key_states[KP_DOWN] == 0:
             level = levels[player.current_level]
             dims = player.get_image_idle_dims()
             x = player.x + (dims[0] // 2)
             y = player.y + dims[1]
             y_of_top_rung = level.get_ladder_top_rung_y(player.current_floor + 1)
-            y_of_2nd_top_rung = level.get_ladder_2nd_top_rung_y(player.current_floor + 1)
-            y_of_current_floor = level.get_floor_y(player.current_floor)
-            if player.is_up == True:
-                floor_number = player.current_floor
-            else:
+
+            # normal going down (ladders are stored at the floor below and go up)
+            if player.current_floor < player.target_floor or player.target_floor == -1: # or player.is_up is True:
                 floor_number = player.current_floor + 1
+            # switched from up to down
+            elif player.current_floor == player.target_floor and player.is_up is False:
+                floor_number = player.current_floor
+            # switching from up to down
+            else:
+                floor_number = player.current_floor
             in_ladder = level.is_location_in_ladder(floor_number, x, y)
-            #print("Position (", x, ",", y, ") In Ladder:", in_ladder, " top rung", y_of_top_rung, " 2nd top rung", y_of_2nd_top_rung, "  floor =", player.current_floor)
             if in_ladder == True:
                 floor_y = level.get_floor_y(player.current_floor)
-                #print("y = ", player.y + dims[1], " floor_y = ", floor_y)
                 # if this is the first step set y to the top rung
                 if player.y + dims[1] == floor_y:
                     player.y = y_of_top_rung - dims[1]
                 else:
                     player.y += RUNG_HEIGHT
-                player.is_in_ladder = True
+
+                # starting down set target to floor below
+                if player.target_floor == -1:
+                    player.target_floor = player.current_floor + 1
+                # if switching from up to down set to floor we just left (the one above)
+                elif player.is_up is True:
+                    player.target_floor = player.target_floor + 1 # player.current_floor
+
+                # set direction to down
                 player.is_up = False
                 player.is_down = True
-                player.target_floor = player.current_floor + 1
 
                 # if reached bottom of ladder
-                #coords = level.get_floor_ladder_coords(player.current_floor)
                 y_of_floor_below = level.get_floor_y(floor_number)
                 dims = player.get_image_idle_dims()
                 foot_y = player.y + dims[1]
-                print("checking foot y", foot_y, "and floor below y", y_of_floor_below)
+                # normal down is to check the floor below
+                if player.current_floor < player.target_floor or player.target_floor == -1:
+                    floor_number = player.current_floor + 1
+                # if switching from up to down check the current floor
+                else:
+                    floor_number = player.current_floor
+                y_of_floor_below = level.get_floor_y(floor_number)
+                dims = player.get_image_idle_dims()
+                foot_y = player.y + dims[1]
                 if foot_y >= y_of_floor_below:
-                    player.current_floor = level.get_floor_id(y_of_floor_below)
-                    player.y = y_of_floor_below - dims[1]
-                    player.is_down = False
+                    player.current_floor = player.target_floor
+                    player.y = y_of_floor_below - dims[1]  # ensures the feet are exactly on the floor y
+                    player.is_up = False
                     player.is_standing = True
                     player.is_in_ladder = False
                     player.target_floor = -1
-                    print("Reached bottom of floor! New current floor is", player.current_floor)
+
+                player.is_right = False
+                player.is_left = False
+                player.walkCount = 0
                 kp_key_states[KP_DOWN] = 1
         else:
             player.is_standing = True
@@ -278,11 +299,14 @@ if __name__ == '__main__':
                 x = player.x + (dims[0] // 2)
                 y = player.y + dims[1]
 
-                if player.current_floor > player.target_floor:      # normal going up
+                # normal going up use the current floor (ladders are stored at the floor below and go up)
+                if player.current_floor > player.target_floor or player.target_floor == -1 or player.is_down is True:
                     floor_number = player.current_floor
-                elif player.current_floor == player.target_floor:   # switched from down to up
+                # switched from down to up
+                elif player.current_floor == player.target_floor and player.is_down is False:
                     floor_number = player.current_floor + 1
-                else:                                               # switching from down to up
+                # switching from down to up
+                else:
                     floor_number = player.target_floor
                 in_ladder = level.is_location_in_ladder(floor_number, x, y)
                 if in_ladder == True:
@@ -290,11 +314,11 @@ if __name__ == '__main__':
                     # starting up set target to floor above
                     if player.target_floor == -1:
                         player.target_floor = player.current_floor - 1
-                    # if switching from down to up set floor we just left (the one above)
+                    # if switching from down to up so set to floor we just left (the one above)
                     elif player.is_down == True:
-                        player.target_floor = player.current_floor
+                        player.target_floor = player.target_floor - 1
 
-                    # change direction to up
+                    # set direction to up
                     player.is_up = True
                     player.is_down = False
 
