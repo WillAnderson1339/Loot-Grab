@@ -238,10 +238,10 @@ if __name__ == '__main__':
             else:
                 floor_number = player.current_floor + 1
             in_ladder = level.is_location_in_ladder(floor_number, x, y)
-            print("Position (", x, ",", y, ") In Ladder:", in_ladder, " top rung", y_of_top_rung, " 2nd top rung", y_of_2nd_top_rung, "  floor =", player.current_floor)
+            #print("Position (", x, ",", y, ") In Ladder:", in_ladder, " top rung", y_of_top_rung, " 2nd top rung", y_of_2nd_top_rung, "  floor =", player.current_floor)
             if in_ladder == True:
                 floor_y = level.get_floor_y(player.current_floor)
-                print("y = ", player.y + dims[1], " floor_y = ", floor_y)
+                #print("y = ", player.y + dims[1], " floor_y = ", floor_y)
                 # if this is the first step set y to the top rung
                 if player.y + dims[1] == floor_y:
                     player.y = y_of_top_rung - dims[1]
