@@ -126,7 +126,7 @@ class Level(object):
                 height = y - y_row_above
                 # height = 165
                 colour = self.colour
-                colour = (255, 0, 0)
+                # colour = (255, 0, 0)
 
                 ladder = Ladder(x, y, width, height, colour, UP)
                 item[3].append(ladder)
