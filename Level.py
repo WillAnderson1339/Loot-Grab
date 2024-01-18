@@ -45,12 +45,13 @@ class Ladder(object):
 
 
 class Level(object):
-    def __init__(self, level_id, num_floors, num_enemies, num_up_portals, num_down_portals, colour):
+    def __init__(self, level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour):
         self.level_id = level_id
         self.num_floors = num_floors
         self.num_enemies = num_enemies
         self.num_up_portals = num_up_portals
         self.num_down_portals = num_down_portals
+        self.background = background
         self.colour = colour
 
         self.floors = []
@@ -145,7 +146,9 @@ class Level(object):
         height = PORTAL_HEIGHT
         colour = PORTAL_COLOUR
         direction = UP
-        for portal_id in range(self.num_up_portals):
+        portal_id = 0
+
+        for i in range(self.num_up_portals):
             # if only 1 up portal place it on the top floor at the left most edge
             if self.num_up_portals == 1:
                 x = PORTAL_WIDTH // 2 * -1
@@ -162,12 +165,14 @@ class Level(object):
             portal = Portal(portal_id, x, y, width, height, colour, direction)
             self.portals.append(portal)
 
+            portal_id += 1
+
         # create the down portals
         width = PORTAL_WIDTH
         height = PORTAL_HEIGHT
         colour = PORTAL_COLOUR
         direction = DOWN
-        for portal_id in range(self.num_down_portals):
+        for i in range(self.num_down_portals):
             # if only 1 up portal place it on the bottom floor at the right most edge
             if self.num_down_portals == 1:
                 x = WINDOW_WIDTH - (PORTAL_WIDTH // 2) + 10
@@ -184,6 +189,8 @@ class Level(object):
 
             portal = Portal(portal_id, x, y, width, height, colour, direction)
             self.portals.append(portal)
+
+            portal_id += 1
 
     def draw(self, win):
         # draw the floors

@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Moved diagnostics code into a file">
-      <change afterPath="$PROJECT_DIR$/Portal.py" afterDir="false" />
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="first impl of Portal">
+      <change afterPath="$PROJECT_DIR$/res/Backgrounds/Field 3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Backgrounds/Field 4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Backgrounds/Lava 1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Backgrounds/Mountains 1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Backgrounds/Mountains 4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Backgrounds/Mountains 5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Backgrounds/Mountains 6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Backgrounds/Mountains 7.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
@@ -190,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705532049569</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="first impl of Portal">
+      <option name="closed" value="true" />
+      <created>1705541848911</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1705541848911</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -215,23 +229,44 @@
     <MESSAGE value="Up is working (not Down yet)" />
     <MESSAGE value="BOTH up and down work!" />
     <MESSAGE value="Moved diagnostics code into a file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Moved diagnostics code into a file" />
+    <MESSAGE value="first impl of Portal" />
+    <option name="LAST_COMMIT_MESSAGE" value="first impl of Portal" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Level.py</url>
+          <line>324</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>241</line>
-          <option name="timeStamp" value="18" />
+          <line>236</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>259</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Level.py</url>
+          <line>164</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Level.py</url>
+          <line>189</line>
+          <option name="timeStamp" value="33" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="floor_number" language="Python" />
-      </configuration>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="251">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="325">
+        <watch expression="portal.portal_id" />
+      </inline-watch>
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="346">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>

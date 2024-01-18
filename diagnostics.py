@@ -9,6 +9,8 @@ def show_diagnotics(win, font, levels, player):
     col_1_width = 170
     col_2_width = 325
 
+    level = levels[player.current_level]
+
     x = start_x
     y = start_y
 
@@ -19,21 +21,25 @@ def show_diagnotics(win, font, levels, player):
     win.blit(print_text, (x, y))
 
     y += row_height
-    level = levels[player.current_level]
+    text = "Current Info: "
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+    y += row_height
     num_floors = len(level.floors)
-    text = "# of Floors: " + str(num_floors)
+    text = "  # of Floors: " + str(num_floors)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
     y += row_height
     num_enemies = level.num_enemies # need to change to the len of the enemies list
-    text = "# of Enemies: " + str(num_enemies)
+    text = "  # of Enemies: " + str(num_enemies)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
     y += row_height
     num_enemies = 0 # need to change to the len of the enemies list
-    text = "Enemies Alive: " + str(num_enemies)
+    text = "  Enemies Alive: " + str(num_enemies)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
@@ -57,7 +63,7 @@ def show_diagnotics(win, font, levels, player):
     # column 3 shows current player info
     x = start_x + col_1_width + col_2_width
     y = start_y
-    text = "Level: " + str(player.current_level + 1)
+    text = "Level: " + str(player.current_level)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
