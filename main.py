@@ -19,14 +19,20 @@ levels = []
 
 font = pygame.font.SysFont('consolas', 15, False)
 
-def redraw_game_window():
+def redraw_game_window(player):
 
     # draw background
     pygame.draw.rect(win, (175,225,240), (0, 0, WINDOW_WIDTH, WINDOW_HEIGHT))
 
     # draw level
+    level = levels[player.current_level]
+    level.draw(win)
+    '''
     for level in levels:
-        level.draw(win)
+        if level.id == current_level:
+            level.draw(win)
+            break
+    '''
 
     # draw characters
     player.draw(win)
@@ -36,7 +42,8 @@ def redraw_game_window():
     for bullet in bullets:
         bullet.draw(win)
 
-    if SHOW_DIAGNOSTICS == True:
+    # show diagnostics (function will check for show/not show)
+    if SHOW_DIAGNOSTICS is True:
         show_diagnotics(win, font, levels, player)
 
     pygame.display.update()
@@ -73,19 +80,33 @@ def check_kp_pause_counts():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # set up the levels
 
+    # set up the levels
+    portal_id = 0
     num_floors = 4
     num_enemies = 5
-    #colour = (50, 75, 175)
+    num_up_portals = 1
+    num_down_portals = 0
     colour = (100, 150, 200)
-    level = Level(num_floors, num_enemies, colour)
+    level = Level(portal_id, num_floors, num_enemies, num_up_portals, num_down_portals, colour)
+    levels.append(level)
+
+    portal_id = 1
+    num_floors = 3
+    num_enemies = 8
+    num_up_portals = 1
+    num_down_portals = 2
+    colour = (50, 75, 175)
+    level = Level(portal_id, num_floors, num_enemies, num_up_portals, num_down_portals, colour)
     levels.append(level)
 
     # set up the player
+    x = WINDOW_WIDTH - 100
+    y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
     current_level = 0
-    current_floor = num_floors
-    player = Player(WINDOW_WIDTH - 100, WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4), current_level, current_floor)
+    level = levels[current_level]
+    current_floor = len(level.floors) - 1
+    player = Player(x, y, current_level, current_floor)
 
     bullets = []
 
@@ -129,10 +150,21 @@ if __name__ == '__main__':
             print("Shoot!")
 
         if keys[pygame.K_LEFT] and player.x > player.vel:
-            player.x -= player.vel
-            player.is_left = True
-            player.is_right = False
-            player.is_standing = False
+            x = player.x - player.vel
+            y = player.y
+            level = levels[player.current_level]
+            portal_id = level.is_location_in_portal(x, y)
+
+            # if not in portal just allow move
+            if portal_id == -1:
+                player.x -= player.vel
+                player.is_left = True
+                player.is_right = False
+                player.is_standing = False
+            else:
+                new_level_id = level.get_portal_target(portal_id)
+                print("Level change to ", new_level_id)
+                player.current_level = new_level_id
 
         elif keys[pygame.K_RIGHT] and player.x < WINDOW_WIDTH - player.width - player.vel:
             player.x += player.vel
@@ -270,6 +302,6 @@ if __name__ == '__main__':
                 player.is_jumping = False
                 player.jumpCount = JUMP_HEIGHT
 
-        redraw_game_window()
+        redraw_game_window(player)
     
     pygame.quit()

@@ -15,6 +15,11 @@ UP = -1
 DOWN = 1
 RUNG_HEIGHT = 25
 
+# portal constants
+PORTAL_COLOUR = (175, 127, 90)
+PORTAL_WIDTH = 60
+PORTAL_HEIGHT = 90
+
 # key press pause constants
 KP_UP    = 0
 KP_DOWN  = 1

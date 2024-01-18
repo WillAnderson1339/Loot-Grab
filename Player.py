@@ -26,6 +26,9 @@ class Player(object):
     def __init__(self, x, y, current_level, current_floor):
         self.x = x
         self.y = y
+        self.current_level = current_level
+        self.current_floor = current_floor
+
         self.width = self.IMAGES_WIDTH
         self.height = self.IMAGES_HEIGHT
         self.vel = 5
@@ -40,8 +43,6 @@ class Player(object):
         self.jumpCount = JUMP_HEIGHT
         self.is_standing = True
         self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT-2)
-        self.current_level = current_level
-        self.current_floor = current_floor
         self.target_floor = -1
 
     def draw(self, win):

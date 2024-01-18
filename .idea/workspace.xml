@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="BOTH up and down work!">
-      <change afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Moved diagnostics code into a file">
+      <change afterPath="$PROJECT_DIR$/Portal.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -178,7 +182,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705531449361</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Moved diagnostics code into a file">
+      <option name="closed" value="true" />
+      <created>1705532049569</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1705532049569</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -202,20 +214,16 @@
     <MESSAGE value="getting up and down working" />
     <MESSAGE value="Up is working (not Down yet)" />
     <MESSAGE value="BOTH up and down work!" />
-    <option name="LAST_COMMIT_MESSAGE" value="BOTH up and down work!" />
+    <MESSAGE value="Moved diagnostics code into a file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved diagnostics code into a file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>151</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>216</line>
-          <option name="timeStamp" value="9" />
+          <line>241</line>
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -223,7 +231,7 @@
       <configuration name="PythonConfigurationType">
         <watch expression="floor_number" language="Python" />
       </configuration>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="220">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="251">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>

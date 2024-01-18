@@ -57,7 +57,7 @@ def show_diagnotics(win, font, levels, player):
     # column 3 shows current player info
     x = start_x + col_1_width + col_2_width
     y = start_y
-    text = "Level: " + str(player.current_level)
+    text = "Level: " + str(player.current_level + 1)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 

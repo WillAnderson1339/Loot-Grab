@@ -2,7 +2,7 @@ import pygame
 import random
 
 from constants import *
-
+from Portal import *
 
 class Ladder(object):
     def __init__(self, x, y, width, height, colour, direction):
@@ -45,13 +45,21 @@ class Ladder(object):
 
 
 class Level(object):
-    def __init__(self, num_floors, num_enemies, colour):
+    def __init__(self, level_id, num_floors, num_enemies, num_up_portals, num_down_portals, colour):
+        self.level_id = level_id
         self.num_floors = num_floors
         self.num_enemies = num_enemies
+        self.num_up_portals = num_up_portals
+        self.num_down_portals = num_down_portals
         self.colour = colour
 
         self.floors = []
+        self.portals = []
 
+        self.create_floors()
+        self.create_portals()
+
+    def create_floors(self):
         # create the floor objects and append them to the floor List
         for i in range(self.num_floors):
             colour = self.colour
@@ -60,10 +68,10 @@ class Level(object):
             width = WINDOW_WIDTH
             height = FLOOR_HEIGHT
             rect = (x, y, width, height)
-            id = i
+            floor_id = i
             ladders = []
 
-            self.floors.append((id, colour, rect, ladders))
+            self.floors.append((floor_id, colour, rect, ladders))
 
         # add the bottom floor
         colour = (20, 115, 80)
@@ -76,7 +84,6 @@ class Level(object):
         ladders = []
 
         self.floors.append((id, colour, rect, ladders))
-
 
         # Once all the floors are create the ladders can be added
         self.init_ladders()
@@ -132,11 +139,67 @@ class Level(object):
                 item[3].append(ladder)
                 ladder_locations.append((x - LADDER_WIDTH - 20, x + LADDER_WIDTH + 20))  # 20 padding so not too close
 
+    def create_portals(self):
+        # create the up portals
+        width = PORTAL_WIDTH
+        height = PORTAL_HEIGHT
+        colour = PORTAL_COLOUR
+        direction = UP
+        for portal_id in range(self.num_up_portals):
+            # if only 1 up portal place it on the top floor at the left most edge
+            if self.num_up_portals == 1:
+                x = PORTAL_WIDTH // 2 * -1
+                y = self.get_floor_y(0) - PORTAL_HEIGHT
+            # else randomize floor and location
+            else:
+                min_x = PORTAL_WIDTH // 2 * -1
+                max_x = WINDOW_WIDTH + (PORTAL_WIDTH // 2) + 10
+                x = random.randint(min_x, max_x)
+                num_floors = len(self.floors)
+                floor_id = random.randint(0, num_floors)
+                y = self.get_floor_y(floor_id) - PORTAL_HEIGHT
+
+            portal = Portal(portal_id, x, y, width, height, colour, direction)
+            self.portals.append(portal)
+
+        # create the down portals
+        width = PORTAL_WIDTH
+        height = PORTAL_HEIGHT
+        colour = PORTAL_COLOUR
+        direction = DOWN
+        for portal_id in range(self.num_down_portals):
+            # if only 1 up portal place it on the bottom floor at the right most edge
+            if self.num_down_portals == 1:
+                x = WINDOW_WIDTH - (PORTAL_WIDTH // 2) + 10
+                num_floors = len(self.floors)
+                y = self.get_floor_y(num_floors - 1) - PORTAL_HEIGHT
+            # else randomize floor and location
+            else:
+                min_x = PORTAL_WIDTH // 2 * -1
+                max_x = WINDOW_WIDTH + (PORTAL_WIDTH // 2) + 10
+                x = random.randint(min_x, max_x)
+                num_floors = len(self.floors)
+                floor_id = random.randint(0, num_floors)
+                y = self.get_floor_y(floor_id) - PORTAL_HEIGHT
+
+            portal = Portal(portal_id, x, y, width, height, colour, direction)
+            self.portals.append(portal)
+
     def draw(self, win):
-        for item in self.floors:
-            pygame.draw.rect(win, item[1], item[2])
-            for ladder in item[3]:
+        # draw the floors
+        for floor in self.floors:
+            colour = floor[1]
+            rect = floor[2]
+            pygame.draw.rect(win, colour, rect)
+
+            # draw the ladders
+            ladders = floor[3]
+            for ladder in ladders:
                 ladder.draw(win)
+
+        # draw the portals
+        for portal in self.portals:
+            portal.draw(win)
 
     def foo(self):
         if self.num_floors == -1:
@@ -225,4 +288,39 @@ class Level(object):
                 in_ladder = True
                 break
         return in_ladder
+    def get_portal_coords(self):
+        portal_coords = []
 
+        for portal in self.portals:
+            x1 = portal.x
+            y1 = portal.y
+            x2 = portal.x + portal.width
+            y2 = portal.y + portal.height
+            portal_coords.append((x1, y1, x2, y2))
+        return portal_coords
+
+    def is_location_in_portal(self, x, y):
+        portal_id = -1
+
+        i = 0
+        portal_coords = self.get_portal_coords()
+        for coord in portal_coords:
+            if x >= coord[0] and x <= coord[2] and y >= coord[1] and y <= coord[3]:
+                portal_id = i
+                break
+            i += 1
+
+        return portal_id
+
+    def get_portal_target(self, portal_id):
+        target_level = -1
+
+        for portal in self.portals:
+            if portal_id == portal.portal_id:
+                if portal.direction == UP:
+                    target_level = self.level_id + 1
+                else:
+                    target_level = self.level_id - 1
+                break
+
+        return target_level
