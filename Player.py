@@ -44,6 +44,11 @@ class Player(object):
         self.is_standing = True
         self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT-2)
         self.target_floor = -1
+        self.in_ladder_min_x = -1
+        self.in_ladder_max_x = -1
+        self.in_ladder_min_y = -1
+        self.in_ladder_max_y = -1
+        self.score = 0
 
     def draw(self, win):
         if self.walkCount + 1 >= 27:

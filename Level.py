@@ -155,12 +155,22 @@ class Level(object):
                 y = self.get_floor_y(0) - PORTAL_HEIGHT
             # else randomize floor and location
             else:
-                min_x = PORTAL_WIDTH // 2 * -1
-                max_x = WINDOW_WIDTH + (PORTAL_WIDTH // 2) + 10
-                x = random.randint(min_x, max_x)
+                # find the y coord
                 num_floors = len(self.floors)
                 floor_id = random.randint(0, num_floors)
                 y = self.get_floor_y(floor_id) - PORTAL_HEIGHT
+
+                # find the x coord
+                x = 0
+                while x == 0:
+                    min_x = PORTAL_WIDTH // 2 * -1
+                    max_x = WINDOW_WIDTH + (PORTAL_WIDTH // 2) + 10
+                    x = random.randint(min_x, max_x)
+                    in_ladder = self.is_location_in_ladder(floor_id, x + PORTAL_WIDTH // 2, y)
+
+                    # portal would have been in a ladder so regenerate x value
+                    if in_ladder is True:
+                        x = 0
 
             portal = Portal(portal_id, x, y, width, height, colour, direction)
             self.portals.append(portal)
@@ -180,12 +190,22 @@ class Level(object):
                 y = self.get_floor_y(num_floors - 1) - PORTAL_HEIGHT
             # else randomize floor and location
             else:
-                min_x = PORTAL_WIDTH // 2 * -1
-                max_x = WINDOW_WIDTH + (PORTAL_WIDTH // 2) + 10
-                x = random.randint(min_x, max_x)
+                # find the y coord
                 num_floors = len(self.floors)
                 floor_id = random.randint(0, num_floors)
                 y = self.get_floor_y(floor_id) - PORTAL_HEIGHT
+
+                # find the x coord
+                x = 0
+                while x == 0:
+                    min_x = PORTAL_WIDTH // 2 * -1
+                    max_x = WINDOW_WIDTH + (PORTAL_WIDTH // 2) + 10
+                    x = random.randint(min_x, max_x)
+                    in_ladder = self.is_location_in_ladder(floor_id, x + PORTAL_WIDTH // 2, y)
+
+                    # portal would have been in a ladder so regenerate x value
+                    if in_ladder is True:
+                        x = 0
 
             portal = Portal(portal_id, x, y, width, height, colour, direction)
             self.portals.append(portal)
@@ -295,6 +315,19 @@ class Level(object):
                 in_ladder = True
                 break
         return in_ladder
+
+    def get_ladder_coords(self, floor_id, x, y):
+        in_ladder = False
+        rect = (-1, -1, -1, -1)
+
+        ladder_coords = self.get_floor_ladder_coords(floor_id)
+        for coord in ladder_coords:
+            # print("Checking (", x, ",", y, ") with coord (", coord[0], ",", coord[1], ",", coord[2], ",", coord[3], ")")
+            if x >= coord[0] and x <= coord[2] and y <= coord[1] and y >= coord[3]:
+                rect = (coord[0], coord[1], coord[2], coord[3])
+                break
+        return rect
+
     def get_portal_coords(self):
         portal_coords = []
 

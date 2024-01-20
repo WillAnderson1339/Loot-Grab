@@ -27,6 +27,9 @@ KP_LEFT  = 2
 KP_RIGHT = 3
 KP_SPACE = 4
 
+# game stats
+COLOUR_STATS = (204, 51, 255)
+
 # diagnostics
 SHOW_DIAGNOSTICS = False
 COLOUR_DIAGNOSTICS = (255, 127, 64)

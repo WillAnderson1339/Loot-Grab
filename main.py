@@ -6,11 +6,15 @@ from Player import *
 from Projectile import *
 from Level import *
 
-images_background = [pygame.image.load('res/Backgrounds/Field 3.png'), pygame.image.load('res/Backgrounds/Field 4.png'),
-                     pygame.image.load('res/Backgrounds/Mountains 1.png'), pygame.image.load('res/Backgrounds/Mountains 4.png'),
-                     pygame.image.load('res/Backgrounds/Mountains 5.png'), pygame.image.load('res/Backgrounds/Mountains 6.png'),
-                     pygame.image.load('res/Backgrounds/Mountains 7.png'),
-                     pygame.image.load('res/Backgrounds/Lava 1.png')]
+images_background = [
+    pygame.image.load('res/Backgrounds/Mountains 5.png'),
+    pygame.image.load('res/Backgrounds/Mountains 4.png'),
+    pygame.image.load('res/Backgrounds/Mountains 7.png'),
+    pygame.image.load('res/Backgrounds/Field 4.png'),
+    pygame.image.load('res/Backgrounds/Field 3.png'),
+    pygame.image.load('res/Backgrounds/Mountains 1.png'),
+    pygame.image.load('res/Backgrounds/Mountains 6.png'),
+    pygame.image.load('res/Backgrounds/Lava 1.png')]
 
 clock = pygame.time.Clock()
 
@@ -21,7 +25,30 @@ pygame.display.set_caption("Loot Grab")
 
 levels = []
 
-font = pygame.font.SysFont('consolas', 15, False)
+font_diagnostics = pygame.font.SysFont('consolas', 15, False)
+font_stats = pygame.font.SysFont('comicsans', 25, True)
+
+def show_stats(win, font, levels, player):
+    colour = COLOUR_STATS
+    start_x = WINDOW_WIDTH - 200
+    start_y = 10
+    row_height = 30
+    col_1_width = 170
+    col_2_width = 325
+
+    level = levels[player.current_level]
+
+    x = start_x
+    y = start_y
+
+    text = "Level:  " + str(player.current_level +1)
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+    y += row_height
+    text = "Score: " + str(player.score)
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
 
 def redraw_game_window(player):
 
@@ -51,7 +78,9 @@ def redraw_game_window(player):
 
     # show diagnostics (function will check for show/not show)
     if SHOW_DIAGNOSTICS is True:
-        show_diagnotics(win, font, levels, player)
+        show_diagnotics(win, font_diagnostics, levels, player)
+    else:
+        show_stats(win, font_stats, levels, player)
 
     pygame.display.update()
 
@@ -85,10 +114,10 @@ def check_kp_pause_counts():
         kp_key_states[KP_SPACE] = 0
 
 def create_random_level(level_id):
-    num_floors = random.randint(2, 2)
+    num_floors = random.randint(2, 5)
     num_enemies = random.randint(2, 8)
-    num_up_portals = random.randint(1, 1)
-    num_down_portals = random.randint(1, 1)
+    num_up_portals = random.randint(1, 2)
+    num_down_portals = random.randint(1, 2)
     background = level_id
     red = random.randint(0, 255)
     green = random.randint(0, 255)
@@ -98,34 +127,33 @@ def create_random_level(level_id):
     levels.append(level)
 
 
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
     # set up the levels
     # create first level (the first level is special - it has no down portal)
     level_id = 0
-    num_floors = 2
+    num_floors = 4
     num_enemies = 2
     num_up_portals = 1
     num_down_portals = 0
     background = 0
-    colour = (25, 125, 150)
+    colour = (90, 165, 120)
     level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
     levels.append(level)
 
-    num_levels_to_create = 2
+    num_levels_to_create = 6
     # create random levels - could change this to planned levels with colours, backgrounds, enemies etc
     for i in range(num_levels_to_create):
         create_random_level(i + 1)
 
     # create last level (the last level is special - it has no up portal)
     level_id = len(levels)
-    num_floors = 2
+    num_floors = 5
     num_enemies = 6
     num_up_portals = 0
     num_down_portals = 1
-    background = 2
+    background = 7
     colour = (150, 175, 75)
     level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
     levels.append(level)
@@ -221,7 +249,8 @@ if __name__ == '__main__':
             kp_key_states[KP_SPACE] = 1
             print("Shoot!")
 
-        if keys[pygame.K_LEFT] and player.x > player.vel:
+        #if keys[pygame.K_LEFT] and player.x > player.vel:
+        if keys[pygame.K_LEFT]:
             x = player.x - player.vel
             y = player.y
             level = levels[player.current_level]
@@ -229,10 +258,16 @@ if __name__ == '__main__':
 
             # if not in portal just allow move
             if portal_id == -1:
-                player.x -= player.vel
-                player.is_left = True
-                player.is_right = False
-                player.is_standing = False
+                # if in ladder restrict horizontal movement to within the ladder
+                if player.is_in_ladder is False or (player.x - player.vel) >= player.in_ladder_min_x - (player.width * 0.3):
+                    player.x -= player.vel
+                    player.is_left = True
+                    player.is_right = False
+                    player.is_standing = False
+
+                # if going off-screen reposition to the right side
+                if player.is_in_ladder is False and player.x <= player.width * -1:
+                    player.x = WINDOW_WIDTH - player.width
             else:
                 new_level_id = level.get_portal_target(portal_id)
                 print("Level change to ", new_level_id)
@@ -244,7 +279,8 @@ if __name__ == '__main__':
                 level = levels[new_level_id]
                 player.current_floor = len(level.floors) - 1
 
-        elif keys[pygame.K_RIGHT] and player.x < WINDOW_WIDTH:  # - player.width - player.vel:
+        #elif keys[pygame.K_RIGHT] and player.x < WINDOW_WIDTH:  # - player.width - player.vel:
+        elif keys[pygame.K_RIGHT]:
             x = player.x + player.vel
             y = player.y
             level = levels[player.current_level]
@@ -252,10 +288,16 @@ if __name__ == '__main__':
 
             # if not in portal just allow move
             if portal_id == -1:
-                player.x += player.vel
-                player.is_right = True
-                player.is_left = False
-                player.is_standing = False
+                # if in ladder restrict horizontal movement to within the ladder
+                if player.is_in_ladder is False or (player.x + player.vel) <= player.in_ladder_max_x - (player.width * 0.5):
+                    player.x += player.vel
+                    player.is_right = True
+                    player.is_left = False
+                    player.is_standing = False
+
+                # if going off-screen reposition to the left side
+                if player.is_in_ladder is False and player.x >= WINDOW_WIDTH:
+                    player.x = 0
             else:
                 new_level_id = level.get_portal_target(portal_id)
                 print("Level change to ", new_level_id)
@@ -285,6 +327,16 @@ if __name__ == '__main__':
                 floor_number = player.current_floor
             in_ladder = level.is_location_in_ladder(floor_number, x, y)
             if in_ladder == True:
+                # set ladder info
+                if player.is_in_ladder is False:
+                    player.is_in_ladder = True
+                    ladder_coords = level.get_ladder_coords(floor_number, x, y)
+                    if ladder_coords[0] != -1:
+                        player.in_ladder_min_x = ladder_coords[0]
+                        player.in_ladder_max_x = ladder_coords[2]
+                        player.in_ladder_min_y = ladder_coords[1]
+                        player.in_ladder_max_y = ladder_coords[3]
+
                 floor_y = level.get_floor_y(player.current_floor)
                 # if this is the first step set y to the top rung
                 if player.y + dims[1] == floor_y:
@@ -322,6 +374,10 @@ if __name__ == '__main__':
                     player.is_up = False
                     player.is_standing = True
                     player.is_in_ladder = False
+                    player.in_ladder_min_x = -1
+                    player.in_ladder_max_x = -1
+                    player.in_ladder_min_y = -1
+                    player.in_ladder_max_y = -1
                     player.target_floor = -1
 
                 player.is_right = False
@@ -350,6 +406,16 @@ if __name__ == '__main__':
                     floor_number = player.target_floor
                 in_ladder = level.is_location_in_ladder(floor_number, x, y)
                 if in_ladder == True:
+                    # set ladder info
+                    if player.is_in_ladder is False:
+                        player.is_in_ladder = True
+                        ladder_coords = level.get_ladder_coords(floor_number, x, y)
+                        if ladder_coords[0] != -1:
+                            player.in_ladder_min_x = ladder_coords[0]
+                            player.in_ladder_max_x = ladder_coords[2]
+                            player.in_ladder_min_y = ladder_coords[1]
+                            player.in_ladder_max_y = ladder_coords[3]
+
                     player.y -= RUNG_HEIGHT
                     # starting up set target to floor above
                     if player.target_floor == -1:
@@ -380,6 +446,10 @@ if __name__ == '__main__':
                         player.is_up = False
                         player.is_standing = True
                         player.is_in_ladder = False
+                        player.in_ladder_min_x = -1
+                        player.in_ladder_max_x = -1
+                        player.in_ladder_min_y = -1
+                        player.in_ladder_max_y = -1
                         player.target_floor = -1
                 else:
                     player.is_jumping = True
