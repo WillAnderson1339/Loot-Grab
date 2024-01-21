@@ -4,7 +4,7 @@ WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 748
 
 # Player constants
-JUMP_HEIGHT = 5
+JUMP_HEIGHT = 6
 
 # floor constants
 FLOOR_HEIGHT = 10
@@ -26,6 +26,8 @@ KP_DOWN  = 1
 KP_LEFT  = 2
 KP_RIGHT = 3
 KP_SPACE = 4
+KP_m     = 5
+KP_d     = 6
 
 # game stats
 COLOUR_STATS = (204, 51, 255)

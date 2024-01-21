@@ -16,17 +16,29 @@ images_background = [
     pygame.image.load('res/Backgrounds/Mountains 6.png'),
     pygame.image.load('res/Backgrounds/Lava 1.png')]
 
+pygame.init()
+
 clock = pygame.time.Clock()
 
-pygame.init()
+bulletSound = pygame.mixer.Sound('res/bullet.mp3')
+hitSound = pygame.mixer.Sound('res/hit.mp3')
+
+music = pygame.mixer.music.load('res/music.mp3')
+pygame.mixer.music.play(-1)
+playing_music = True
 
 win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Loot Grab")
 
 levels = []
 
-font_diagnostics = pygame.font.SysFont('consolas', 15, False)
+# key press pause counts. use KP_ constants to access list
+kp_key_states = [0, 0, 0, 0, 0, 0, 0]
+
 font_stats = pygame.font.SysFont('comicsans', 25, True)
+font_diagnostics = pygame.font.SysFont('consolas', 15, False)
+
+show_diagnostics = SHOW_DIAGNOSTICS
 
 def show_stats(win, font, levels, player):
     colour = COLOUR_STATS
@@ -77,7 +89,7 @@ def redraw_game_window(player):
         bullet.draw(win)
 
     # show diagnostics (function will check for show/not show)
-    if SHOW_DIAGNOSTICS is True:
+    if show_diagnostics is True:
         show_diagnotics(win, font_diagnostics, levels, player)
     else:
         show_stats(win, font_stats, levels, player)
@@ -86,6 +98,12 @@ def redraw_game_window(player):
 
 
 def check_kp_pause_counts():
+    '''
+    NOTE:
+        need to look into another method for this. Consider pygame.key.get_repeat()
+        https://www.pygame.org/docs/ref/key.html#pygame.key.get_repeat
+    '''
+
     # uses a count to pause so multiple key press events are not processed when the user only intended a single press
     max_pause_needed = 3
 
@@ -100,6 +118,10 @@ def check_kp_pause_counts():
         kp_key_states[KP_RIGHT] += 1
     if kp_key_states[KP_SPACE] > 0:
         kp_key_states[KP_SPACE] += 1
+    if kp_key_states[KP_m] > 0:
+        kp_key_states[KP_m] += 1
+    if kp_key_states[KP_d] > 0:
+        kp_key_states[KP_d] += 1
 
     # if reached max pause rest to 0
     if kp_key_states[KP_UP] > max_pause_needed:
@@ -112,6 +134,10 @@ def check_kp_pause_counts():
         kp_key_states[KP_RIGHT] = 0
     if kp_key_states[KP_SPACE] > max_pause_needed:
         kp_key_states[KP_SPACE] = 0
+    if kp_key_states[KP_m] > max_pause_needed:
+        kp_key_states[KP_m] = 0
+    if kp_key_states[KP_d] > max_pause_needed:
+        kp_key_states[KP_d] = 0
 
 def create_random_level(level_id):
     num_floors = random.randint(2, 5)
@@ -210,9 +236,6 @@ if __name__ == '__main__':
 
     bullets = []
 
-    # key press pause counts. use KP_ constants to access list
-    kp_key_states = [0, 0, 0, 0, 0]
-
     print("Hellow World!")
 
     run = True
@@ -236,6 +259,7 @@ if __name__ == '__main__':
 
         keys = pygame.key.get_pressed()
 
+        # shoot key
         if keys[pygame.K_SPACE] and kp_key_states[KP_SPACE] == 0:
             if player.is_left:
                 facing = -1
@@ -245,11 +269,31 @@ if __name__ == '__main__':
             if len(bullets) < 5:
                 bullets.append(
                     Projectile(round(player.x + player.width // 2), round(player.y + player.height // 2), 6, (0, 0, 0), facing))
+                bulletSound.play()
+                print("Shoot!")
 
             kp_key_states[KP_SPACE] = 1
-            print("Shoot!")
 
-        #if keys[pygame.K_LEFT] and player.x > player.vel:
+        # toggle playing the music
+        elif keys[pygame.K_m] and kp_key_states[KP_m] == 0:
+            if playing_music is True:
+                playing_music = False
+                pygame.mixer.music.stop()
+            else:
+                playing_music = True
+                pygame.mixer.music.play(-1)
+
+            kp_key_states[KP_m] = 1
+
+        # toggle showing the diagnostics
+        elif keys[pygame.K_d] and kp_key_states[KP_d] == 0:
+            if show_diagnostics is True:
+                show_diagnostics = False
+            else:
+                show_diagnostics = True
+
+            kp_key_states[KP_d] = 1
+
         if keys[pygame.K_LEFT]:
             x = player.x - player.vel
             y = player.y
@@ -257,7 +301,10 @@ if __name__ == '__main__':
             portal_id = level.is_location_in_portal(x, y)
 
             # if not in portal just allow move
-            if portal_id == -1:
+            if portal_id == -1 or player.is_jumping is True:
+                if portal_id != -1 and player.is_jumping is True:
+                    print("in portal but jumping so moving instead!")
+
                 # if in ladder restrict horizontal movement to within the ladder
                 if player.is_in_ladder is False or (player.x - player.vel) >= player.in_ladder_min_x - (player.width * 0.3):
                     player.x -= player.vel
@@ -287,7 +334,10 @@ if __name__ == '__main__':
             portal_id = level.is_location_in_portal(x, y)
 
             # if not in portal just allow move
-            if portal_id == -1:
+            if portal_id == -1 or player.is_jumping is True:
+                if portal_id != -1 and player.is_jumping is True:
+                    print("in portal but jumping so moving instead!")
+
                 # if in ladder restrict horizontal movement to within the ladder
                 if player.is_in_ladder is False or (player.x + player.vel) <= player.in_ladder_max_x - (player.width * 0.5):
                     player.x += player.vel

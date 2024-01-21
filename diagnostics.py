@@ -8,6 +8,7 @@ def show_diagnotics(win, font, levels, player):
     row_height = 20
     col_1_width = 170
     col_2_width = 325
+    col_3_width = 200
 
     level = levels[player.current_level]
 
@@ -94,3 +95,17 @@ def show_diagnotics(win, font, levels, player):
     text = "Run:  (" + str(idle[0]) + ", " + str(idle[1]) + ")"
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
+
+    # column 4 shows misc info
+    x += col_3_width
+    y = start_y
+    text = "is_jumping:  " + str(player.is_jumping)
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+'''
+    y += row_height
+    text = "KP_m:  " + str(kp_key_states[KP_m])
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+'''

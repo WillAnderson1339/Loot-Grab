@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="portal works and first impl backgrounds">
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Left Right improvements and Stats">
+      <change afterPath="$PROJECT_DIR$/res/bullet.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/hit.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/music.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -204,7 +206,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705614397582</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Left Right improvements and Stats">
+      <option name="closed" value="true" />
+      <created>1705712638121</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1705712638121</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -231,14 +241,15 @@
     <MESSAGE value="Moved diagnostics code into a file" />
     <MESSAGE value="first impl of Portal" />
     <MESSAGE value="portal works and first impl backgrounds" />
-    <option name="LAST_COMMIT_MESSAGE" value="portal works and first impl backgrounds" />
+    <MESSAGE value="Left Right improvements and Stats" />
+    <option name="LAST_COMMIT_MESSAGE" value="Left Right improvements and Stats" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
       <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="358">
         <watch expression="portal.portal_id" />
       </inline-watch>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="402">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="452">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>
