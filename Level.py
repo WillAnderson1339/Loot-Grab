@@ -2,46 +2,9 @@ import pygame
 import random
 
 from constants import *
+from Floor import *
+from Ladder import *
 from Portal import *
-
-class Ladder(object):
-    def __init__(self, x, y, width, height, colour, direction):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.colour = colour
-        self.direction = direction
-
-        self.num_rungs = self.height // RUNG_HEIGHT
-        if direction == UP:
-            self.y_of_top_rung = self.y + (RUNG_HEIGHT * self.num_rungs * direction)
-            self.y_of_2nd_top_rung = self.y_of_top_rung - (RUNG_HEIGHT * direction)
-        else:
-            self.y_of_top_rung = self.y + (RUNG_HEIGHT * self.num_rungs * direction)
-            self.y_of_2nd_top_rung = self.y_of_top_rung - (RUNG_HEIGHT * direction)
-
-
-    def draw(self, win):
-        if self.direction == UP:
-            # draw the vertical lines
-            point_start = (self.x, self.y)
-            point_end   = (self.x, self.y - self.height)
-            #print(point_start, point_end)
-            pygame.draw.line(win, self.colour,point_start, point_end, 3)
-            point_start = (self.x + LADDER_WIDTH, self.y)
-            point_end   = (self.x + LADDER_WIDTH, self.y - self.height)
-            pygame.draw.line(win, self.colour,point_start, point_end, 3)
-
-            # draw the rungs
-            x_start = self.x
-            y_start = self.y
-            num_rungs = self.height // RUNG_HEIGHT
-            for i in range(num_rungs):
-                point_start = (x_start, y_start - (RUNG_HEIGHT * (i + 1)))
-                point_end = (x_start + LADDER_WIDTH, y_start - (RUNG_HEIGHT * (i + 1)))
-                pygame.draw.line(win, self.colour, point_start, point_end, 3)
-
 
 
 class Level(object):
@@ -72,7 +35,9 @@ class Level(object):
             floor_id = i
             ladders = []
 
-            self.floors.append((floor_id, colour, rect, ladders))
+            #self.floors.append((floor_id, colour, rect, ladders))
+            floor = Floor(floor_id, colour, rect, ladders)
+            self.floors.append(floor)
 
         # add the bottom floor
         colour = (20, 115, 80)
@@ -81,10 +46,12 @@ class Level(object):
         width = WINDOW_WIDTH
         height = FLOOR_HEIGHT
         rect = (x, y, width, height)
-        id = self.num_floors
+        floor_id = self.num_floors
         ladders = []
 
-        self.floors.append((id, colour, rect, ladders))
+        #self.floors.append((floor_id, colour, rect, ladders))
+        floor = Floor(floor_id, colour, rect, ladders)
+        self.floors.append(floor)
 
         # Once all the floors are create the ladders can be added
         self.init_ladders()
@@ -94,9 +61,9 @@ class Level(object):
 
         num = len(ladder_locations)
 
-        for item in self.floors:
+        for floor in self.floors:
             # don't add ladders to the top floor
-            if item[0] == 0:
+            if floor.floor_id == 0:
                 continue
 
             num_ladders = random.randint(1,2)
@@ -125,19 +92,28 @@ class Level(object):
                     if (counter == len(ladder_locations)):
                         keep_looking = False
 
-                y = item[2][1]
+                #y = item[2][1]
+                rect = floor.rect
+                y = rect[1]
                 width = LADDER_WIDTH
-                id = item[0]
+                #id = item[0]
+                id = floor.floor_id
                 id_floor_above = id - 1
-                row_above = self.floors[id_floor_above]
-                y_row_above = row_above[2][1]
-                height = y - y_row_above
+                #row_above = self.floors[id_floor_above]
+                #y_row_above = row_above[2][1]
+                #row_above = self.floors[id_floor_above]
+                #height = y - y_row_above
+                floor_above = self.floors[id_floor_above]
+                y_floor_above = floor_above.rect[1]
+                height = y - y_floor_above
                 # height = 165
                 colour = self.colour
                 # colour = (255, 0, 0)
 
                 ladder = Ladder(x, y, width, height, colour, UP)
-                item[3].append(ladder)
+                #item[3].append(ladder)
+                #floor.append(ladder)
+                floor.ladders.append(ladder)
                 ladder_locations.append((x - LADDER_WIDTH - 20, x + LADDER_WIDTH + 20))  # 20 padding so not too close
 
     def create_portals(self):
@@ -215,6 +191,7 @@ class Level(object):
     def draw(self, win):
         # draw the floors
         for floor in self.floors:
+            '''
             colour = floor[1]
             rect = floor[2]
             pygame.draw.rect(win, colour, rect)
@@ -223,11 +200,14 @@ class Level(object):
             ladders = floor[3]
             for ladder in ladders:
                 ladder.draw(win)
+            '''
+            floor.draw(win)
 
         # draw the portals
         for portal in self.portals:
             portal.draw(win)
 
+    '''
     def foo(self):
         if self.num_floors == -1:
             pass
@@ -241,63 +221,115 @@ class Level(object):
                 something = 5
 
             mystring = "hello world"
+    '''
+    def get_floor(self, floor_id):
+        """Returns the floor with the matching ID. Returns an empty floor if ID not found."""
+        ladders = []
+        found_floor = Floor(-1, (0,0,0), (0,0,0,0), ladders)
+        found = False
+        if (floor_id >= 0 and floor_id < len(self.floors)):
+            for floor in self.floors:
+                if floor.floor_id == floor_id:
+                    found_floor = floor
+        return found_floor
 
     def get_num_floor_ladders(self, floor_id):
+        """Returns the number of ladders for the floor ID. Returns -1 if ID not found."""
         num_ladders = -1
+        floor = self.get_floor(floor_id)
+        if floor.floor_id != -1:
+            num_ladders = len(floor.ladders)
+        '''    
         if (floor_id >= 0 and floor_id < len(self.floors)):
             for floor in self.floors:
                 if floor[0] == floor_id:
                     num_ladders = len(floor[3])
+        '''
         return num_ladders
 
     def get_ladder_top_rung_y(self, floor_id):
+        """Returns the y of the top rung of the ladders for the floor ID. Returns -1 if ID not found."""
         top_rung_y = -1
+        floor = self.get_floor(floor_id)
+        if floor.floor_id != -1:
+            ladder = floor.ladders[0]   # all ladders on this floor have the same y coord for the top rung
+            top_rung_y = ladder.y_of_top_rung
+        '''
         if (floor_id >= 0 and floor_id < len(self.floors)):
             for floor in self.floors:
                 if floor[0] == floor_id:
                     for ladder in floor[3]:
                         top_rung_y = ladder.y_of_top_rung
+        '''
         return top_rung_y
 
     def get_ladder_2nd_top_rung_y(self, floor_id):
+        """Returns the y of the 2nd top rung of the ladders for the floor ID. Returns -1 if ID not found."""
         top_2nd_rung_y = -1
+        floor = self.get_floor(floor_id)
+        if floor.floor_id != -1:
+            ladder = floor.ladders[0]  # all ladders on this floor have the same y coord for the top rung
+            top_2nd_rung_y = ladder.y_of_2nd_top_rung
+        '''
         if (floor_id >= 0 and floor_id < len(self.floors)):
             for floor in self.floors:
                 if floor[0] == floor_id:
                     for ladder in floor[3]:
                         top_2nd_rung_y = ladder.y_of_2nd_top_rung
+        '''
         return top_2nd_rung_y
 
     def get_floor_y(self, floor_id):
+        """Returns the y of the floor for the floor ID. Returns -1 if ID not found."""
         y = -1
 
+        '''
         if (floor_id >= 0 and floor_id < len(self.floors)):
             for floor in self.floors:
                 if floor[0] == floor_id:
                     rect = floor[2]
                     y = rect[1]
                     break
-
+        '''
+        floor = self.get_floor(floor_id)
+        if floor.floor_id != -1:
+            rect = floor.rect
+            y = rect[1]
+            y = floor.rect[1]
         return y
+
     def get_floor_id(self, y):
+        """Returns the ID of the floor for the floor y. Returns -1 if ID not found."""
         floor_id = -1
 
+        if (y >= 0 and y <= WINDOW_HEIGHT):
+            for floor in self.floors:
+                rect = floor.rect
+                if rect[1] == y:
+                    floor_id = floor.floor_id
+                    break
+
+        '''
         if (y >= 0 and y <= WINDOW_HEIGHT):
             for floor in self.floors:
                 rect = floor[2]
                 if rect[1] == y:
                     floor_id = floor[0]
                     break
+        '''
 
         return floor_id
 
     def get_floor_ladder_coords(self, floor_id):
+        """Returns a list of coords of ladder(s) for the floor with ID. Returns an empty list if ID not found."""
         ladder_coords = []
 
         if (floor_id >= 0 and floor_id < len(self.floors)):
             for floor in self.floors:
-                if floor[0] == floor_id:
-                    for ladder in floor[3]:
+                #if floor[0] == floor_id:
+                if floor.floor_id == floor_id:
+                    #for ladder in floor[3]:
+                    for ladder in floor.ladders:
                         x1 = ladder.x
                         y1 = ladder.y
                         x2 = ladder.x + ladder.width
@@ -306,6 +338,7 @@ class Level(object):
         return ladder_coords
 
     def is_location_in_ladder(self, floor_id, x, y):
+        """Returns True if the x,y point is in a ladder on floor with ID. Returns False if not."""
         in_ladder = False
 
         ladder_coords = self.get_floor_ladder_coords(floor_id)
@@ -317,7 +350,8 @@ class Level(object):
         return in_ladder
 
     def get_ladder_coords(self, floor_id, x, y):
-        in_ladder = False
+        """Returns the rect of the ladder the point (x,y) is in on floor with ID. Returns a rect of -1 if ID not found."""
+        #in_ladder = False
         rect = (-1, -1, -1, -1)
 
         ladder_coords = self.get_floor_ladder_coords(floor_id)
@@ -329,6 +363,8 @@ class Level(object):
         return rect
 
     def get_portal_coords(self):
+        """Returns the rect of the ladder the point (x,y) is in on floor with ID. Returns a rect of -1 if ID not found."""
+        """Returns a list of coords of portal(s). Returns an empty list if no portals found."""
         portal_coords = []
 
         for portal in self.portals:
@@ -340,6 +376,7 @@ class Level(object):
         return portal_coords
 
     def is_location_in_portal(self, x, y):
+        """Returns the ID of the portal the x,y point is in if in a portal. Returns -1 if not."""
         portal_id = -1
 
         i = 0
@@ -353,6 +390,7 @@ class Level(object):
         return portal_id
 
     def get_portal_target(self, portal_id):
+        """Returns the target level of a portal. Returns -1 if portal direction is not known"""
         target_level = -1
 
         for portal in self.portals:
@@ -364,3 +402,4 @@ class Level(object):
                 break
 
         return target_level
+
