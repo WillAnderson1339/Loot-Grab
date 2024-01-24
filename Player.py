@@ -2,26 +2,38 @@ import pygame
 
 from constants import *
 
+hero_1_idle = [pygame.image.load('res/Hero - 1/Idle__000.png'), pygame.image.load('res/Hero - 1/Idle__001.png'),
+               pygame.image.load('res/Hero - 1/Idle__002.png'), pygame.image.load('res/Hero - 1/Idle__003.png'),
+               pygame.image.load('res/Hero - 1/Idle__004.png'), pygame.image.load('res/Hero - 1/Idle__005.png'),
+               pygame.image.load('res/Hero - 1/Idle__006.png'), pygame.image.load('res/Hero - 1/Idle__007.png'),
+               pygame.image.load('res/Hero - 1/Idle__008.png')]
+
+hero_1_walk_right = [pygame.image.load('res/Hero - 1/Run_Right__000.png'),
+                     pygame.image.load('res/Hero - 1/Run_Right__001.png'),
+                     pygame.image.load('res/Hero - 1/Run_Right__002.png'),
+                     pygame.image.load('res/Hero - 1/Run_Right__003.png'),
+                     pygame.image.load('res/Hero - 1/Run_Right__004.png'),
+                     pygame.image.load('res/Hero - 1/Run_Right__005.png'),
+                     pygame.image.load('res/Hero - 1/Run_Right__006.png'),
+                     pygame.image.load('res/Hero - 1/Run_Right__007.png'),
+                     pygame.image.load('res/Hero - 1/Run_Right__008.png')]
+
+hero_1_walk_left = [pygame.image.load('res/Hero - 1/Run_Left__000.png'),
+                    pygame.image.load('res/Hero - 1/Run_Left__001.png'),
+                    pygame.image.load('res/Hero - 1/Run_Left__002.png'),
+                    pygame.image.load('res/Hero - 1/Run_Left__003.png'),
+                    pygame.image.load('res/Hero - 1/Run_Left__004.png'),
+                    pygame.image.load('res/Hero - 1/Run_Left__005.png'),
+                    pygame.image.load('res/Hero - 1/Run_Left__006.png'),
+                    pygame.image.load('res/Hero - 1/Run_Left__007.png'),
+                    pygame.image.load('res/Hero - 1/Run_Left__008.png')]
+
+
 class Player(object):
     IMAGES_WIDTH = 62
     IMAGES_HEIGHT = 76
     IMAGES_HIT_WIDTH = 48
     IMAGES_HIT_HEIGHT = 68
-    images_idle = [pygame.image.load('res/Idle__000.png'), pygame.image.load('res/Idle__001.png'),
-                   pygame.image.load('res/Idle__002.png'), pygame.image.load('res/Idle__003.png'),
-                   pygame.image.load('res/Idle__004.png'), pygame.image.load('res/Idle__005.png'),
-                   pygame.image.load('res/Idle__006.png'), pygame.image.load('res/Idle__007.png'),
-                   pygame.image.load('res/Idle__008.png')]
-    images_walk_right = [pygame.image.load('res/Run_Right__000.png'), pygame.image.load('res/Run_Right__001.png'),
-                         pygame.image.load('res/Run_Right__002.png'), pygame.image.load('res/Run_Right__003.png'),
-                         pygame.image.load('res/Run_Right__004.png'), pygame.image.load('res/Run_Right__005.png'),
-                         pygame.image.load('res/Run_Right__006.png'), pygame.image.load('res/Run_Right__007.png'),
-                         pygame.image.load('res/Run_Right__008.png')]
-    images_walk_left = [pygame.image.load('res/Run_Left__000.png'), pygame.image.load('res/Run_Left__001.png'),
-                        pygame.image.load('res/Run_Left__002.png'), pygame.image.load('res/Run_Left__003.png'),
-                        pygame.image.load('res/Run_Left__004.png'), pygame.image.load('res/Run_Left__005.png'),
-                        pygame.image.load('res/Run_Left__006.png'), pygame.image.load('res/Run_Left__007.png'),
-                        pygame.image.load('res/Run_Left__008.png')]
 
     def __init__(self, x, y, current_level, current_floor):
         self.x = x
@@ -49,6 +61,11 @@ class Player(object):
         self.in_ladder_min_y = -1
         self.in_ladder_max_y = -1
         self.score = 0
+
+        # set up the images lists
+        self.images_idle = hero_1_idle
+        self.images_walk_right = hero_1_walk_right
+        self.images_walk_left = hero_1_walk_left
 
     def draw(self, win):
         if self.walkCount + 1 >= 27:
@@ -85,8 +102,8 @@ class Player(object):
             pygame.draw.rect(win, COLOUR_P_PERIMITER, image_rect,2)
 
         # draw hit box
-        self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT-2)
         if SHOW_PLAYER_HITBOX == True:
+            self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT - 2)
             pygame.draw.rect(win, COLOUR_P_HITBOX, self.hitbox,2)
 
         # increment the walkCount

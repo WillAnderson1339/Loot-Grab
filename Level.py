@@ -5,6 +5,7 @@ from constants import *
 from Floor import *
 from Ladder import *
 from Portal import *
+from Loot import *
 
 
 class Level(object):
@@ -19,9 +20,11 @@ class Level(object):
 
         self.floors = []
         self.portals = []
+        self.loots = []
 
         self.create_floors()
         self.create_portals()
+        self.create_loot()
 
     def create_floors(self):
         # create the floor objects and append them to the floor List
@@ -188,6 +191,38 @@ class Level(object):
 
             portal_id += 1
 
+    def create_loot(self):
+        """Creates the loot on each level."""
+        facing = random.randint(0, 9)
+        start_x = 50
+        loot_interval = 50
+        loot_type = LOOT_COIN_GOLD
+        for floor in self.floors:
+            sizing_loot = Loot(0,0,loot_type, 0)
+            width = sizing_loot.get_loot_width()
+            height = sizing_loot.get_loot_height()
+            num_loot = random.randint(0, 6)
+            num_loot = WINDOW_WIDTH // (loot_interval + width) - 1
+            x = start_x
+            y = self.get_floor_y(floor.floor_id) - height - LOOT_FLOAT
+            for i in range(num_loot):
+                okay_to_place = True
+                if self.is_location_in_ladder(x,y, floor.floor_id) is True:
+                    print("Level " + str(self.level_id) + ": (" + str(x) + ", " + str(y) + ") is in ladder on floor " + str(floor.floor_id))
+                if self.is_location_in_ladder(floor.floor_id, x + width, y) is True:
+                    print("Level " + str(self.level_id) + ": [" + str((x + width)) + ", " + str(y) + "] is in ladder on floor " + str(floor.floor_id))
+
+                if self.is_location_in_ladder(x,y, floor.floor_id) is True or self.is_location_in_ladder(floor.floor_id, x + width, y) is True:
+                    okay_to_place = False
+                if self.is_location_in_portal(x, y) is True or self.is_location_in_portal(x + width, y) is True:
+                    okay_to_place = False
+
+                if okay_to_place is True:
+                    loot = Loot(x, y, loot_type, facing)
+                    self.loots.append(loot)
+
+                x += loot_interval + sizing_loot.get_loot_width()
+
     def draw(self, win):
         # draw the floors
         for floor in self.floors:
@@ -206,6 +241,10 @@ class Level(object):
         # draw the portals
         for portal in self.portals:
             portal.draw(win)
+
+        # draw the loots
+        for loot in self.loots:
+            loot.draw(win)
 
     '''
     def foo(self):
