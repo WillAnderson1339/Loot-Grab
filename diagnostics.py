@@ -44,9 +44,11 @@ def show_diagnotics(win, font, levels, player):
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
+    '''
     # column 2 shows ladder info
     x = start_x + col_1_width
     y = start_y
+    num_floors = len(level.floors)
     for i in range(num_floors):
         ladders = level.get_floor_ladder_coords(i)
         for j in range(len(ladders)):
@@ -60,6 +62,27 @@ def show_diagnotics(win, font, levels, player):
             print_text = font.render(text, 1, colour)
             win.blit(print_text, (x, y))
             y += row_height
+    '''
+
+    # column 2 shows portal info
+    x = start_x + col_1_width
+    y = start_y
+    num_portals = len(level.portals)
+    for i in range(num_portals):
+        portal = level.portals[i]
+        portal_id = portal.portal_id
+        portal_x = portal.x
+        portal_y = portal.y
+        if portal.direction == UP:
+            direction_str = "Up"
+        elif portal.direction == DOWN:
+            direction_str = "Down"
+        else:
+            direction_str = "unknown"
+        text = "Portal ID " + str(portal_id) + ": (" + str(portal_x) + ", " + str(portal_y) + ") direction " + direction_str
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
+        y += row_height
 
     # column 3 shows current player info
     x = start_x + col_1_width + col_2_width

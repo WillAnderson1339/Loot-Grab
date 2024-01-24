@@ -31,7 +31,7 @@ class Player(object):
 
         self.width = self.IMAGES_WIDTH
         self.height = self.IMAGES_HEIGHT
-        self.vel = 5
+        self.vel = PLAYER_VEL
         self.is_jumping = False
         self.is_in_ladder = False
         self.is_left = False

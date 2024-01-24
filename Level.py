@@ -164,7 +164,7 @@ class Level(object):
                 x = 0
                 while x == 0:
                     min_x = PORTAL_WIDTH // 2 * -1
-                    max_x = WINDOW_WIDTH + (PORTAL_WIDTH // 2) + 10
+                    max_x = WINDOW_WIDTH + (PORTAL_WIDTH // 2)
                     x = random.randint(min_x, max_x)
                     in_ladder = self.is_location_in_ladder(floor_id, x + PORTAL_WIDTH // 2, y)
 
@@ -185,7 +185,7 @@ class Level(object):
         for i in range(self.num_down_portals):
             # if only 1 up portal place it on the bottom floor at the right most edge
             if self.num_down_portals == 1:
-                x = WINDOW_WIDTH - (PORTAL_WIDTH // 2) + 10
+                x = WINDOW_WIDTH - (PORTAL_WIDTH // 2)
                 num_floors = len(self.floors)
                 y = self.get_floor_y(num_floors - 1) - PORTAL_HEIGHT
             # else randomize floor and location

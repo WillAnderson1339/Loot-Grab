@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Left Right improvements and Stats">
-      <change afterPath="$PROJECT_DIR$/res/bullet.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/hit.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/music.mp3" afterDir="false" />
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="added toggles for diags and music">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -214,7 +208,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705712638121</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="added toggles for diags and music">
+      <option name="closed" value="true" />
+      <created>1705868341446</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1705868341446</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -242,7 +244,8 @@
     <MESSAGE value="first impl of Portal" />
     <MESSAGE value="portal works and first impl backgrounds" />
     <MESSAGE value="Left Right improvements and Stats" />
-    <option name="LAST_COMMIT_MESSAGE" value="Left Right improvements and Stats" />
+    <MESSAGE value="added toggles for diags and music" />
+    <option name="LAST_COMMIT_MESSAGE" value="added toggles for diags and music" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

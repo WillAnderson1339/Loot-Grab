@@ -23,9 +23,13 @@ clock = pygame.time.Clock()
 bulletSound = pygame.mixer.Sound('res/bullet.mp3')
 hitSound = pygame.mixer.Sound('res/hit.mp3')
 
+# setup music
 music = pygame.mixer.music.load('res/music.mp3')
-pygame.mixer.music.play(-1)
-playing_music = True
+playing_music = False
+if playing_music is True:
+    pygame.mixer.music.play(-1)
+else:
+    pygame.mixer.music.stop()
 
 win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Loot Grab")
@@ -295,7 +299,7 @@ if __name__ == '__main__':
             kp_key_states[KP_d] = 1
 
         if keys[pygame.K_LEFT]:
-            x = player.x - player.vel
+            x = player.x - player.vel + 0     # -5 is to check if the player foot is in the portal (not his hat)
             y = player.y
             level = levels[player.current_level]
             portal_id = level.is_location_in_portal(x, y)

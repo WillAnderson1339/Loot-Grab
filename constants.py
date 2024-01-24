@@ -5,6 +5,7 @@ WINDOW_HEIGHT = 748
 
 # Player constants
 JUMP_HEIGHT = 6
+PLAYER_VEL = 5
 
 # floor constants
 FLOOR_HEIGHT = 10
