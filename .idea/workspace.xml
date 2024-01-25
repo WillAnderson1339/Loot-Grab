@@ -4,11 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="First implementation of Loot">
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="added hit detection for loot">
+      <change afterPath="$PROJECT_DIR$/res/Objects/Bullet_1_Left__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Objects/Bullet_1_Right__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Loot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Loot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Projectile.py" beforeDir="false" afterPath="$PROJECT_DIR$/Projectile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -243,7 +248,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706139848061</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="added hit detection for loot">
+      <option name="closed" value="true" />
+      <created>1706150834435</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1706150834435</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -275,11 +288,12 @@
     <MESSAGE value="fixed portal create off screen" />
     <MESSAGE value="Created the Floor and Ladder classes" />
     <MESSAGE value="First implementation of Loot" />
-    <option name="LAST_COMMIT_MESSAGE" value="First implementation of Loot" />
+    <MESSAGE value="added hit detection for loot" />
+    <option name="LAST_COMMIT_MESSAGE" value="added hit detection for loot" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="405">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="406">
         <watch expression="portal.portal_id" />
       </inline-watch>
       <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="470">

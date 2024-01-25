@@ -22,35 +22,63 @@ class Loot(object):
 
         self.image_list = coin_gold_1
 
-        width = self.image_list[0].get_width()
-        height = self.image_list[0].get_height()
-        self.hit_box = (self.x, self.y, self.x + width, self.y + height)
-        self.spinCount = self.facing
+        self.spin_count = self.facing
+
+        # setup the hit box
+        self.hit_box_left_indent = 2
+        self.hit_box_right_indent = 2
+        self.hit_box_top_indent = 2
+        self.hit_box_bottom_indent = 2
+        width = self.get_loot_width()
+        height = self.get_loot_height()
+        x = self.x + self.hit_box_left_indent
+        y = self.y + self.hit_box_top_indent
+        width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+        #self.hit_box = (self.x, self.y, self.x + width, self.y + height)
+        self.hit_box = (x, y, width, height)
 
     def draw(self, win):
-        if self.spinCount + 1 >= 27:
-            self.spinCount = 0
+        """Draws the loot on the screen."""
+
+        if self.spin_count + 1 >= 27:
+            self.spin_count = 0
 
         #pygame.draw.circle(win, self.color, (self.x, self.y), self.radius)
-        win.blit(self.image_list[self.spinCount // 3], (self.x, self.y))
+        win.blit(self.image_list[self.spin_count // 3], (self.x, self.y))
+
+        # update the hit box
+        width = self.get_loot_width()
+        height = self.get_loot_height()
+        x = self.x + self.hit_box_left_indent
+        y = self.y + self.hit_box_top_indent
+        width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+        self.hit_box = (x, y, width, height)
 
         # draw hit box
-        if SHOW_LOOT_HITBOX == True:
-            width = self.get_loot_width()
-            height = self.get_loot_height()
-            self.hit_box = (self.x, self.y, width, height)
+        if SHOW_LOOT_HITBOX is True:
             pygame.draw.rect(win, COLOUR_LOOT_HITBOX, self.hit_box,2)
 
+        # draw the image outline box
+        if SHOW_DIAGNOSTICS is True:
+            width = self.image_list[self.spin_count // 3].get_width()
+            height = self.image_list[self.spin_count // 3].get_height()
+            image_rect = (self.x, self.y, width, height)
+            pygame.draw.rect(win, COLOUR_LOOT_PERIMETER, image_rect, 2)
+
         # increment the spinCount
-        self.spinCount += 1
+        self.spin_count += 1
 
     def get_loot_width(self):
         """Returns the width of the loot"""
+
         width = self.image_list[0].get_width()
         return width
 
     def get_loot_height(self):
-        """Returns the width of the loot"""
-        width = self.image_list[0].get_height()
-        return width
+        """Returns the height of the loot"""
+
+        height = self.image_list[0].get_height()
+        return height
 

@@ -54,7 +54,6 @@ class Player(object):
         self.walkCount = 0
         self.jumpCount = JUMP_HEIGHT
         self.is_standing = True
-        self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT-2)
         self.target_floor = -1
         self.in_ladder_min_x = -1
         self.in_ladder_max_x = -1
@@ -66,6 +65,21 @@ class Player(object):
         self.images_idle = hero_1_idle
         self.images_walk_right = hero_1_walk_right
         self.images_walk_left = hero_1_walk_left
+
+        # setup the hit box
+        self.hit_box_left_indent = 9
+        self.hit_box_right_indent = 7
+        self.hit_box_top_indent = 2
+        self.hit_box_bottom_indent = 2
+        idle_dims = self.get_image_idle_dims()
+        width = self.get_player_width()
+        height = self.get_player_height()
+        x = self.x + self.hit_box_left_indent
+        y = self.y + self.hit_box_top_indent
+        width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+
+        self.hit_box = (x, y, width, height)
 
     def draw(self, win):
         if self.walkCount + 1 >= 27:
@@ -85,9 +99,36 @@ class Player(object):
             '''
             win.blit(self.images_idle[0], (self.x, self.y))
 
+        # update the hit box
+        width = self.get_player_width()
+        height = self.get_player_height()
+        x = self.x + self.hit_box_left_indent
+        y = self.y + self.hit_box_top_indent
+        width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+        self.hit_box = (x, y, width, height)
+
+
+        # draw hit box
+        if SHOW_PLAYER_HITBOX == True:
+            '''
+            # update the hit box
+            idle_dims = self.get_image_idle_dims()
+            x = self.x + self.hit_box_left_indent
+            y = self.y + self.hit_box_top_indent
+            width = idle_dims[0] - self.hit_box_left_indent - self.hit_box_right_indent
+            height = idle_dims[1] - self.hit_box_top_indent - self.hit_box_bottom_indent
+            self.hit_box = (x, y, width, height)
+            #self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT - 2)
+            '''
+            pygame.draw.rect(win, COLOUR_PLAYER_HITBOX, self.hit_box,2)
+
         if SHOW_DIAGNOSTICS == True:
-            width = 15  # default value just something recognizable if the standing/left/right etc does not work
-            height = 15
+            #width = 15  # default value just something recognizable if the standing/left/right etc does not work
+            #height = 15
+            width = self.get_player_width()
+            height = self.get_player_height()
+            '''
             if not (self.is_standing):
                 if self.is_left:
                     width = self.images_walk_left[self.walkCount//3].get_width()
@@ -98,13 +139,9 @@ class Player(object):
             else:
                 width = self.images_idle[0].get_width()
                 height = self.images_idle[0].get_height()
+            '''
             image_rect = (self.x, self.y, width, height)
-            pygame.draw.rect(win, COLOUR_P_PERIMITER, image_rect,2)
-
-        # draw hit box
-        if SHOW_PLAYER_HITBOX == True:
-            self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT - 2)
-            pygame.draw.rect(win, COLOUR_P_HITBOX, self.hitbox,2)
+            pygame.draw.rect(win, COLOUR_PLAYER_PERIMETER, image_rect,2)
 
         # increment the walkCount
         self.walkCount += 1
@@ -118,3 +155,30 @@ class Player(object):
         width = self.images_walk_right[0].get_width()
         height = self.images_walk_right[0].get_height()
         return (width, height)
+
+
+    def get_player_width(self):
+        """Returns the width of the player"""
+
+        if self.is_standing is True:
+            width = self.images_idle[0].get_width()
+        else:
+            if self.is_left is True:
+                width = self.images_walk_left[self.walkCount // 3].get_width()
+            elif self.is_right:
+                width = self.images_walk_right[self.walkCount // 3].get_width()
+
+        return width
+
+    def get_player_height(self):
+        """Returns the height of the player"""
+
+        if self.is_standing is True:
+            height = self.images_idle[0].get_width()
+        else:
+            if self.is_left is True:
+                height = self.images_walk_left[self.walkCount // 3].get_height()
+            elif self.is_right:
+                height = self.images_walk_right[self.walkCount // 3].get_height()
+
+        return height
