@@ -44,6 +44,8 @@ font_diagnostics = pygame.font.SysFont('consolas', 15, False)
 
 show_diagnostics = SHOW_DIAGNOSTICS
 
+
+
 def show_stats(win, font, levels, player):
     colour = COLOUR_STATS
     start_x = WINDOW_WIDTH - 200
@@ -319,6 +321,12 @@ if __name__ == '__main__':
                 # if going off-screen reposition to the right side
                 if player.is_in_ladder is False and player.x <= player.width * -1:
                     player.x = WINDOW_WIDTH - player.width
+
+                # check to see if walked into any loot
+                loot = level.is_player_in_loot(player)
+                if loot.loot_id != -1:
+                    print("in Loot ID " + str(loot.loot_id))
+
             else:
                 new_level_id = level.get_portal_target(portal_id)
                 print("Level change to ", new_level_id)
@@ -330,7 +338,7 @@ if __name__ == '__main__':
                 level = levels[new_level_id]
                 player.current_floor = len(level.floors) - 1
 
-        #elif keys[pygame.K_RIGHT] and player.x < WINDOW_WIDTH:  # - player.width - player.vel:
+
         elif keys[pygame.K_RIGHT]:
             x = player.x + player.vel
             y = player.y
@@ -352,6 +360,12 @@ if __name__ == '__main__':
                 # if going off-screen reposition to the left side
                 if player.is_in_ladder is False and player.x >= WINDOW_WIDTH:
                     player.x = 0
+
+                # check to see if walked into any loot
+                loot = level.is_player_in_loot(player)
+                if loot.loot_id != -1:
+                    print("in Loot ID " + str(loot.loot_id))
+
             else:
                 new_level_id = level.get_portal_target(portal_id)
                 print("Level change to ", new_level_id)

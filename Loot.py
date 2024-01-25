@@ -13,7 +13,8 @@ coin_gold_1 = [pygame.image.load('res/Loot/Coin - 1__000.png'),
                pygame.image.load('res/Loot/Coin - 1__006.png')]
 
 class Loot(object):
-    def __init__(self, x, y, loot_type, facing):
+    def __init__(self, loot_id, x, y, loot_type, facing):
+        self.loot_id = loot_id
         self.x = x
         self.y = y
         self.loot_type = loot_type

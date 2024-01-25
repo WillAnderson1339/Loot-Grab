@@ -193,49 +193,35 @@ class Level(object):
 
     def create_loot(self):
         """Creates the loot on each level."""
+        loot_id = 1
         facing = random.randint(0, 9)
         start_x = 50
         loot_interval = 50
         loot_type = LOOT_COIN_GOLD
         for floor in self.floors:
-            sizing_loot = Loot(0,0,loot_type, 0)
+            sizing_loot = Loot(-1, 0,0,loot_type, 0)
             width = sizing_loot.get_loot_width()
             height = sizing_loot.get_loot_height()
-            num_loot = random.randint(0, 6)
             num_loot = WINDOW_WIDTH // (loot_interval + width) - 1
             x = start_x
             y = self.get_floor_y(floor.floor_id) - height - LOOT_FLOAT
             for i in range(num_loot):
                 okay_to_place = True
-                if self.is_location_in_ladder(x,y, floor.floor_id) is True:
-                    print("Level " + str(self.level_id) + ": (" + str(x) + ", " + str(y) + ") is in ladder on floor " + str(floor.floor_id))
-                if self.is_location_in_ladder(floor.floor_id, x + width, y) is True:
-                    print("Level " + str(self.level_id) + ": [" + str((x + width)) + ", " + str(y) + "] is in ladder on floor " + str(floor.floor_id))
-
-                if self.is_location_in_ladder(x,y, floor.floor_id) is True or self.is_location_in_ladder(floor.floor_id, x + width, y) is True:
+                if (self.is_location_in_ladder(floor.floor_id, x, y) is True or self.is_location_in_ladder(floor.floor_id, x + width, y) is True):
                     okay_to_place = False
                 if self.is_location_in_portal(x, y) is True or self.is_location_in_portal(x + width, y) is True:
                     okay_to_place = False
 
                 if okay_to_place is True:
-                    loot = Loot(x, y, loot_type, facing)
+                    loot = Loot(loot_id, x, y, loot_type, facing)
                     self.loots.append(loot)
+                    loot_id += 1
 
                 x += loot_interval + sizing_loot.get_loot_width()
 
     def draw(self, win):
         # draw the floors
         for floor in self.floors:
-            '''
-            colour = floor[1]
-            rect = floor[2]
-            pygame.draw.rect(win, colour, rect)
-
-            # draw the ladders
-            ladders = floor[3]
-            for ladder in ladders:
-                ladder.draw(win)
-            '''
             floor.draw(win)
 
         # draw the portals
@@ -246,21 +232,6 @@ class Level(object):
         for loot in self.loots:
             loot.draw(win)
 
-    '''
-    def foo(self):
-        if self.num_floors == -1:
-            pass
-
-        for item in self.floors:
-            bar = 12
-
-            if bar == 10:
-                something = 3
-            else:
-                something = 5
-
-            mystring = "hello world"
-    '''
     def get_floor(self, floor_id):
         """Returns the floor with the matching ID. Returns an empty floor if ID not found."""
         ladders = []
@@ -402,7 +373,6 @@ class Level(object):
         return rect
 
     def get_portal_coords(self):
-        """Returns the rect of the ladder the point (x,y) is in on floor with ID. Returns a rect of -1 if ID not found."""
         """Returns a list of coords of portal(s). Returns an empty list if no portals found."""
         portal_coords = []
 
@@ -441,4 +411,59 @@ class Level(object):
                 break
 
         return target_level
+
+    def is_player_in_loot(self, player):
+        """Returns the loot object that the player is intersecting. The loot_id is -1 if not interacting with any loot"""
+        found_loot = Loot(-1, 0, 0, 0, 0)
+        found = False
+
+        for loot in self.loots:
+            width = loot.get_loot_width()
+            height = loot.get_loot_height()
+            rect_1 = (loot.x, loot.y, width, height)
+
+            player_dims = player.get_image_run_dims()
+            width = player_dims[0]
+            height = player_dims[1]
+            body_indent = 5
+            if player.is_left is True:
+                #body_indent *= 1
+                rect_2 = (player.x + body_indent, player.y, width, height)
+            elif player.is_right is True:
+                #body_indent *= -1
+                rect_2 = (player.x, player.y, width - body_indent - 20, height)
+            found = do_rectangles_overlap(rect_1, rect_2)
+            if found is True:
+                found_loot = loot
+                break
+
+        return found_loot
+
+
+def do_rectangles_overlap(rect_1, rect_2):
+    """Determines if 2 rectangles overlap. Rect are (x, y, width, height)"""
+    overlap = False
+
+    # points for 1st rectangle
+    x1 = rect_1[0]
+    y1 = rect_1[1]
+    x2 = rect_1[0] + rect_1[2]
+    y2 = rect_1[1] + rect_1[3]
+
+    # points for 2nd rectangle
+    x3 = rect_2[0]
+    y3 = rect_2[1]
+    x4 = rect_2[0] + rect_2[2]
+    y4 = rect_2[1] + rect_2[3]
+
+    # check points for overlap
+    for y in range(y1, y2):
+        for x in range(x1, x2):
+            # if (y > y3 and y < y4) and (x > x3 and x < x4):
+            if (y3 < y < y4) and (x3 < x < x4):
+                print
+                "overlap"
+                overlap = True
+
+    return overlap
 
