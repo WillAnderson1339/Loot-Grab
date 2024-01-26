@@ -1,6 +1,8 @@
 
 import pygame
 
+pygame.init()
+
 import constants
 from constants import *
 
@@ -13,6 +15,9 @@ coin_gold_1 = [pygame.image.load('res/Loot/Coin - 1__000.png'),
                pygame.image.load('res/Loot/Coin - 1__005.png'),
                pygame.image.load('res/Loot/Coin - 1__006.png'),
                pygame.image.load('res/Loot/Coin - 1__006.png')]
+
+sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
+sound_ding = pygame.mixer.Sound('res/ding-1.mp3')
 
 class Loot(object):
     def __init__(self, loot_id, x, y, loot_type, facing):
@@ -27,18 +32,21 @@ class Loot(object):
                 self.image_list = coin_gold_1
                 self.spin_count = self.facing
                 self.loot_value = LOOT_VALUE_GOLD
+                self.sound = sound_loot
 
             # loot objects are created with this as an uninitialized loot object (i.e. function return when not found)
             case constants.LOOT_UNKNOWN:
                 self.image_list = coin_gold_1
                 self.spin_count = self.facing
                 self.loot_value = LOOT_VALUE_GOLD
+                self.sound = sound_loot
 
             case _:
                 print("Loot Type", self.loot_type, "not yet coded!")
                 self.image_list = coin_gold_1
                 self.spin_count = self.facing
                 self.loot_value = LOOT_VALUE_GOLD
+                self.sound = sound_loot
 
         # setup the hit box
         self.hit_box_left_indent = 2
@@ -51,7 +59,6 @@ class Loot(object):
         y = self.y + self.hit_box_top_indent
         width = width - self.hit_box_left_indent - self.hit_box_right_indent
         height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        #self.hit_box = (self.x, self.y, self.x + width, self.y + height)
         self.hit_box = (x, y, width, height)
 
     def draw(self, win):
@@ -60,7 +67,6 @@ class Loot(object):
         if self.spin_count + 1 >= 27:
             self.spin_count = 0
 
-        #pygame.draw.circle(win, self.color, (self.x, self.y), self.radius)
         win.blit(self.image_list[self.spin_count // 3], (self.x, self.y))
 
         # update the hit box
@@ -99,3 +105,5 @@ class Loot(object):
         height = self.image_list[0].get_height()
         return height
 
+    def loot_sound(self):
+        self.sound.play()

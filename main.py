@@ -22,7 +22,7 @@ clock = pygame.time.Clock()
 
 sound_bullet = pygame.mixer.Sound('res/bullet.mp3')
 hitSound = pygame.mixer.Sound('res/hit.mp3')
-sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
+#sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
 sound_portal = pygame.mixer.Sound('res/portal.mp3')
 
 # setup music
@@ -337,7 +337,6 @@ if __name__ == '__main__':
                 loot = level.is_player_in_loot(player)
                 if loot.loot_id != -1:
                     level.hit_loot(loot, player)
-                    sound_loot.play()
                     #print("in Loot ID " + str(loot.loot_id))
                     # player.score += loot.loot_value
 

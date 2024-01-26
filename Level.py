@@ -441,4 +441,7 @@ class Level(object):
         self.loots.remove(loot)
         player.score += loot.loot_value
 
+        loot.loot_sound()
+
+
 
