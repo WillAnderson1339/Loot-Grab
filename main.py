@@ -20,8 +20,10 @@ pygame.init()
 
 clock = pygame.time.Clock()
 
-bulletSound = pygame.mixer.Sound('res/bullet.mp3')
+sound_bullet = pygame.mixer.Sound('res/bullet.mp3')
 hitSound = pygame.mixer.Sound('res/hit.mp3')
+sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
+sound_portal = pygame.mixer.Sound('res/portal.mp3')
 
 # setup music
 music = pygame.mixer.music.load('res/music.mp3')
@@ -37,7 +39,7 @@ pygame.display.set_caption("Loot Grab")
 levels = []
 
 # key press pause counts. use KP_ constants to access list
-kp_key_states = [0, 0, 0, 0, 0, 0, 0]
+kp_key_states = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 font_stats = pygame.font.SysFont('comicsans', 25, True)
 font_diagnostics = pygame.font.SysFont('consolas', 15, False)
@@ -128,6 +130,10 @@ def check_kp_pause_counts():
         kp_key_states[KP_m] += 1
     if kp_key_states[KP_d] > 0:
         kp_key_states[KP_d] += 1
+    if kp_key_states[KP_foo] > 0:
+        kp_key_states[KP_foo] += 1
+    if kp_key_states[KP_bar] > 0:
+        kp_key_states[KP_bar] += 1
 
     # if reached max pause rest to 0
     if kp_key_states[KP_UP] > max_pause_needed:
@@ -144,6 +150,10 @@ def check_kp_pause_counts():
         kp_key_states[KP_m] = 0
     if kp_key_states[KP_d] > max_pause_needed:
         kp_key_states[KP_d] = 0
+    if kp_key_states[KP_foo] > max_pause_needed:
+        kp_key_states[KP_foo] = 0
+    if kp_key_states[KP_bar] > max_pause_needed:
+        kp_key_states[KP_bar] = 0
 
 def create_random_level(level_id):
     num_floors = random.randint(2, 5)
@@ -275,7 +285,7 @@ if __name__ == '__main__':
             if len(bullets) < 5:
                 bullets.append(
                     Projectile(round(player.x + player.width // 2), round(player.y + player.height // 2), 6, (0, 0, 0), facing))
-                bulletSound.play()
+                sound_bullet.play()
                 print("Shoot!")
 
             kp_key_states[KP_SPACE] = 1
@@ -300,6 +310,7 @@ if __name__ == '__main__':
 
             kp_key_states[KP_d] = 1
 
+        #if keys[pygame.K_LEFT] and kp_key_states[KP_LEFT] == 0:
         if keys[pygame.K_LEFT]:
             x = player.x - player.vel + 0     # -5 is to check if the player foot is in the portal (not his hat)
             y = player.y
@@ -325,12 +336,16 @@ if __name__ == '__main__':
                 # check to see if walked into any loot
                 loot = level.is_player_in_loot(player)
                 if loot.loot_id != -1:
-                    print("in Loot ID " + str(loot.loot_id))
+                    level.hit_loot(loot, player)
+                    sound_loot.play()
+                    #print("in Loot ID " + str(loot.loot_id))
+                    # player.score += loot.loot_value
 
             else:
                 new_level_id = level.get_portal_target(portal_id)
                 print("Level change to ", new_level_id)
                 player.current_level = new_level_id
+                sound_portal.play()
 
                 # setup player on new level
                 player.x = WINDOW_WIDTH - 100
@@ -338,7 +353,10 @@ if __name__ == '__main__':
                 level = levels[new_level_id]
                 player.current_floor = len(level.floors) - 1
 
+            kp_key_states[KP_LEFT] = 1
 
+
+        #elif keys[pygame.K_RIGHT] and kp_key_states[KP_RIGHT] == 0:
         elif keys[pygame.K_RIGHT]:
             x = player.x + player.vel
             y = player.y
@@ -364,18 +382,22 @@ if __name__ == '__main__':
                 # check to see if walked into any loot
                 loot = level.is_player_in_loot(player)
                 if loot.loot_id != -1:
-                    print("in Loot ID " + str(loot.loot_id))
+                    level.hit_loot(loot, player)
+                    sound_loot.play()
 
             else:
                 new_level_id = level.get_portal_target(portal_id)
                 print("Level change to ", new_level_id)
                 player.current_level = new_level_id
+                sound_portal.play()
 
                 # setup player on new level
                 player.x = WINDOW_WIDTH - 100
                 player.y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
                 level = levels[new_level_id]
                 player.current_floor = len(level.floors) - 1
+
+            kp_key_states[KP_RIGHT] = 1
 
         elif keys[pygame.K_DOWN] and kp_key_states[KP_DOWN] == 0:
             level = levels[player.current_level]
@@ -453,8 +475,11 @@ if __name__ == '__main__':
                 player.walkCount = 0
                 kp_key_states[KP_DOWN] = 1
         else:
-            player.is_standing = True
-            player.walkCount = 0
+            # if the left key press is being pressed but is being supressed don't set to standing
+            #if keys[pygame.K_LEFT] and kp_key_states[KP_LEFT] == 0:
+            if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+                player.is_standing = True
+                player.walkCount = 0
 
         if not player.is_jumping:
             if keys[pygame.K_UP] and kp_key_states[KP_UP] == 0:
@@ -531,7 +556,7 @@ if __name__ == '__main__':
                 neg = 1
                 if player.jumpCount < 0:
                     neg = -1
-                player.y -= (player.jumpCount ** 2) * 0.5 * neg
+                player.y -= int((player.jumpCount ** 2) * 0.5 * neg)
                 player.jumpCount -= 1
             else:
                 player.is_jumping = False

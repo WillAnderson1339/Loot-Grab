@@ -197,10 +197,10 @@ class Level(object):
         loot_id = 1
         facing = random.randint(0, 9)
         start_x = 50
-        loot_interval = 50
+        loot_interval = LOOT_INTERVAL
         loot_type = LOOT_COIN_GOLD
         for floor in self.floors:
-            sizing_loot = Loot(-1, 0,0,loot_type, 0)
+            sizing_loot = Loot(-1, 0,0, loot_type, 0)
             width = sizing_loot.get_loot_width()
             height = sizing_loot.get_loot_height()
             num_loot = WINDOW_WIDTH // (loot_interval + width) - 1
@@ -416,40 +416,29 @@ class Level(object):
     def is_player_in_loot(self, player):
         """Returns the loot object that the player is intersecting. The loot_id is -1 if not interacting with any loot"""
 
-        found_loot = Loot(-1, 0, 0, 0, 0)
+        found_loot = Loot(-1, 0, 0, LOOT_UNKNOWN, 0)
         found = False
 
         player_hit_box = player.hit_box
 
         for loot in self.loots:
             loot_hit_box = loot.hit_box
+            #print("Player hit_box: ", player_hit_box[0], player_hit_box[1], player_hit_box[2], player_hit_box[3], "Loot hit_box: ")
+            #if loot_hit_box[0] > 840 and loot_hit_box[1] > 700:
+                #print("Player hit_box: ", player_hit_box[0], player_hit_box[1], player_hit_box[2], player_hit_box[3], "Loot hit_box: ", loot_hit_box[0], loot_hit_box[1], loot_hit_box[2], loot_hit_box[3])
+                #print("Player hit_box X: ", player_hit_box[0], "Loot hit_box X: ", loot_hit_box[0])
 
             found = do_rectangles_overlap(player_hit_box, loot_hit_box)
             if found is True:
                 found_loot = loot
 
-            '''
-            width = loot.get_loot_width()
-            height = loot.get_loot_height()
-            rect_1 = (loot.x, loot.y, width, height)
-
-            player_dims = player.get_image_run_dims()
-            width = player_dims[0]
-            height = player_dims[1]
-            body_indent = 5
-            if player.is_left is True:
-                #body_indent *= 1
-                rect_2 = (player.x + body_indent, player.y, width, height)
-            elif player.is_right is True:
-                #body_indent *= -1
-                rect_2 = (player.x, player.y, width - body_indent - 20, height)
-            found = do_rectangles_overlap(rect_1, rect_2)
-            if found is True:
-                found_loot = loot
-                break
-            '''
-
         return found_loot
 
+    def hit_loot(self, loot, player):
+        """The player has hit a loot - need to do the hitting loot action like adding score and removing the loot"""
+
+        print("in Loot ID " + str(loot.loot_id))
+        self.loots.remove(loot)
+        player.score += loot.loot_value
 
 

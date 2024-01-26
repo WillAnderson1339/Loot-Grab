@@ -22,8 +22,13 @@ PORTAL_WIDTH = 60
 PORTAL_HEIGHT = 90
 
 # loot constants
-LOOT_COIN_GOLD = 1
+LOOT_INTERVAL = 25
 LOOT_FLOAT = 5
+LOOT_UNKNOWN = 0
+LOOT_COIN_GOLD = 1
+LOOT_COIN_SILVER = 2
+LOOT_COIN_BRONZE = 3
+LOOT_VALUE_GOLD = 10
 
 # key press pause constants
 KP_UP    = 0
@@ -33,15 +38,18 @@ KP_RIGHT = 3
 KP_SPACE = 4
 KP_m     = 5
 KP_d     = 6
+KP_foo   = 7  # getting ready for next key to implement
+KP_bar   = 8  # getting ready for next key to implement
+
 
 # game stats
 COLOUR_STATS = (204, 51, 255)
 
 # diagnostics
 SHOW_DIAGNOSTICS = False
-SHOW_PLAYER_HITBOX = True
-SHOW_LOOT_HITBOX = True
-SHOW_PROJECTILE_HITBOX = True
+SHOW_PLAYER_HITBOX = False
+SHOW_LOOT_HITBOX = False
+SHOW_PROJECTILE_HITBOX = False
 COLOUR_DIAGNOSTICS = (255, 127, 64)
 COLOUR_LOOT_HITBOX = (0,255,0)
 COLOUR_LOOT_PERIMETER = (127,127,255)

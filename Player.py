@@ -71,7 +71,7 @@ class Player(object):
         self.hit_box_right_indent = 7
         self.hit_box_top_indent = 2
         self.hit_box_bottom_indent = 2
-        idle_dims = self.get_image_idle_dims()
+        #idle_dims = self.get_image_idle_dims()
         width = self.get_player_width()
         height = self.get_player_height()
         x = self.x + self.hit_box_left_indent
@@ -121,7 +121,7 @@ class Player(object):
             self.hit_box = (x, y, width, height)
             #self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT - 2)
             '''
-            pygame.draw.rect(win, COLOUR_PLAYER_HITBOX, self.hit_box,2)
+            pygame.draw.rect(win, COLOUR_PLAYER_HITBOX, self.hit_box,1)
 
         if SHOW_DIAGNOSTICS == True:
             #width = 15  # default value just something recognizable if the standing/left/right etc does not work
@@ -160,6 +160,7 @@ class Player(object):
     def get_player_width(self):
         """Returns the width of the player"""
 
+        '''
         if self.is_standing is True:
             width = self.images_idle[0].get_width()
         else:
@@ -167,18 +168,33 @@ class Player(object):
                 width = self.images_walk_left[self.walkCount // 3].get_width()
             elif self.is_right:
                 width = self.images_walk_right[self.walkCount // 3].get_width()
+        '''
+        width = self.images_idle[0].get_width()
+
+        if self.is_left is True:
+            width = self.images_walk_left[self.walkCount // 3].get_width()
+        elif self.is_right:
+            width = self.images_walk_right[self.walkCount // 3].get_width()
 
         return width
 
     def get_player_height(self):
         """Returns the height of the player"""
 
+        '''
         if self.is_standing is True:
-            height = self.images_idle[0].get_width()
+            height = self.images_idle[0].get_height()
         else:
             if self.is_left is True:
                 height = self.images_walk_left[self.walkCount // 3].get_height()
             elif self.is_right:
                 height = self.images_walk_right[self.walkCount // 3].get_height()
+        '''
+        height = self.images_idle[0].get_height()
+
+        if self.is_left is True:
+            height = self.images_walk_left[self.walkCount // 3].get_height()
+        elif self.is_right:
+            height = self.images_walk_right[self.walkCount // 3].get_height()
 
         return height

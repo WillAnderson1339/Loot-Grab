@@ -1,5 +1,7 @@
+
 import pygame
 
+import constants
 from constants import *
 
 coin_gold_1 = [pygame.image.load('res/Loot/Coin - 1__000.png'),
@@ -20,9 +22,23 @@ class Loot(object):
         self.loot_type = loot_type
         self.facing = facing
 
-        self.image_list = coin_gold_1
+        match self.loot_type:
+            case constants.LOOT_COIN_GOLD:
+                self.image_list = coin_gold_1
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_GOLD
 
-        self.spin_count = self.facing
+            # loot objects are created with this as an uninitialized loot object (i.e. function return when not found)
+            case constants.LOOT_UNKNOWN:
+                self.image_list = coin_gold_1
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_GOLD
+
+            case _:
+                print("Loot Type", self.loot_type, "not yet coded!")
+                self.image_list = coin_gold_1
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_GOLD
 
         # setup the hit box
         self.hit_box_left_indent = 2
@@ -48,6 +64,7 @@ class Loot(object):
         win.blit(self.image_list[self.spin_count // 3], (self.x, self.y))
 
         # update the hit box
+        # LOOT DOES NOT MOVE SO SHOULD NOT UPDATE THE HIT BOX!
         width = self.get_loot_width()
         height = self.get_loot_height()
         x = self.x + self.hit_box_left_indent
@@ -58,7 +75,7 @@ class Loot(object):
 
         # draw hit box
         if SHOW_LOOT_HITBOX is True:
-            pygame.draw.rect(win, COLOUR_LOOT_HITBOX, self.hit_box,2)
+            pygame.draw.rect(win, COLOUR_LOOT_HITBOX, self.hit_box,1)
 
         # draw the image outline box
         if SHOW_DIAGNOSTICS is True:
