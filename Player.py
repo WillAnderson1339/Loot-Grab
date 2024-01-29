@@ -1,5 +1,6 @@
 import pygame
 
+import constants
 from constants import *
 
 hero_1_idle = [pygame.image.load('res/Hero - 1/Idle__000.png'), pygame.image.load('res/Hero - 1/Idle__001.png'),
@@ -145,6 +146,149 @@ class Player(object):
 
         # increment the walkCount
         self.walkCount += 1
+
+    def move(self, target_x, target_y, direction):
+        """Performs the move action. difficulty_multiplier is used to make the speed faster"""
+
+        # print("moving", direction, difficulty_multiplier)
+        # target_x, target_y, target_hit_box = self.calc_move_result(direction, difficulty_multiplier)
+
+        self.x = target_x
+        self.y = target_y
+
+        self.hit_box = self.calc_hit_box(self.x, self.y)
+
+        match direction:
+            case constants.DIR_UP:
+                # x_change = 0
+                # y_change = int(self.vel * difficulty_multiplier)
+                pass
+            case constants.DIR_DOWN:
+                # x_change = 0
+                # y_change = int(self.vel * difficulty_multiplier * -1)
+                pass
+            case constants.DIR_LEFT:
+                # x_change = int(self.vel * difficulty_multiplier * -1)
+                # y_change = 0
+                self.is_left = True
+                self.is_right = False
+                self.is_standing = False
+            case constants.DIR_RIGHT:
+                # x_change = int(self.vel * difficulty_multiplier)
+                # y_change = 0
+                self.is_left = False
+                self.is_right = True
+                self.is_standing = False
+            case constants.DIR_NO_MOVE:
+                x_change = 0
+                y_change = 0
+                pass
+            case _:
+                print ("ERROR: unknown move direction", direction)
+                x_change = 0
+                y_change = 0
+        """
+
+        # print("x_change = ", x_change)
+
+        self.x += x_change
+        self.y += y_change
+
+        # if going off-screen reposition to the right side
+        if self.is_in_ladder is False and self.x <= self.width * -1:
+            self.x = WINDOW_WIDTH - self.width
+
+        # update the hit box
+        self.update_hit_box()
+        # width = self.get_player_width()
+        # height = self.get_player_height()
+        # x = self.x + self.hit_box_left_indent
+        # y = self.y + self.hit_box_top_indent
+        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+        # self.hit_box = (x, y, width, height)
+        """
+
+    def calc_hit_box(self, target_x, target_y):
+        """Returns the hit box for the supplied x and y"""
+
+        # update the hit box
+        width = self.get_player_width()
+        height = self.get_player_height()
+        x = target_x + self.hit_box_left_indent
+        y = target_y + self.hit_box_top_indent
+        width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+        hit_box = (x, y, width, height)
+
+        return hit_box
+
+    def calc_move_result(self, direction, difficulty_multiplier):
+        """Returns the resulting x, y, hit box of a move. difficulty_multiplier is used to make the speed faster"""
+
+        # print("calc move result", direction, difficulty_multiplier)
+
+        target_x = self.x
+        target_y = self.y
+
+        match direction:
+            case constants.DIR_UP:
+                x_change = 0
+                y_change = int(self.vel * difficulty_multiplier)
+            case constants.DIR_DOWN:
+                x_change = 0
+                y_change = int(self.vel * difficulty_multiplier * -1)
+            case constants.DIR_LEFT:
+                x_change = int(self.vel * difficulty_multiplier * -1)
+                y_change = 0
+            case constants.DIR_RIGHT:
+                x_change = int(self.vel * difficulty_multiplier)
+                y_change = 0
+            case constants.DIR_NO_MOVE:
+                x_change = 0
+                y_change = 0
+            case _:
+                print("ERROR: unknown move direction", direction)
+                x_change = 0
+                y_change = 0
+
+        # print("x_change = ", x_change)
+
+        target_x += x_change
+        target_y += y_change
+
+        # if going off-screen left reposition to the right side
+        if self.is_in_ladder is False and target_x <= self.width * -1:
+            target_x = WINDOW_WIDTH - self.width
+
+        # if going off-screen right reposition to the left side
+        if self.is_in_ladder is False and target_x >= WINDOW_WIDTH:
+            target_x = 0
+
+        # calculate the hit box
+        hit_box = self.calc_hit_box(target_x, target_y)
+        # width = self.get_player_width()
+        # height = self.get_player_height()
+        # hit_x = target_x + self.hit_box_left_indent
+        # hit_y = target_y + self.hit_box_top_indent
+        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+        # hit_box = (hit_x, hit_y, width, height)
+
+        return target_x, target_y, hit_box
+
+    def position_player_on_new_level(self, portal_id = -1):
+        """Positions  on new level at portal_id. If portal_id = -1 (default) player is positioned in bottom right."""
+        # self.x = WINDOW_WIDTH - 100
+        # self.y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
+
+        # self.move(DIR_NO_MOVE, 1)
+
+        target_x = WINDOW_WIDTH - 100
+        target_y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
+
+        self.move(target_x, target_y, DIR_NO_MOVE)
+
 
     def get_image_idle_dims(self):
         width = self.images_idle[0].get_width()

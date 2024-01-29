@@ -19,6 +19,8 @@ class Level(object):
         self.background = background
         self.colour = colour
 
+        self.difficulty_multiplier = 1.0
+
         self.floors = []
         self.portals = []
         self.loots = []

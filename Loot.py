@@ -1,10 +1,10 @@
 
 import pygame
 
-pygame.init()
-
 import constants
 from constants import *
+
+pygame.init()
 
 coin_gold_1 = [pygame.image.load('res/Loot/Coin - 1__000.png'),
                pygame.image.load('res/Loot/Coin - 1__000.png'),

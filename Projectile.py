@@ -2,10 +2,13 @@ import pygame
 
 from constants import *
 
+pygame.init()
+
 images_bullet_1_left = [pygame.image.load('res/Objects/Bullet_1_Left__000.png')]
 
 images_bullet_1_right = [pygame.image.load('res/Objects/Bullet_1_Right__000.png')]
 
+sound_projectile = pygame.mixer.Sound('res/bullet.mp3')
 
 class Projectile(object):
     def __init__(self, x, y, radius, color, facing):
@@ -24,6 +27,8 @@ class Projectile(object):
 
         self.image_list_left = images_bullet_1_left
         self.image_list_right = images_bullet_1_right
+
+        self.sound = sound_projectile
 
         # setup the hit box
         self.hit_box_left_indent = 2
@@ -87,3 +92,6 @@ class Projectile(object):
         # always use left images (same as right)
         width = self.image_list_left[0].get_height()
         return width
+
+    def projectile_sound(self):
+        self.sound.play()
