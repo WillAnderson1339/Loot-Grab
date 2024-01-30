@@ -54,7 +54,7 @@ KP_bar   = 8  # getting ready for next key to implement
 COLOUR_STATS = (204, 51, 255)
 
 # diagnostics
-SHOW_DIAGNOSTICS = True
+SHOW_DIAGNOSTICS = False
 SHOW_PLAYER_HITBOX = True
 SHOW_LOOT_HITBOX = True
 SHOW_PROJECTILE_HITBOX = False

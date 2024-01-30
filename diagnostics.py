@@ -126,6 +126,17 @@ def show_diagnotics(win, font, levels, player):
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
+    y += row_height
+    text = "Diff Multiplier:  " + str(level.difficulty_multiplier)
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+    y += row_height
+    text = "Speed:  " + str(level.difficulty_multiplier * player.vel)
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+
 '''
     y += row_height
     text = "KP_m:  " + str(kp_key_states[KP_m])

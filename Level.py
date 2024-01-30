@@ -10,7 +10,7 @@ from Loot import *
 
 
 class Level(object):
-    def __init__(self, level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour):
+    def __init__(self, level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier):
         self.level_id = level_id
         self.num_floors = num_floors
         self.num_enemies = num_enemies
@@ -19,7 +19,7 @@ class Level(object):
         self.background = background
         self.colour = colour
 
-        self.difficulty_multiplier = 1.0
+        self.difficulty_multiplier = difficulty_multiplier
 
         self.floors = []
         self.portals = []
@@ -264,7 +264,7 @@ class Level(object):
         """Returns the y of the top rung of the ladders for the floor ID. Returns -1 if ID not found."""
         top_rung_y = -1
         floor = self.get_floor(floor_id)
-        if floor.floor_id != -1:
+        if floor.floor_id != -1 and len(floor.ladders) > 0:
             ladder = floor.ladders[0]   # all ladders on this floor have the same y coord for the top rung
             top_rung_y = ladder.y_of_top_rung
         '''

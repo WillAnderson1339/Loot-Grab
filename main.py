@@ -165,7 +165,8 @@ def create_random_level(level_id):
     green = random.randint(0, 255)
     blue = random.randint(0, 255)
     colour = (red, green, blue)
-    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
+    difficulty_multiplier = 1.0 + (0.2 * level_id)
+    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
     levels.append(level)
 
 
@@ -181,7 +182,8 @@ if __name__ == '__main__':
     num_down_portals = 0
     background = 0
     colour = (90, 165, 120)
-    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
+    difficulty_multiplier = 1.0
+    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
     levels.append(level)
 
     num_levels_to_create = 6
@@ -197,7 +199,8 @@ if __name__ == '__main__':
     num_down_portals = 1
     background = 7
     colour = (150, 175, 75)
-    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
+    difficulty_multiplier = 1.0 + (0.2 * level_id)
+    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
     levels.append(level)
 
     '''
@@ -278,7 +281,7 @@ if __name__ == '__main__':
 
         # shoot key
         if keys[pygame.K_SPACE] and kp_key_states[KP_SPACE] == 0:
-            if player.is_left:
+            if player.shoot_dir == DIR_LEFT:
                 facing = -1
             else:
                 facing = 1

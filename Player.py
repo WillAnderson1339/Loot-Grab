@@ -55,6 +55,7 @@ class Player(object):
         self.walkCount = 0
         self.jumpCount = JUMP_HEIGHT
         self.is_standing = True
+        self.shoot_dir = DIR_RIGHT
         self.target_floor = -1
         self.in_ladder_min_x = -1
         self.in_ladder_max_x = -1
@@ -175,12 +176,14 @@ class Player(object):
                 self.is_left = True
                 self.is_right = False
                 self.is_standing = False
+                self.shoot_dir = DIR_LEFT
             case constants.DIR_RIGHT:
                 # x_change = int(self.vel * difficulty_multiplier)
                 # y_change = 0
                 self.is_left = False
                 self.is_right = True
                 self.is_standing = False
+                self.shoot_dir = DIR_RIGHT
             case constants.DIR_NO_MOVE:
                 x_change = 0
                 y_change = 0
