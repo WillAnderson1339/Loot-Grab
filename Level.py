@@ -350,6 +350,28 @@ class Level(object):
                         ladder_coords.append((x1, y1, x2, y2))
         return ladder_coords
 
+    def is_player_move_in_ladder(self, player_hit_box, floor_number):
+        in_ladder = False
+
+        if 0 <= floor_number < len(self.floors):
+            floor = self.floors[floor_number]
+
+            for ladder in floor.ladders:
+                ladder_hit_box = ladder.hit_box
+
+                #print("Player hit_box: ", player_hit_box[0], player_hit_box[1], player_hit_box[2], player_hit_box[3], "Loot hit_box: ")
+                #if loot_hit_box[0] > 840 and loot_hit_box[1] > 700:
+                    #print("Player hit_box: ", player_hit_box[0], player_hit_box[1], player_hit_box[2], player_hit_box[3], "Loot hit_box: ", loot_hit_box[0], loot_hit_box[1], loot_hit_box[2], loot_hit_box[3])
+                    #print("Player hit_box X: ", player_hit_box[0], "Loot hit_box X: ", loot_hit_box[0])
+
+                found = do_rectangles_overlap(player_hit_box, ladder_hit_box)
+                if found is True:
+                    #found_ladder = ladder
+                    in_ladder = True
+                    break
+
+        return in_ladder
+
     def is_location_in_ladder(self, floor_id, x, y):
         """Returns True if the x,y point is in a ladder on floor with ID. Returns False if not."""
         in_ladder = False

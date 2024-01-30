@@ -318,8 +318,8 @@ if __name__ == '__main__':
             # y = player.y
 
             # calculate move so can compare for various results before moving
-            target_x, target_y, target_hit_box = player.calc_move_result(DIR_LEFT, level.difficulty_multiplier)
             level = levels[player.current_level]
+            target_x, target_y, target_hit_box = player.calc_move_result(DIR_LEFT, level.difficulty_multiplier)
             # portal_id = level.is_location_in_portal(x, y)
             portal_id = level.is_location_in_portal(target_x, target_y)
 
@@ -374,8 +374,8 @@ if __name__ == '__main__':
             # portal_id = level.is_location_in_portal(x, y)
 
             # calculate move so can compare for various results before moving
-            target_x, target_y, target_hit_box = player.calc_move_result(DIR_RIGHT, level.difficulty_multiplier)
             level = levels[player.current_level]
+            target_x, target_y, target_hit_box = player.calc_move_result(DIR_RIGHT, level.difficulty_multiplier)
             portal_id = level.is_location_in_portal(target_x, target_y)
 
             # if not in portal just allow move
@@ -420,7 +420,9 @@ if __name__ == '__main__':
             kp_key_states[KP_RIGHT] = 1
 
         elif keys[pygame.K_DOWN] and kp_key_states[KP_DOWN] == 0:
+            # calculate move so can compare for various results before moving
             level = levels[player.current_level]
+            target_x, target_y, target_hit_box = player.calc_move_result(DIR_DOWN, level.difficulty_multiplier)
             dims = player.get_image_idle_dims()
             x = player.x + (dims[0] // 2)
             y = player.y + dims[1]
@@ -435,7 +437,9 @@ if __name__ == '__main__':
             # switching from up to down
             else:
                 floor_number = player.current_floor
-            in_ladder = level.is_location_in_ladder(floor_number, x, y)
+
+            # in_ladder = level.is_location_in_ladder(floor_number, x, y)
+            in_ladder = level.is_player_move_in_ladder(target_hit_box, floor_number)
             if in_ladder == True:
                 # set ladder info
                 if player.is_in_ladder is False:
@@ -447,13 +451,6 @@ if __name__ == '__main__':
                         player.in_ladder_min_y = ladder_coords[1]
                         player.in_ladder_max_y = ladder_coords[3]
 
-                floor_y = level.get_floor_y(player.current_floor)
-                # if this is the first step set y to the top rung
-                if player.y + dims[1] == floor_y:
-                    player.y = y_of_top_rung - dims[1]
-                else:
-                    player.y += RUNG_HEIGHT
-
                 # starting down set target to floor below
                 if player.target_floor == -1:
                     player.target_floor = player.current_floor + 1
@@ -461,9 +458,18 @@ if __name__ == '__main__':
                 elif player.is_up is True:
                     player.target_floor = player.target_floor + 1 # player.current_floor
 
+                floor_y = level.get_floor_y(player.current_floor)
+                # if this is the first step set y to the top rung
+                if player.y + dims[1] == floor_y:
+                    # player.y = y_of_top_rung - dims[1]
+                    target_y = y_of_top_rung - dims[1]
+                # else:
+                #     player.y += RUNG_HEIGHT
+                player.move(target_x, target_y, DIR_DOWN)
+
                 # set direction to down
-                player.is_up = False
-                player.is_down = True
+                # player.is_up = False
+                # player.is_down = True
 
                 # if reached bottom of ladder
                 y_of_floor_below = level.get_floor_y(floor_number)
@@ -480,7 +486,9 @@ if __name__ == '__main__':
                 foot_y = player.y + dims[1]
                 if foot_y >= y_of_floor_below:
                     player.current_floor = player.target_floor
-                    player.y = y_of_floor_below - dims[1]  # ensures the feet are exactly on the floor y
+                    # player.y = y_of_floor_below - dims[1]  # ensures the feet are exactly on the floor y
+                    target_y = y_of_floor_below - dims[1]
+                    player.move(target_x, target_y, DIR_NO_MOVE)  # ensures the feet are exactly on the floor y
                     player.is_up = False
                     player.is_standing = True
                     player.is_in_ladder = False
@@ -506,12 +514,13 @@ if __name__ == '__main__':
         if not player.is_jumping:
             if keys[pygame.K_UP] and kp_key_states[KP_UP] == 0:
                 level = levels[player.current_level]
+                target_x, target_y, target_hit_box = player.calc_move_result(DIR_UP, level.difficulty_multiplier)
                 dims = player.get_image_idle_dims()
                 x = player.x + (dims[0] // 2)
                 y = player.y + dims[1]
 
                 # normal going up use the current floor (ladders are stored at the floor below and go up)
-                if player.current_floor > player.target_floor or player.target_floor == -1 or player.is_down is True:
+                if player.current_floor > player.target_floor or player.target_floor == -1: #" or player.is_down is True:
                     floor_number = player.current_floor
                 # switched from down to up
                 elif player.current_floor == player.target_floor and player.is_down is False:
@@ -519,7 +528,14 @@ if __name__ == '__main__':
                 # switching from down to up
                 else:
                     floor_number = player.target_floor
-                in_ladder = level.is_location_in_ladder(floor_number, x, y)
+
+                # in_ladder = level.is_location_in_ladder(floor_number, x, y)
+                y_of_top_rung = level.get_ladder_top_rung_y(floor_number)
+                if (player.y + dims[1] == y_of_top_rung):
+                    in_ladder = True
+                else:
+                    in_ladder = level.is_player_move_in_ladder(target_hit_box, floor_number)
+
                 if in_ladder == True:
                     # set ladder info
                     if player.is_in_ladder is False:
@@ -531,7 +547,6 @@ if __name__ == '__main__':
                             player.in_ladder_min_y = ladder_coords[1]
                             player.in_ladder_max_y = ladder_coords[3]
 
-                    player.y -= RUNG_HEIGHT
                     # starting up set target to floor above
                     if player.target_floor == -1:
                         player.target_floor = player.current_floor - 1
@@ -539,9 +554,12 @@ if __name__ == '__main__':
                     elif player.is_down == True:
                         player.target_floor = player.target_floor - 1
 
+                    # player.y -= RUNG_HEIGHT
+                    player.move(target_x, target_y, DIR_UP)
+
                     # set direction to up
-                    player.is_up = True
-                    player.is_down = False
+                    # player.is_up = True
+                    # player.is_down = False
 
                     # if reached top of ladder
                     # normal up is to check the floor above
@@ -557,7 +575,9 @@ if __name__ == '__main__':
                     foot_y = player.y + dims[1]
                     if foot_y <= y_of_floor_above:
                         player.current_floor = player.target_floor
-                        player.y = y_of_floor_above - dims[1]   # ensures the feet are exactly on the floor y
+                        # player.y = y_of_floor_above - dims[1]   # ensures the feet are exactly on the floor y
+                        target_y = y_of_floor_above - dims[1]
+                        player.move(target_x, target_y, DIR_NO_MOVE) # ensures the feet are exactly on the floor y
                         player.is_up = False
                         player.is_standing = True
                         player.is_in_ladder = False

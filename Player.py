@@ -162,11 +162,13 @@ class Player(object):
             case constants.DIR_UP:
                 # x_change = 0
                 # y_change = int(self.vel * difficulty_multiplier)
-                pass
+                self.is_up = True
+                self.is_down = False
             case constants.DIR_DOWN:
                 # x_change = 0
                 # y_change = int(self.vel * difficulty_multiplier * -1)
-                pass
+                self.is_up = False
+                self.is_down = True
             case constants.DIR_LEFT:
                 # x_change = int(self.vel * difficulty_multiplier * -1)
                 # y_change = 0
@@ -234,10 +236,10 @@ class Player(object):
         match direction:
             case constants.DIR_UP:
                 x_change = 0
-                y_change = int(self.vel * difficulty_multiplier)
+                y_change = int(RUNG_HEIGHT * -1)
             case constants.DIR_DOWN:
                 x_change = 0
-                y_change = int(self.vel * difficulty_multiplier * -1)
+                y_change = int(RUNG_HEIGHT)
             case constants.DIR_LEFT:
                 x_change = int(self.vel * difficulty_multiplier * -1)
                 y_change = 0

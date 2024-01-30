@@ -19,6 +19,12 @@ class Ladder(object):
             self.y_of_top_rung = self.y + (RUNG_HEIGHT * self.num_rungs * direction)
             self.y_of_2nd_top_rung = self.y_of_top_rung - (RUNG_HEIGHT * direction)
 
+        # setup the hit box
+        x = self.x
+        y = self.y - self.height
+
+        self.hit_box = (x, y, self.width, self.height)
+
 
     def draw(self, win):
         if self.direction == UP:
@@ -39,4 +45,20 @@ class Ladder(object):
                 point_start = (x_start, y_start - (RUNG_HEIGHT * (i + 1)))
                 point_end = (x_start + LADDER_WIDTH, y_start - (RUNG_HEIGHT * (i + 1)))
                 pygame.draw.line(win, self.colour, point_start, point_end, 3)
+        else:
+            print("ERROR not yet coded direction ", self.direction)
 
+        # draw hit box
+        pygame.draw.rect(win, COLOUR_LADDER_HITBOX, self.hit_box,1)
+
+    def get_rung_width(self):
+        """Returns the width of the rung on this ladder"""
+
+        width = LADDER_WIDTH
+        return width
+
+    def get_rung_height(self):
+        """Returns the height of rung on this ladder"""
+
+        height = RUNG_HEIGHT
+        return height
