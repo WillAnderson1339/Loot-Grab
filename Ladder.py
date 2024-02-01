@@ -49,7 +49,8 @@ class Ladder(object):
             print("ERROR not yet coded direction ", self.direction)
 
         # draw hit box
-        pygame.draw.rect(win, COLOUR_LADDER_HITBOX, self.hit_box,1)
+        if SHOW_LADDER_HITBOX is True:
+            pygame.draw.rect(win, COLOUR_LADDER_HITBOX, self.hit_box,1)
 
     def get_rung_width(self):
         """Returns the width of the rung on this ladder"""

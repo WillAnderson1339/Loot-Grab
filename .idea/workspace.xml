@@ -4,10 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="New Player class move functions for Up and Down">
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Added diff multiplier to level creation">
+      <change afterPath="$PROJECT_DIR$/Character.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__001.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__002.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__003.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__004.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__005.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__006.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__007.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__001.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__002.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__003.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__004.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__005.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__006.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__007.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__008.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__001.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__002.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__003.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__004.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__005.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__006.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__007.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__008.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ladder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ladder.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
@@ -293,7 +318,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706579002746</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Added diff multiplier to level creation">
+      <option name="closed" value="true" />
+      <created>1706582008063</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1706582008063</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -331,33 +364,15 @@
     <MESSAGE value="Moved sound into Loot class" />
     <MESSAGE value="New Player class move functions for Left and Right" />
     <MESSAGE value="New Player class move functions for Up and Down" />
-    <option name="LAST_COMMIT_MESSAGE" value="New Player class move functions for Up and Down" />
+    <MESSAGE value="Added diff multiplier to level creation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added diff multiplier to level creation" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>470</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>536</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>426</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="430">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="461">
         <watch expression="portal.portal_id" />
       </inline-watch>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="529">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="603">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>

@@ -1,7 +1,7 @@
 
 from constants import *
 
-def show_diagnotics(win, font, levels, player):
+def show_diagnotics(win, font, levels, player, hit_pause):
     colour = COLOUR_DIAGNOSTICS
     start_x = 50
     start_y = 10
@@ -44,6 +44,7 @@ def show_diagnotics(win, font, levels, player):
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
+    """
     # column 2 shows ladder info
     x = start_x + col_1_width
     y = start_y
@@ -61,8 +62,8 @@ def show_diagnotics(win, font, levels, player):
             print_text = font.render(text, 1, colour)
             win.blit(print_text, (x, y))
             y += row_height
+    """
 
-    '''
     # column 2 shows portal info
     x = start_x + col_1_width
     y = start_y
@@ -82,7 +83,6 @@ def show_diagnotics(win, font, levels, player):
         print_text = font.render(text, 1, colour)
         win.blit(print_text, (x, y))
         y += row_height
-    '''
 
     # column 3 shows current player info
     x = start_x + col_1_width + col_2_width
@@ -97,16 +97,28 @@ def show_diagnotics(win, font, levels, player):
     win.blit(print_text, (x, y))
 
     y += row_height
-    text = "Top Left:  (" + str(player.x) + ", " + str(player.y) + ")"
+    text = "P Top Left:  (" + str(player.x) + ", " + str(player.y) + ")"
     print_text = font.render(text, 1, (255, 127, 0))
     win.blit(print_text, (x, y))
 
     y += row_height
     dims = player.get_image_idle_dims()
-    text = "Bot Right: (" + str(player.x + dims[0]) + ", " + str(player.y + dims[1]) + ")"
+    text = "P Bot Right: (" + str(player.x + dims[0]) + ", " + str(player.y + dims[1]) + ")"
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
+    # y += row_height
+    # text = "E Top Left:  (" + str(enemy.x) + ", " + str(enemy.y) + ")"
+    # print_text = font.render(text, 1, (255, 127, 0))
+    # win.blit(print_text, (x, y))
+    #
+    # y += row_height
+    # dims = player.get_image_idle_dims()
+    # text = "E Bot Right: (" + str(enemy.x + dims[0]) + ", " + str(enemy.y + dims[1]) + ")"
+    # print_text = font.render(text, 1, colour)
+    # win.blit(print_text, (x, y))
+
+    '''
     y += row_height
     idle = player.get_image_idle_dims()
     text = "Idle: (" + str(idle[0]) + ", " + str(idle[1]) + ")"
@@ -118,6 +130,7 @@ def show_diagnotics(win, font, levels, player):
     text = "Run:  (" + str(idle[0]) + ", " + str(idle[1]) + ")"
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
+    '''
 
     # column 4 shows misc info
     x += col_3_width
@@ -133,6 +146,11 @@ def show_diagnotics(win, font, levels, player):
 
     y += row_height
     text = "Speed:  " + str(level.difficulty_multiplier * player.vel)
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+    y += row_height
+    text = "hit_pause:  " + str(hit_pause)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 

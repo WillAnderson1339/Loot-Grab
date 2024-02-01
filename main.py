@@ -2,7 +2,7 @@ import pygame
 
 from constants import *
 from diagnostics import *
-from Player import *
+from Character import *
 from Projectile import *
 from Level import *
 
@@ -66,6 +66,11 @@ def show_stats(win, font, levels, player):
     win.blit(print_text, (x, y))
 
     y += row_height
+    text = "Lives: " + str(num_player_lives)
+    print_text = font.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+    y += row_height
     text = "Score: " + str(player.score)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
@@ -91,6 +96,9 @@ def redraw_game_window(player):
     # draw characters
     player.draw(win)
     # goblin.draw(win)
+    # tumbleweed.draw(win)
+    # thug.draw(win)
+    # skeleton.draw(win)
 
     # draw bullets
     for bullet in bullets:
@@ -98,7 +106,7 @@ def redraw_game_window(player):
 
     # show diagnostics (function will check for show/not show)
     if show_diagnostics is True:
-        show_diagnotics(win, font_diagnostics, levels, player)
+        show_diagnotics(win, font_diagnostics, levels, player, tumbleweed_hit_pause)
     else:
         show_stats(win, font_stats, levels, player)
 
@@ -251,10 +259,38 @@ if __name__ == '__main__':
     current_level = 0
     level = levels[current_level]
     current_floor = len(level.floors) - 1
-    player = Player(x, y, current_level, current_floor)
+    player = Character(CHARACTER_TYPE_HERO_1, x, y, current_level, current_floor)
     player.position_player_on_new_level()
 
+    # level = levels[0]
+    # floor = level.get_floor(0)
+    #
+    # x = 100
+    # y = level.get_floor_y(floor.floor_id)
+    # tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_1, x, y, current_level, current_floor)
+    # dims = tumbleweed.get_image_idle_dims()
+    # y -= dims[1]
+    # tumbleweed.move(x, y, DIR_NO_MOVE)
+    #
+    # x += 80
+    # y = level.get_floor_y(floor.floor_id)
+    # thug = Character(CHARACTER_TYPE_THUG_1, x, y, current_level, current_floor)
+    # dims = thug.get_image_idle_dims()
+    # y -= dims[1]
+    # thug.move(x, y, DIR_NO_MOVE)
+    #
+    # x += 80
+    # y = level.get_floor_y(floor.floor_id)
+    # skeleton = Character(CHARACTER_TYPE_SKELETON_1, x, y, current_level, current_floor)
+    # dims = skeleton.get_image_idle_dims()
+    # y -= dims[1]
+    # skeleton.move(x, y, DIR_NO_MOVE)
+
+    num_player_lives = 3
+
     bullets = []
+
+    tumbleweed_hit_pause = 0
 
     print("Hellow World!")
 
@@ -266,6 +302,9 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+        if num_player_lives == -99:
+            run = False
 
         # check if any key press pause counts are needed
         check_kp_pause_counts()
@@ -279,6 +318,37 @@ if __name__ == '__main__':
 
         keys = pygame.key.get_pressed()
 
+        # move enemies
+        level = levels[player.current_level]
+        hit_box_list = level.auto_move_enemies()
+
+        # update the tumbleweed pause timer (so tumbleweed passes player and does not continually decrement score)
+        if tumbleweed_hit_pause > 0:
+            tumbleweed_hit_pause += 1
+        if tumbleweed_hit_pause > 20:
+            tumbleweed_hit_pause = 0
+
+        # check to see if the enemy is touching the player
+        for hit_box in hit_box_list:
+            rect_enemy = hit_box
+            rect_player = player.hit_box
+            if do_rectangles_overlap(rect_enemy, rect_player) is True:
+                if tumbleweed_hit_pause == 0:
+                    player.score -= 25
+                    tumbleweed_hit_pause = 1
+
+        # if below zero score -1 life
+        if player.score < 0 and num_player_lives != -99:
+            num_player_lives -= 1
+            player.score = 0
+            if num_player_lives == 0:
+                print("You Lose!")
+                num_player_lives = -99
+            else:
+                current_floor = len(level.floors) - 1
+                player.current_floor = current_floor
+                player.position_player_on_new_level()
+
         # shoot key
         if keys[pygame.K_SPACE] and kp_key_states[KP_SPACE] == 0:
             if player.shoot_dir == DIR_LEFT:
@@ -287,7 +357,9 @@ if __name__ == '__main__':
                 facing = 1
 
             if len(bullets) < 5:
-                bullet = Projectile(round(player.x + player.width // 2), round(player.y + player.height // 2), 6, (0, 0, 0), facing)
+                width = player.get_player_width()
+                height = player.get_player_height()
+                bullet = Projectile(round(player.x + width // 2), round(player.y + height // 2), 6, (0, 0, 0), facing)
                 bullets.append(bullet)
                 bullet.projectile_sound()
                 # sound_bullet.play()
@@ -333,7 +405,8 @@ if __name__ == '__main__':
 
                 # if in ladder restrict horizontal movement to within the ladder
                 ##if player.is_in_ladder is False or (player.x - player.vel) >= player.in_ladder_min_x - (player.width * 0.3):
-                if player.is_in_ladder is False or target_x >= player.in_ladder_min_x - (player.width * 0.3):
+                width = player.get_player_width()
+                if player.is_in_ladder is False or target_x >= player.in_ladder_min_x - (width * 0.3):
                     # player.x -= player.vel
                     ## player.move(DIR_LEFT, level.difficulty_multiplier)
                     player.move(target_x, target_y, DIR_LEFT)
@@ -388,7 +461,8 @@ if __name__ == '__main__':
 
                 # if in ladder restrict horizontal movement to within the ladder
                 # if player.is_in_ladder is False or (player.x + player.vel) <= player.in_ladder_max_x - (player.width * 0.5):
-                if player.is_in_ladder is False or target_x <= player.in_ladder_max_x - (player.width * 0.5):
+                width = player.get_player_width()
+                if player.is_in_ladder is False or target_x <= player.in_ladder_max_x - (width * 0.5):
                     # player.x -= player.vel
                     ## player.move(DIR_LEFT, level.difficulty_multiplier)
                     player.move(target_x, target_y, DIR_RIGHT)

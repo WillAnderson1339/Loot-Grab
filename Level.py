@@ -7,6 +7,7 @@ from Floor import *
 from Ladder import *
 from Portal import *
 from Loot import *
+from Character import *
 
 
 class Level(object):
@@ -24,10 +25,12 @@ class Level(object):
         self.floors = []
         self.portals = []
         self.loots = []
+        self.enemies = []
 
         self.create_floors()
         self.create_portals()
-        self.create_loot()
+        self.create_loots()
+        self.create_enemies()
 
     def create_floors(self):
         # create the floor objects and append them to the floor List
@@ -194,7 +197,7 @@ class Level(object):
 
             portal_id += 1
 
-    def create_loot(self):
+    def create_loots(self):
         """Creates the loot on each level."""
         loot_id = 1
         facing = random.randint(0, 9)
@@ -222,6 +225,19 @@ class Level(object):
 
                 x += loot_interval + sizing_loot.get_loot_width()
 
+    def create_enemies(self):
+        """Creates the enemies for the level"""
+
+        floor_id = len(self.floors) - 2
+        # floor = self.get_floor(floor_id)
+        tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_1, -100, -100, 0, 0)
+        height = tumbleweed.get_player_height()
+        x = 100
+        y = self.get_floor_y(floor_id) - height
+        tumbleweed.move(x, y, DIR_LEFT)
+
+        self.enemies.append(tumbleweed)
+
     def draw(self, win):
         # draw the floors
         for floor in self.floors:
@@ -234,6 +250,21 @@ class Level(object):
         # draw the loots
         for loot in self.loots:
             loot.draw(win)
+
+        # draw the enemies
+        for enemy in self.enemies:
+            enemy.draw(win)
+
+    def auto_move_enemies(self):
+        """Moves the enemies, returning a list of the new enemy hit_boxes"""
+
+        hit_box_list = []
+
+        for enemy in self.enemies:
+            hit_box = enemy.auto_move()
+            hit_box_list.append(hit_box)
+
+        return hit_box_list
 
     def get_floor(self, floor_id):
         """Returns the floor with the matching ID. Returns an empty floor if ID not found."""
@@ -461,7 +492,7 @@ class Level(object):
     def hit_loot(self, loot, player):
         """The player has hit a loot - need to do the hitting loot action like adding score and removing the loot"""
 
-        print("in Loot ID " + str(loot.loot_id))
+        # print("in Loot ID " + str(loot.loot_id))
         self.loots.remove(loot)
         player.score += loot.loot_value
 
