@@ -16,14 +16,19 @@ images_background = [
     pygame.image.load('res/Backgrounds/Mountains 6.png'),
     pygame.image.load('res/Backgrounds/Lava 1.png')]
 
+images_objects = [
+    pygame.image.load('res/Objects/Heart_1__000.png')]
+
+
+
 pygame.init()
 
 clock = pygame.time.Clock()
 
 sound_bullet = pygame.mixer.Sound('res/bullet.mp3')
 hitSound = pygame.mixer.Sound('res/hit.mp3')
-#sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
 sound_portal = pygame.mixer.Sound('res/portal.mp3')
+sound_grunt = pygame.mixer.Sound('res/grunt-2.mp3')
 
 # setup music
 music = pygame.mixer.music.load('res/music.mp3')
@@ -43,12 +48,55 @@ kp_key_states = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 font_stats = pygame.font.SysFont('comicsans', 25, True)
 font_diagnostics = pygame.font.SysFont('consolas', 15, False)
+font_pause = pygame.font.SysFont("comicsansms", 90)
 
 show_diagnostics = SHOW_DIAGNOSTICS
 
+num_player_lives = SCORE_START_NUM_LIVES
+
+pause = False       # used for game over - but should implement a pause too?
+
+def paused():
+    colour = COLOUR_GAME_OVER
+
+    x = WINDOW_WIDTH // 2
+    y = WINDOW_HEIGHT // 2
+
+    text = "Game Over: "
+    print_text = font_pause.render(text, 1, colour)
+    x -= print_text.get_width() // 2
+    y -= print_text.get_height() // 2
+    win.blit(print_text, (x, y))
+
+    while pause:
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        pygame.display.update()
+        clock.tick(15)
 
 
 def show_stats(win, font, levels, player):
+    """Displays the player game stats like lives, score, etc."""
+
+    # show the player lives as hearts
+    start_x = WINDOW_WIDTH - 200
+    start_y = 10
+    object_index = IMAGE_OBJECT_LIFE_HEART
+    width = images_objects[object_index].get_width()
+    width += 4
+
+    x = start_x - 15 - (num_player_lives * width)
+    y = start_y + 10
+
+    for num_lives in range(num_player_lives):
+        win.blit(images_objects[object_index], (x, y))
+        x += width
+
+    # show the player level and score info
     colour = COLOUR_STATS
     start_x = WINDOW_WIDTH - 200
     start_y = 10
@@ -95,10 +143,6 @@ def redraw_game_window(player):
 
     # draw characters
     player.draw(win)
-    # goblin.draw(win)
-    # tumbleweed.draw(win)
-    # thug.draw(win)
-    # skeleton.draw(win)
 
     # draw bullets
     for bullet in bullets:
@@ -262,31 +306,6 @@ if __name__ == '__main__':
     player = Character(CHARACTER_TYPE_HERO_1, x, y, current_level, current_floor)
     player.position_player_on_new_level()
 
-    # level = levels[0]
-    # floor = level.get_floor(0)
-    #
-    # x = 100
-    # y = level.get_floor_y(floor.floor_id)
-    # tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_1, x, y, current_level, current_floor)
-    # dims = tumbleweed.get_image_idle_dims()
-    # y -= dims[1]
-    # tumbleweed.move(x, y, DIR_NO_MOVE)
-    #
-    # x += 80
-    # y = level.get_floor_y(floor.floor_id)
-    # thug = Character(CHARACTER_TYPE_THUG_1, x, y, current_level, current_floor)
-    # dims = thug.get_image_idle_dims()
-    # y -= dims[1]
-    # thug.move(x, y, DIR_NO_MOVE)
-    #
-    # x += 80
-    # y = level.get_floor_y(floor.floor_id)
-    # skeleton = Character(CHARACTER_TYPE_SKELETON_1, x, y, current_level, current_floor)
-    # dims = skeleton.get_image_idle_dims()
-    # y -= dims[1]
-    # skeleton.move(x, y, DIR_NO_MOVE)
-
-    num_player_lives = 3
 
     bullets = []
 
@@ -334,7 +353,8 @@ if __name__ == '__main__':
             rect_player = player.hit_box
             if do_rectangles_overlap(rect_enemy, rect_player) is True:
                 if tumbleweed_hit_pause == 0:
-                    player.score -= 25
+                    player.score -= SCORE_TUMBLEWEED
+                    sound_grunt.play()
                     tumbleweed_hit_pause = 1
 
         # if below zero score -1 life
@@ -342,8 +362,10 @@ if __name__ == '__main__':
             num_player_lives -= 1
             player.score = 0
             if num_player_lives == 0:
-                print("You Lose!")
+                print("Game Over!")
                 num_player_lives = -99
+                pause = True
+                paused()
             else:
                 current_floor = len(level.floors) - 1
                 player.current_floor = current_floor

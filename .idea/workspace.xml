@@ -4,37 +4,43 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Added diff multiplier to level creation">
-      <change afterPath="$PROJECT_DIR$/Character.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Idle__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Left__008.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Skeleton/Walk_Right__008.png" afterDir="false" />
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="1st implementation of enemies!">
+      <change afterPath="$PROJECT_DIR$/res/Objects/Heart_1__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Idle__00-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Idle__000-.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Idle__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__001.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__002.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__003.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__004.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__005.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__006.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__007.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__008.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__00_.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__001.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__002.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__003.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__004.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__005.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__006.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__007.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__008.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Idle__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__001.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__002.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__003.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__004.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__005.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__006.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__007.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__008.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/grunt-1.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ladder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ladder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -326,7 +332,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706582008063</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="1st implementation of enemies!">
+      <option name="closed" value="true" />
+      <created>1706756835546</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1706756835546</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -365,14 +379,15 @@
     <MESSAGE value="New Player class move functions for Left and Right" />
     <MESSAGE value="New Player class move functions for Up and Down" />
     <MESSAGE value="Added diff multiplier to level creation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added diff multiplier to level creation" />
+    <MESSAGE value="1st implementation of enemies!" />
+    <option name="LAST_COMMIT_MESSAGE" value="1st implementation of enemies!" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
       <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="461">
         <watch expression="portal.portal_id" />
       </inline-watch>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="603">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="659">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>
