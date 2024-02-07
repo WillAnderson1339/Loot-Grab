@@ -17,7 +17,8 @@ images_background = [
     pygame.image.load('res/Backgrounds/Lava 1.png')]
 
 images_objects = [
-    pygame.image.load('res/Objects/Heart_1__000.png')]
+    pygame.image.load('res/Objects/Heart_1__000.png'),
+    pygame.image.load('res/Objects/Bullet_1__000.png')]
 
 
 
@@ -53,6 +54,9 @@ font_pause = pygame.font.SysFont("comicsansms", 90)
 show_diagnostics = SHOW_DIAGNOSTICS
 
 num_player_lives = SCORE_START_NUM_LIVES
+num_player_bullets = SCORE_START_NUM_BULLETS
+
+bullets = []
 
 pause = False       # used for game over - but should implement a pause too?
 
@@ -85,10 +89,12 @@ def show_stats(win, font, levels, player):
     # show the player lives as hearts
     start_x = WINDOW_WIDTH - 200
     start_y = 10
+    row_height = 30
+
+    # show the hearts for lives
     object_index = IMAGE_OBJECT_LIFE_HEART
     width = images_objects[object_index].get_width()
     width += 4
-
     x = start_x - 15 - (num_player_lives * width)
     y = start_y + 10
 
@@ -96,11 +102,20 @@ def show_stats(win, font, levels, player):
         win.blit(images_objects[object_index], (x, y))
         x += width
 
+    # show the bullets for number of bullets left
+    object_index = IMAGE_OBJECT_HERO_BULLET
+    width = images_objects[object_index].get_width()
+    width += 8
+    x = start_x - 15 - (num_player_bullets * width)
+    y = start_y + 10 + row_height
+    for num_bullets in range(num_player_bullets):
+        win.blit(images_objects[object_index], (x, y))
+        x += width
+
     # show the player level and score info
     colour = COLOUR_STATS
     start_x = WINDOW_WIDTH - 200
     start_y = 10
-    row_height = 30
     col_1_width = 170
     col_2_width = 325
 
@@ -113,10 +128,10 @@ def show_stats(win, font, levels, player):
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
-    y += row_height
-    text = "Lives: " + str(num_player_lives)
-    print_text = font.render(text, 1, colour)
-    win.blit(print_text, (x, y))
+    # y += row_height
+    # text = "Lives: " + str(num_player_lives)
+    # print_text = font.render(text, 1, colour)
+    # win.blit(print_text, (x, y))
 
     y += row_height
     text = "Score: " + str(player.score)
@@ -221,6 +236,36 @@ def create_random_level(level_id):
     level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
     levels.append(level)
 
+def action_enemy_touching_player(enemy_type, player, tumbleweed_hit_pause):
+    """Performs the enemy touching player action - changes score etc"""
+
+    score_change = 0
+
+    if tumbleweed_hit_pause == 0:
+        match enemy_type:
+            case constants.CHARACTER_TYPE_TUMBLEWEED_1:
+                score_change = SCORE_TUMBLEWEED_1
+            case constants.CHARACTER_TYPE_TUMBLEWEED_2:
+                score_change = SCORE_TUMBLEWEED_2
+            case constants.CHARACTER_TYPE_THUG_1:
+                score_change = SCORE_THUG_1
+            case constants.CHARACTER_TYPE_SKELETON_1:
+                score_change = SCORE_SKELETON_1
+
+        player.score += score_change
+
+        sound_grunt.play()
+
+def action_player_shot_enemy(enemy_id, projectile):
+    """Performs the player shot enemy action - changes score etc"""
+
+    # print("hit!")
+    level = levels[player.current_level]
+    level.remove_enemy(enemy_id)
+
+    bullets.pop(bullets.index(projectile))
+
+    sound_grunt.play()
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -262,11 +307,11 @@ if __name__ == '__main__':
     current_level = 0
     level = levels[current_level]
     current_floor = len(level.floors) - 1
-    player = Character(CHARACTER_TYPE_HERO_1, x, y, current_level, current_floor)
+    player_type = CHARACTER_TYPE_HERO_1
+    player_id = 1000
+    player = Character(player_type, player_id, x, y, current_level, current_floor)
     player.position_player_on_new_level()
 
-
-    bullets = []
 
     tumbleweed_hit_pause = 0
 
@@ -279,9 +324,10 @@ if __name__ == '__main__':
     while run:
         clock.tick(27)
 
-        # check if they are quitting
+        # check events
         for event in pygame.event.get():
 
+            # check if they are quitting
             if event.type == pygame.QUIT:
                 run = False
 
@@ -321,15 +367,19 @@ if __name__ == '__main__':
         for item in hit_box_list:
             rect_enemy = item[0]
             enemy_type = item[1]
+            enemy_id = item[2]
+
+            # check to see if the enemy is touching the player
+            for bullet in bullets:
+                rect_projectile = bullet.get_hit_rect()
+                if do_rectangles_overlap(rect_enemy, rect_projectile) is True:
+                    action_player_shot_enemy(enemy_id, bullet)
+
+            # check to see if the enemy is touching the player
             rect_player = player.hit_box
             if do_rectangles_overlap(rect_enemy, rect_player) is True:
-                if tumbleweed_hit_pause == 0:
-                    if enemy_type == CHARACTER_TYPE_TUMBLEWEED_1:
-                        player.score += SCORE_TUMBLEWEED_1
-                    if enemy_type == CHARACTER_TYPE_TUMBLEWEED_2:
-                        player.score += SCORE_TUMBLEWEED_2
-                    sound_grunt.play()
-                    tumbleweed_hit_pause = 1
+                action_enemy_touching_player(enemy_type, player, tumbleweed_hit_pause)
+                tumbleweed_hit_pause = 1
 
         # if below zero score -1 life
         if player.score < 0 and num_player_lives != -99:
@@ -352,12 +402,16 @@ if __name__ == '__main__':
             else:
                 facing = 1
 
-            if len(bullets) < 5:
+            if num_player_bullets > 0:
                 width = player.get_character_width()
                 height = player.get_character_width()
-                bullet = Projectile(round(player.x + width // 2), round(player.y + height // 2), 6, (0, 0, 0), facing)
+                projectile_id = 101
+                x = round(player.x + width // 2)
+                y = round(player.y + height // 2)
+                bullet = Projectile(PROJECTILE_HERO_BULLET, projectile_id, x, y, 6, (0, 0, 0), facing)
                 bullets.append(bullet)
                 bullet.projectile_sound()
+                num_player_bullets -= 1
                 # sound_bullet.play()
                 print("Shoot!")
 

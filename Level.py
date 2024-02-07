@@ -230,7 +230,9 @@ class Level(object):
 
         floor_id = len(self.floors) - 2
         # floor = self.get_floor(floor_id)
-        tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_1, -100, -100, 0, 0)
+        enemy_type = CHARACTER_TYPE_TUMBLEWEED_1
+        enemy_id = len(self.enemies)
+        tumbleweed = Character(enemy_type, enemy_id, -100, -100, 0, 0)
         height = tumbleweed.get_character_height()
         x = 100
         y = self.get_floor_y(floor_id) - height
@@ -239,7 +241,9 @@ class Level(object):
         self.enemies.append(tumbleweed)
 
         floor_id -= 1
-        tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_2, -100, -100, 0, 0)
+        enemy_type = CHARACTER_TYPE_THUG_1
+        enemy_id = len(self.enemies)
+        tumbleweed = Character(enemy_type, enemy_id, -100, -100, 0, 0)
         height = tumbleweed.get_character_height()
         x = 100
         y = self.get_floor_y(floor_id) - height
@@ -270,8 +274,8 @@ class Level(object):
         hit_box_list = []
 
         for enemy in self.enemies:
-            hit_box, character_type = enemy.auto_move(difficulty_multiplier)
-            item = (hit_box, character_type)
+            hit_box, character_type, character_id = enemy.auto_move(difficulty_multiplier)
+            item = (hit_box, character_type, character_id)
             hit_box_list.append(item)
 
         return hit_box_list
@@ -532,7 +536,8 @@ class Level(object):
             enemy_type = random.randint(0, 3)
             # floor = self.get_floor(floor_id)
             enemy_type += 2
-            enemy = Character(enemy_type, -100, -100, self.level_id, floor_id)
+            enemy_id = len(self.enemies)
+            enemy = Character(enemy_type, enemy_id, -100, -100, self.level_id, floor_id)
             height = enemy.get_character_height()
             x = 100
             y = self.get_floor_y(floor_id) - height
@@ -542,3 +547,18 @@ class Level(object):
             self.enemies.append(enemy)
 
 
+    def remove_enemy(self, enemy_id):
+        """Removes the enemy from the enemies list. Returns True if id is found (and removed)"""
+
+        found_in_list = False
+
+        for enemy in self.enemies:
+            if enemy.character_id == enemy_id:
+                self.enemies.pop(self.enemies.index(enemy))
+                found_in_list = True
+                break
+
+        if found_in_list is False:
+            print("remove_enemy called but enemy id not found: ", enemy_id)
+
+        return found_in_list

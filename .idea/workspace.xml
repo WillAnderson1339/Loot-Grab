@@ -4,19 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="worked on the 2 tumbleweed sizes. Added random generating -- but too many!">
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Idle__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 2/Right__008.png" afterDir="false" />
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="created timer function to spawn enemies">
+      <change afterPath="$PROJECT_DIR$/res/Objects/Bullet_1__000.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Character.py" beforeDir="false" afterPath="$PROJECT_DIR$/Character.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Projectile.py" beforeDir="false" afterPath="$PROJECT_DIR$/Projectile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -341,7 +334,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707275096402</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="created timer function to spawn enemies">
+      <option name="closed" value="true" />
+      <created>1707291390724</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1707291390724</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -357,7 +358,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="First implementation of Ladder" />
     <MESSAGE value="Randomized X location of ladders" />
     <MESSAGE value="Ladder rungs and now draw UP" />
     <MESSAGE value="getting up and down working" />
@@ -382,17 +382,18 @@
     <MESSAGE value="Implemented score life hearts" />
     <MESSAGE value="Sound for tumbleweed hitting player" />
     <MESSAGE value="worked on the 2 tumbleweed sizes. Added random generating -- but too many!" />
-    <option name="LAST_COMMIT_MESSAGE" value="worked on the 2 tumbleweed sizes. Added random generating -- but too many!" />
+    <MESSAGE value="created timer function to spawn enemies" />
+    <option name="LAST_COMMIT_MESSAGE" value="created timer function to spawn enemies" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="self.walkCount" language="Python" />
       </configuration>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="471">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="475">
         <watch expression="portal.portal_id" />
       </inline-watch>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="599">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="653">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>

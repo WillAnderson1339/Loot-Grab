@@ -130,8 +130,9 @@ class Character(object):
     IMAGES_HIT_WIDTH = 48
     IMAGES_HIT_HEIGHT = 68
 
-    def __init__(self, character_type, x, y, current_level, current_floor):
+    def __init__(self, character_type, character_id, x, y, current_level, current_floor):
         self.character_type = character_type
+        self.character_id = character_id
         self.x = x
         self.y = y
         self.current_level = current_level
@@ -157,7 +158,7 @@ class Character(object):
         self.in_ladder_max_y = -1
         self.score = 0
 
-        # set up the images lists
+        # set up the character specific data
         match character_type:
             case constants.CHARACTER_TYPE_HERO_1:
                 self.vel = VELOCITY_HERO
@@ -401,7 +402,7 @@ class Character(object):
             new_hit_box = (hit_box[0], new_y, hit_box[2], hit_box[3])
             hit_box = new_hit_box
 
-        return hit_box, self.character_type
+        return hit_box, self.character_type, self.character_id
 
     def jump_move(self, direction):
         """Performs the jump move by adjusting the y value"""
