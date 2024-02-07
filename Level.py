@@ -517,22 +517,28 @@ class Level(object):
 
         probability = self.difficulty_multiplier
         probability -= 1.0  # modifier is a number in the form 1.x where x is a decimal 0-9
-        probability = self.difficulty_multiplier - 1.0
+        # probability = self.difficulty_multiplier - 1.0
         probability *= 10
+        probability = round(probability, 0) # corrects rounding in python float subtraction
+        probability *= 1
 
-        random_num = random.randint(0, 800)
+        random_num = random.randint(0, 100)
 
         print("prob: ", probability, "rand:", random_num)
 
         if random_num < probability:
             floor_id = random.randint(0, len(self.floors) - 1)
+            # y = self.get_floor_y(floor_id)
+            enemy_type = random.randint(0, 3)
             # floor = self.get_floor(floor_id)
-            tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_1, -100, -100, 0, 0)
-            height = tumbleweed.get_character_height()
+            enemy_type += 2
+            enemy = Character(enemy_type, -100, -100, self.level_id, floor_id)
+            height = enemy.get_character_height()
             x = 100
             y = self.get_floor_y(floor_id) - height
-            tumbleweed.move(x, y, DIR_LEFT)
+            enemy.move(x, y, DIR_LEFT)
 
-            self.enemies.append(tumbleweed)
+            print("spawning enemy type: ", enemy_type)
+            self.enemies.append(enemy)
 
 

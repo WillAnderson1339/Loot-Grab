@@ -255,47 +255,6 @@ if __name__ == '__main__':
     level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
     levels.append(level)
 
-    '''
-    level_id = 0
-    num_floors = 2 #4
-    num_enemies = 5
-    num_up_portals = 1
-    num_down_portals = 0
-    background = 0
-    colour = (100, 150, 200)
-    level = Level(portal_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
-    levels.append(level)
-
-    portal_id = 1
-    num_floors = 3
-    num_enemies = 8
-    num_up_portals = 1
-    num_down_portals = 2
-    background = 1
-    colour = (50, 75, 175)
-    level = Level(portal_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
-    levels.append(level)
-
-    portal_id = 2
-    num_floors = 2
-    num_enemies = 8
-    num_up_portals = 2
-    num_down_portals = 2
-    background = 2
-    colour = (100, 50, 200)
-    level = Level(portal_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
-    levels.append(level)
-
-    portal_id = 3
-    num_floors = 2
-    num_enemies = 6
-    num_up_portals = 0
-    num_down_portals = 2
-    background = 2
-    colour = (150, 175, 75)
-    level = Level(portal_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour)
-    levels.append(level)
-    '''
 
     # set up the player
     x = WINDOW_WIDTH - 100
@@ -313,14 +272,24 @@ if __name__ == '__main__':
 
     print("Hellow World!")
 
+    # set timer to spawn enemies
+    pygame.time.set_timer(TIMER_EVENT_ENEMY_SPAWN_CHECK, TIMER_INTERVAL_ENEMY_SPAWN_CHECK)
+
     run = True
     while run:
         clock.tick(27)
 
         # check if they are quitting
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 run = False
+
+            # timer event
+            elif event.type == TIMER_EVENT_ENEMY_SPAWN_CHECK:
+                level = levels[player.current_level]
+                level.check_if_spawning_enemy()
+
 
         if num_player_lives == -99:
             run = False
@@ -339,7 +308,7 @@ if __name__ == '__main__':
 
         # move enemies
         level = levels[player.current_level]
-        level.check_if_spawning_enemy()
+        # level.check_if_spawning_enemy()
         hit_box_list = level.auto_move_enemies(level.difficulty_multiplier)
 
         # update the tumbleweed pause timer (so tumbleweed passes player and does not continually decrement score)
