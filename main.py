@@ -339,7 +339,8 @@ if __name__ == '__main__':
 
         # move enemies
         level = levels[player.current_level]
-        hit_box_list = level.auto_move_enemies()
+        level.check_if_spawning_enemy()
+        hit_box_list = level.auto_move_enemies(level.difficulty_multiplier)
 
         # update the tumbleweed pause timer (so tumbleweed passes player and does not continually decrement score)
         if tumbleweed_hit_pause > 0:
@@ -348,12 +349,16 @@ if __name__ == '__main__':
             tumbleweed_hit_pause = 0
 
         # check to see if the enemy is touching the player
-        for hit_box in hit_box_list:
-            rect_enemy = hit_box
+        for item in hit_box_list:
+            rect_enemy = item[0]
+            enemy_type = item[1]
             rect_player = player.hit_box
             if do_rectangles_overlap(rect_enemy, rect_player) is True:
                 if tumbleweed_hit_pause == 0:
-                    player.score -= SCORE_TUMBLEWEED
+                    if enemy_type == CHARACTER_TYPE_TUMBLEWEED_1:
+                        player.score += SCORE_TUMBLEWEED_1
+                    if enemy_type == CHARACTER_TYPE_TUMBLEWEED_2:
+                        player.score += SCORE_TUMBLEWEED_2
                     sound_grunt.play()
                     tumbleweed_hit_pause = 1
 
@@ -379,8 +384,8 @@ if __name__ == '__main__':
                 facing = 1
 
             if len(bullets) < 5:
-                width = player.get_player_width()
-                height = player.get_player_height()
+                width = player.get_character_width()
+                height = player.get_character_width()
                 bullet = Projectile(round(player.x + width // 2), round(player.y + height // 2), 6, (0, 0, 0), facing)
                 bullets.append(bullet)
                 bullet.projectile_sound()
@@ -427,7 +432,7 @@ if __name__ == '__main__':
 
                 # if in ladder restrict horizontal movement to within the ladder
                 ##if player.is_in_ladder is False or (player.x - player.vel) >= player.in_ladder_min_x - (player.width * 0.3):
-                width = player.get_player_width()
+                width = player.get_character_width()
                 if player.is_in_ladder is False or target_x >= player.in_ladder_min_x - (width * 0.3):
                     # player.x -= player.vel
                     ## player.move(DIR_LEFT, level.difficulty_multiplier)
@@ -483,7 +488,7 @@ if __name__ == '__main__':
 
                 # if in ladder restrict horizontal movement to within the ladder
                 # if player.is_in_ladder is False or (player.x + player.vel) <= player.in_ladder_max_x - (player.width * 0.5):
-                width = player.get_player_width()
+                width = player.get_character_width()
                 if player.is_in_ladder is False or target_x <= player.in_ladder_max_x - (width * 0.5):
                     # player.x -= player.vel
                     ## player.move(DIR_LEFT, level.difficulty_multiplier)
@@ -693,15 +698,20 @@ if __name__ == '__main__':
                 player.walkCount = 0
                 kp_key_states[KP_UP] = 1
         else:
-            if player.jumpCount >= (JUMP_HEIGHT * -1):
-                neg = 1
-                if player.jumpCount < 0:
-                    neg = -1
-                player.y -= int((player.jumpCount ** 2) * 0.5 * neg)
-                player.jumpCount -= 1
+            if player.is_left:
+                direction = DIR_LEFT
             else:
-                player.is_jumping = False
-                player.jumpCount = JUMP_HEIGHT
+                direction = DIR_RIGHT
+            player.jump_move(direction)
+            # if player.jumpCount >= (JUMP_HEIGHT * -1):
+            #     neg = 1
+            #     if player.jumpCount < 0:
+            #         neg = -1
+            #     player.y -= int((player.jumpCount ** 2) * 0.5 * neg)
+            #     player.jumpCount -= 1
+            # else:
+            #     player.is_jumping = False
+            #     player.jumpCount = JUMP_HEIGHT
 
         redraw_game_window(player)
     

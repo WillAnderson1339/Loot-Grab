@@ -44,7 +44,6 @@ def show_diagnotics(win, font, levels, player, hit_pause):
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
-    """
     # column 2 shows ladder info
     x = start_x + col_1_width
     y = start_y
@@ -62,8 +61,8 @@ def show_diagnotics(win, font, levels, player, hit_pause):
             print_text = font.render(text, 1, colour)
             win.blit(print_text, (x, y))
             y += row_height
-    """
 
+    """
     # column 2 shows portal info
     x = start_x + col_1_width
     y = start_y
@@ -83,6 +82,7 @@ def show_diagnotics(win, font, levels, player, hit_pause):
         print_text = font.render(text, 1, colour)
         win.blit(print_text, (x, y))
         y += row_height
+    """
 
     # column 3 shows current player info
     x = start_x + col_1_width + col_2_width

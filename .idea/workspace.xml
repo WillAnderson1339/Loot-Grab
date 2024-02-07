@@ -4,44 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="1st implementation of enemies!">
-      <change afterPath="$PROJECT_DIR$/res/Objects/Heart_1__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Idle__00-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Idle__000-.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Idle__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__008.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__00_.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__008.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Idle__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__008.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/grunt-1.mp3" afterDir="false" />
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Sound for tumbleweed hitting player">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Character.py" beforeDir="false" afterPath="$PROJECT_DIR$/Character.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Idle__000.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Idle__000.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__000.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__000.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__001.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__001.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__002.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__002.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__003.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__003.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__004.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__004.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__005.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__005.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__006.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__006.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__007.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__007.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__008.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Tumbleweed - 1/Right__008.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -340,7 +319,23 @@
       <option name="project" value="LOCAL" />
       <updated>1706756835546</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Implemented score life hearts">
+      <option name="closed" value="true" />
+      <created>1706832361988</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1706832361988</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Sound for tumbleweed hitting player">
+      <option name="closed" value="true" />
+      <created>1706832395404</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1706832395404</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -356,7 +351,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="First Commit" />
     <MESSAGE value="Broke classes out into files&#10;First implementation of Level" />
     <MESSAGE value="First implementation of Ladder" />
     <MESSAGE value="Randomized X location of ladders" />
@@ -380,14 +374,19 @@
     <MESSAGE value="New Player class move functions for Up and Down" />
     <MESSAGE value="Added diff multiplier to level creation" />
     <MESSAGE value="1st implementation of enemies!" />
-    <option name="LAST_COMMIT_MESSAGE" value="1st implementation of enemies!" />
+    <MESSAGE value="Implemented score life hearts" />
+    <MESSAGE value="Sound for tumbleweed hitting player" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sound for tumbleweed hitting player" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="461">
+      <configuration name="PythonConfigurationType">
+        <watch expression="self.walkCount" language="Python" />
+      </configuration>
+      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="471">
         <watch expression="portal.portal_id" />
       </inline-watch>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="659">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="630">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>

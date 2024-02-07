@@ -231,7 +231,16 @@ class Level(object):
         floor_id = len(self.floors) - 2
         # floor = self.get_floor(floor_id)
         tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_1, -100, -100, 0, 0)
-        height = tumbleweed.get_player_height()
+        height = tumbleweed.get_character_height()
+        x = 100
+        y = self.get_floor_y(floor_id) - height
+        tumbleweed.move(x, y, DIR_LEFT)
+
+        self.enemies.append(tumbleweed)
+
+        floor_id -= 1
+        tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_2, -100, -100, 0, 0)
+        height = tumbleweed.get_character_height()
         x = 100
         y = self.get_floor_y(floor_id) - height
         tumbleweed.move(x, y, DIR_LEFT)
@@ -255,14 +264,15 @@ class Level(object):
         for enemy in self.enemies:
             enemy.draw(win)
 
-    def auto_move_enemies(self):
+    def auto_move_enemies(self, difficulty_multiplier):
         """Moves the enemies, returning a list of the new enemy hit_boxes"""
 
         hit_box_list = []
 
         for enemy in self.enemies:
-            hit_box = enemy.auto_move()
-            hit_box_list.append(hit_box)
+            hit_box, character_type = enemy.auto_move(difficulty_multiplier)
+            item = (hit_box, character_type)
+            hit_box_list.append(item)
 
         return hit_box_list
 
@@ -498,5 +508,31 @@ class Level(object):
 
         loot.loot_sound()
 
+    def check_if_spawning_enemy(self):
+        """Checks to see if an enemy should be added and if so creates one and adds it to the level"""
+
+        if self.difficulty_multiplier > 1.0:
+            foo = 5
+            foo += 3
+
+        probability = self.difficulty_multiplier
+        probability -= 1.0  # modifier is a number in the form 1.x where x is a decimal 0-9
+        probability = self.difficulty_multiplier - 1.0
+        probability *= 10
+
+        random_num = random.randint(0, 800)
+
+        print("prob: ", probability, "rand:", random_num)
+
+        if random_num < probability:
+            floor_id = random.randint(0, len(self.floors) - 1)
+            # floor = self.get_floor(floor_id)
+            tumbleweed = Character(CHARACTER_TYPE_TUMBLEWEED_1, -100, -100, 0, 0)
+            height = tumbleweed.get_character_height()
+            x = 100
+            y = self.get_floor_y(floor_id) - height
+            tumbleweed.move(x, y, DIR_LEFT)
+
+            self.enemies.append(tumbleweed)
 
 

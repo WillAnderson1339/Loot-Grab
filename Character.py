@@ -25,6 +25,28 @@ tumbleweed_1_left = [pygame.image.load('res/Tumbleweed - 1/Right__000.png'),
                      pygame.image.load('res/Tumbleweed - 1/Right__007.png'),
                      pygame.image.load('res/Tumbleweed - 1/Right__008.png')]
 
+tumbleweed_2_idle = [pygame.image.load('res/Tumbleweed - 2/Idle__000.png')]
+
+tumbleweed_2_right = [pygame.image.load('res/Tumbleweed - 2/Right__000.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__001.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__002.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__003.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__004.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__005.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__006.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__007.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__008.png')]
+
+tumbleweed_2_left = [pygame.image.load('res/Tumbleweed - 2/Right__000.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__001.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__002.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__003.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__004.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__005.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__006.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__007.png'),
+                     pygame.image.load('res/Tumbleweed - 2/Right__008.png')]
+
 thug_1_idle = [pygame.image.load('res/Thug - 1/Idle__000.png')]
 
 thug_1_right = [pygame.image.load('res/Thug - 1/Run_Right__000.png'),
@@ -125,7 +147,7 @@ class Character(object):
         self.is_down = False
         self.idleCount = 0
         self.walkCount = 0
-        self.jumpCount = JUMP_HEIGHT
+        self.jumpCount = 0
         self.is_standing = True
         self.shoot_dir = DIR_RIGHT
         self.target_floor = -1
@@ -139,6 +161,8 @@ class Character(object):
         match character_type:
             case constants.CHARACTER_TYPE_HERO_1:
                 self.vel = VELOCITY_HERO
+                self.jumpCount = JUMP_HEIGHT_HERO
+                self.jump_height = JUMP_HEIGHT_HERO
                 self.images_idle = hero_1_idle
                 self.images_walk_right = hero_1_walk_right
                 self.images_walk_left = hero_1_walk_left
@@ -148,17 +172,33 @@ class Character(object):
                 self.hit_box_bottom_indent = 2
 
             case constants.CHARACTER_TYPE_TUMBLEWEED_1:
-                self.vel = VELOCITY_TUMBLEWEED
+                self.vel = VELOCITY_TUMBLEWEED_1
+                self.jumpCount = JUMP_HEIGHT_TUMBLEWEED_1
+                self.jump_height = JUMP_HEIGHT_TUMBLEWEED_1
                 self.images_idle = tumbleweed_1_idle
                 self.images_walk_right = tumbleweed_1_right
                 self.images_walk_left = tumbleweed_1_left
-                self.hit_box_left_indent = 10
-                self.hit_box_right_indent = 10
-                self.hit_box_top_indent = 12
-                self.hit_box_bottom_indent = 2
+                self.hit_box_left_indent = 21
+                self.hit_box_right_indent = 21
+                self.hit_box_top_indent = 25
+                self.hit_box_bottom_indent = 10
 
+            case constants.CHARACTER_TYPE_TUMBLEWEED_2:
+                self.vel = VELOCITY_TUMBLEWEED_2
+                self.jumpCount = JUMP_HEIGHT_TUMBLEWEED_2
+                self.jump_height = JUMP_HEIGHT_TUMBLEWEED_2
+                self.images_idle = tumbleweed_2_idle
+                self.images_walk_right = tumbleweed_2_right
+                self.images_walk_left = tumbleweed_2_left
+                self.hit_box_left_indent = 15
+                self.hit_box_right_indent = 16
+                self.hit_box_top_indent = 24
+                self.hit_box_bottom_indent = 4
+                
             case constants.CHARACTER_TYPE_THUG_1:
                 self.vel = VELOCITY_THUG
+                self.jumpCount = JUMP_HEIGHT_THUG
+                self.jump_height = JUMP_HEIGHT_THUG
                 self.images_idle = thug_1_idle
                 self.images_walk_right = thug_1_right
                 self.images_walk_left = thug_1_left
@@ -169,6 +209,8 @@ class Character(object):
 
             case constants.CHARACTER_TYPE_SKELETON_1:
                 self.vel = VELOCITY_SKELETON
+                self.jumpCount = JUMP_HEIGHT_SKELETON
+                self.jump_height = JUMP_HEIGHT_SKELETON
                 self.images_idle = skeleton_1_idle
                 self.images_walk_right = skeleton_1_walk_right
                 self.images_walk_left = skeleton_1_walk_left
@@ -182,14 +224,15 @@ class Character(object):
 
         # setup the hit box
         #idle_dims = self.get_image_idle_dims()
-        width = self.get_player_width()
-        height = self.get_player_height()
-        x = self.x + self.hit_box_left_indent
-        y = self.y + self.hit_box_top_indent
-        width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+        # width = self.get_character_width()
+        # height = self.get_character_height()
+        # x = self.x + self.hit_box_left_indent
+        # y = self.y + self.hit_box_top_indent
+        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
 
-        self.hit_box = (x, y, width, height)
+        # self.hit_box = (x, y, width, height)
+        self.hit_box = self.calc_hit_box(self.x, self.y)
 
     def draw(self, win):
         # character_type = self.character_type
@@ -214,13 +257,13 @@ class Character(object):
             win.blit(self.images_idle[0], (self.x, self.y))
 
         # update the hit box
-        width = self.get_player_width()
-        height = self.get_player_height()
-        x = self.x + self.hit_box_left_indent
-        y = self.y + self.hit_box_top_indent
-        width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        self.hit_box = (x, y, width, height)
+        # width = self.get_character_width()
+        # height = self.get_character_height()
+        # x = self.x + self.hit_box_left_indent
+        # y = self.y + self.hit_box_top_indent
+        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+        # self.hit_box = (x, y, width, height)
 
 
         # draw hit box
@@ -240,8 +283,8 @@ class Character(object):
         if SHOW_DIAGNOSTICS == True:
             #width = 15  # default value just something recognizable if the standing/left/right etc does not work
             #height = 15
-            width = self.get_player_width()
-            height = self.get_player_height()
+            width = self.get_character_width()
+            height = self.get_character_height()
             '''
             if not (self.is_standing):
                 if self.is_left:
@@ -268,6 +311,11 @@ class Character(object):
 
         self.x = target_x
         self.y = target_y
+
+        if self.character_type == CHARACTER_TYPE_TUMBLEWEED_2:
+            foo = 5
+            if foo == 4:
+                print("foobar")
 
         self.hit_box = self.calc_hit_box(self.x, self.y)
 
@@ -317,8 +365,8 @@ class Character(object):
 
         # update the hit box
         self.update_hit_box()
-        # width = self.get_player_width()
-        # height = self.get_player_height()
+        # width = self.get_character_width()
+        # height = self.get_character_height()
         # x = self.x + self.hit_box_left_indent
         # y = self.y + self.hit_box_top_indent
         # width = width - self.hit_box_left_indent - self.hit_box_right_indent
@@ -326,7 +374,7 @@ class Character(object):
         # self.hit_box = (x, y, width, height)
         """
 
-    def auto_move(self):
+    def auto_move(self, difficulty_multiplier):
         """actions the move for non-player characters"""
 
         # target_x = self.x + self.vel
@@ -336,8 +384,8 @@ class Character(object):
             direction = DIR_LEFT
         else:
             direction = DIR_RIGHT
-        difficulty_modifier = 1
-        target_x, target_y, hit_box = self.calc_move_result(direction, difficulty_modifier)
+        # difficulty_modifier = 1
+        target_x, target_y, hit_box = self.calc_move_result(direction, difficulty_multiplier)
         # print("Before move: x = ", self.x, "y = ", self.y)
 
         if self.is_left:
@@ -347,16 +395,53 @@ class Character(object):
 
         # print("After move: x = ", self.x, "y = ", self.y)
 
-        return hit_box
+        if self.character_type == CHARACTER_TYPE_TUMBLEWEED_1 or self.character_type == CHARACTER_TYPE_TUMBLEWEED_2:
+            y_change = self.jump_move(direction)
+            new_y = hit_box[1] - y_change
+            new_hit_box = (hit_box[0], new_y, hit_box[2], hit_box[3])
+            hit_box = new_hit_box
+
+        return hit_box, self.character_type
+
+    def jump_move(self, direction):
+        """Performs the jump move by adjusting the y value"""
+
+        x, y = self.get_character_position()
+        y_change = 0
+
+        if self.jumpCount >= (self.jump_height * -1):
+            neg = 1
+            if self.jumpCount < 0:
+                neg = -1
+            y_change = int((self.jumpCount ** 2) * 0.5 * neg)
+            # y -= int((self.jumpCount ** 2) * 0.5 * neg)
+            y -= y_change
+            self.jumpCount -= 1
+        else:
+            self.is_jumping = False
+            self.jumpCount = self.jump_height
+
+        self.move(x, y, direction)
+
+        return y_change
 
     def calc_hit_box(self, target_x, target_y):
         """Returns the hit box for the supplied x and y"""
 
         # update the hit box
-        width = self.get_player_width()
-        height = self.get_player_height()
+        width = self.get_character_width()
+        height = self.get_character_height()
         x = target_x + self.hit_box_left_indent
         y = target_y + self.hit_box_top_indent
+        # the tumbleweed hit box moves up and down with the bounce
+        # if self.character_type == CHARACTER_TYPE_TUMBLEWEED_1:
+        #     offset = self.walkCount // 3
+        #     # print("walkCount", self.walkCount, "offset", offset)
+        #     if 0 < offset <= 5:
+        #         y -= offset * 5
+                # print("adjusting y by ", offset * 5)
+            # else:
+            #     y += offset * 2
         width = width - self.hit_box_left_indent - self.hit_box_right_indent
         height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
         hit_box = (x, y, width, height)
@@ -408,8 +493,8 @@ class Character(object):
 
         # calculate the hit box
         hit_box = self.calc_hit_box(target_x, target_y)
-        # width = self.get_player_width()
-        # height = self.get_player_height()
+        # width = self.get_character_width()
+        # height = self.get_character_height()
         # hit_x = target_x + self.hit_box_left_indent
         # hit_y = target_y + self.hit_box_top_indent
         # width = width - self.hit_box_left_indent - self.hit_box_right_indent
@@ -442,7 +527,7 @@ class Character(object):
         return (width, height)
 
 
-    def get_player_width(self):
+    def get_character_width(self):
         """Returns the width of the player"""
 
         '''
@@ -463,7 +548,7 @@ class Character(object):
 
         return width
 
-    def get_player_height(self):
+    def get_character_height(self):
         """Returns the height of the player"""
 
         '''
@@ -483,3 +568,8 @@ class Character(object):
             height = self.images_walk_right[self.walkCount // 3].get_height()
 
         return height
+
+    def get_character_position(self):
+        """Returns the character position.  Used to determine if the position is in contact with another object"""
+
+        return self.x, self.y
