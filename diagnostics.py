@@ -1,7 +1,7 @@
 
 from constants import *
 
-def show_diagnotics(win, font, levels, player, hit_pause):
+def show_diagnotics(win, font, show_portal_info, levels, player, hit_pause):
     colour = COLOUR_DIAGNOSTICS
     start_x = 50
     start_y = 10
@@ -44,44 +44,48 @@ def show_diagnotics(win, font, levels, player, hit_pause):
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
-    # column 2 shows ladder info
-    x = start_x + col_1_width
-    y = start_y
-    num_floors = len(level.floors)
-    for i in range(num_floors):
-        ladders = level.get_floor_ladder_coords(i)
-        for j in range(len(ladders)):
-            foo = ladders[j]
-
-            ladder_x1 = foo[0]
-            ladder_y1 = foo[1]
-            ladder_x2 = foo[2]
-            ladder_y2 = foo[3]
-            text = "Fl " + str(i) + " ldr " + str(j) + ":  (" + str(ladder_x1) + ", " + str(ladder_y1) + ")  (" + str(ladder_x2) + ", " + str(ladder_y2) + ")"
+    # column 2 shows either portal or ladder info
+    if show_portal_info == True:
+        # column 2 shows portal info
+        x = start_x + col_1_width
+        y = start_y
+        num_portals = len(level.portals)
+        for i in range(num_portals):
+            portal = level.portals[i]
+            portal_id = portal.portal_id
+            portal_x = portal.x
+            portal_y = portal.y
+            if portal.direction == UP:
+                direction_str = "Up"
+            elif portal.direction == DOWN:
+                direction_str = "Down"
+            else:
+                direction_str = "unknown"
+            text = "Portal ID " + str(portal_id) + ": (" + str(portal_x) + ", " + str(portal_y) + ") direction " + direction_str
             print_text = font.render(text, 1, colour)
             win.blit(print_text, (x, y))
             y += row_height
+    else:
+        # column 2 shows ladder info
+        x = start_x + col_1_width
+        y = start_y
+        num_floors = len(level.floors)
+        for i in range(num_floors):
+            ladders = level.get_floor_ladder_coords(i)
+            for j in range(len(ladders)):
+                foo = ladders[j]
+
+                ladder_x1 = foo[0]
+                ladder_y1 = foo[1]
+                ladder_x2 = foo[2]
+                ladder_y2 = foo[3]
+                text = "Fl " + str(i) + " ldr " + str(j) + ":  (" + str(ladder_x1) + ", " + str(
+                    ladder_y1) + ")  (" + str(ladder_x2) + ", " + str(ladder_y2) + ")"
+                print_text = font.render(text, 1, colour)
+                win.blit(print_text, (x, y))
+                y += row_height
 
     """
-    # column 2 shows portal info
-    x = start_x + col_1_width
-    y = start_y
-    num_portals = len(level.portals)
-    for i in range(num_portals):
-        portal = level.portals[i]
-        portal_id = portal.portal_id
-        portal_x = portal.x
-        portal_y = portal.y
-        if portal.direction == UP:
-            direction_str = "Up"
-        elif portal.direction == DOWN:
-            direction_str = "Down"
-        else:
-            direction_str = "unknown"
-        text = "Portal ID " + str(portal_id) + ": (" + str(portal_x) + ", " + str(portal_y) + ") direction " + direction_str
-        print_text = font.render(text, 1, colour)
-        win.blit(print_text, (x, y))
-        y += row_height
     """
 
     # column 3 shows current player info

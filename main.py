@@ -52,6 +52,8 @@ font_diagnostics = pygame.font.SysFont('consolas', 15, False)
 font_pause = pygame.font.SysFont("comicsansms", 90)
 
 show_diagnostics = SHOW_DIAGNOSTICS
+show_portal_info = True
+
 
 num_player_lives = SCORE_START_NUM_LIVES
 num_player_bullets = SCORE_START_NUM_BULLETS
@@ -165,7 +167,9 @@ def redraw_game_window(player):
 
     # show diagnostics (function will check for show/not show)
     if show_diagnostics is True:
-        show_diagnotics(win, font_diagnostics, levels, player, tumbleweed_hit_pause)
+        show_diagnotics(win, font_diagnostics, show_portal_info, levels, player, tumbleweed_hit_pause)
+
+
     else:
         show_stats(win, font_stats, levels, player)
 
@@ -434,6 +438,13 @@ if __name__ == '__main__':
                 show_diagnostics = False
             else:
                 show_diagnostics = True
+
+                # toggle state of the portal or ladder info
+                if show_portal_info:
+                    show_portal_info = False
+                else:
+                    show_portal_info = True
+
 
             kp_key_states[KP_d] = 1
 

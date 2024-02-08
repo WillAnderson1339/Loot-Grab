@@ -528,7 +528,7 @@ class Level(object):
 
         random_num = random.randint(0, 100)
 
-        print("prob: ", probability, "rand:", random_num)
+        # print("prob: ", probability, "rand:", random_num)
 
         if random_num < probability:
             floor_id = random.randint(0, len(self.floors) - 1)
