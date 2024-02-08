@@ -55,8 +55,8 @@ show_diagnostics = SHOW_DIAGNOSTICS
 show_portal_info = True
 
 
-num_player_lives = SCORE_START_NUM_LIVES
-num_player_bullets = SCORE_START_NUM_BULLETS
+# num_player_lives_XXX = SCORE_START_NUM_LIVES
+# num_player_bullets_XXX = SCORE_START_NUM_BULLETS
 
 bullets = []
 
@@ -68,7 +68,7 @@ def paused():
     x = WINDOW_WIDTH // 2
     y = WINDOW_HEIGHT // 2
 
-    text = "Game Over: "
+    text = "Game Over! "
     print_text = font_pause.render(text, 1, colour)
     x -= print_text.get_width() // 2
     y -= print_text.get_height() // 2
@@ -97,10 +97,10 @@ def show_stats(win, font, levels, player):
     object_index = IMAGE_OBJECT_LIFE_HEART
     width = images_objects[object_index].get_width()
     width += 4
-    x = start_x - 15 - (num_player_lives * width)
+    x = start_x - 15 - (player.num_lives * width)
     y = start_y + 10
 
-    for num_lives in range(num_player_lives):
+    for num_lives in range(player.num_lives):
         win.blit(images_objects[object_index], (x, y))
         x += width
 
@@ -108,9 +108,9 @@ def show_stats(win, font, levels, player):
     object_index = IMAGE_OBJECT_HERO_BULLET
     width = images_objects[object_index].get_width()
     width += 8
-    x = start_x - 15 - (num_player_bullets * width)
+    x = start_x - 15 - (player.num_bullets * width)
     y = start_y + 10 + row_height
-    for num_bullets in range(num_player_bullets):
+    for num_bullets in range(player.num_bullets):
         win.blit(images_objects[object_index], (x, y))
         x += width
 
@@ -129,11 +129,6 @@ def show_stats(win, font, levels, player):
     text = "Level:  " + str(player.current_level +1)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
-
-    # y += row_height
-    # text = "Lives: " + str(num_player_lives)
-    # print_text = font.render(text, 1, colour)
-    # win.blit(print_text, (x, y))
 
     y += row_height
     text = "Score: " + str(player.score)
@@ -313,7 +308,9 @@ if __name__ == '__main__':
     current_floor = len(level.floors) - 1
     player_type = CHARACTER_TYPE_HERO_1
     player_id = 1000
-    player = Character(player_type, player_id, x, y, current_level, current_floor)
+    num_lives = SCORE_START_NUM_LIVES
+    num_bullets = SCORE_START_NUM_BULLETS
+    player = Character(player_type, player_id, x, y, num_lives, num_bullets, current_level, current_floor)
     player.position_player_on_new_level()
 
 
@@ -341,7 +338,7 @@ if __name__ == '__main__':
                 level.check_if_spawning_enemy()
 
 
-        if num_player_lives == -99:
+        if player.num_lives == -99:
             run = False
 
         # check if any key press pause counts are needed
@@ -386,12 +383,12 @@ if __name__ == '__main__':
                 tumbleweed_hit_pause = 1
 
         # if below zero score -1 life
-        if player.score < 0 and num_player_lives != -99:
-            num_player_lives -= 1
+        if player.score < 0 and player.num_lives != -99:
+            player.num_lives -= 1
             player.score = 0
-            if num_player_lives == 0:
+            if player.num_lives == 0:
                 print("Game Over!")
-                num_player_lives = -99
+                player.num_lives = -99
                 pause = True
                 paused()
             else:
@@ -406,7 +403,7 @@ if __name__ == '__main__':
             else:
                 facing = 1
 
-            if num_player_bullets > 0:
+            if player.num_bullets > 0:
                 width = player.get_character_width()
                 height = player.get_character_width()
                 projectile_id = 101
@@ -415,7 +412,7 @@ if __name__ == '__main__':
                 bullet = Projectile(PROJECTILE_HERO_BULLET, projectile_id, x, y, 6, (0, 0, 0), facing)
                 bullets.append(bullet)
                 bullet.projectile_sound()
-                num_player_bullets -= 1
+                player.num_bullets -= 1
                 # sound_bullet.play()
                 print("Shoot!")
 
@@ -483,7 +480,7 @@ if __name__ == '__main__':
                 # check to see if walked into any loot
                 loot = level.is_player_in_loot(player)
                 if loot.loot_id != -1:
-                    level.hit_loot(loot, player)
+                    level.action_player_touching_loot(loot, player)
                     #print("in Loot ID " + str(loot.loot_id))
                     # player.score += loot.loot_value
 
@@ -539,7 +536,7 @@ if __name__ == '__main__':
                 # check to see if walked into any loot
                 loot = level.is_player_in_loot(player)
                 if loot.loot_id != -1:
-                    level.hit_loot(loot, player)
+                    level.action_player_touching_loot(loot, player)
                     sound_loot.play()
 
             else:

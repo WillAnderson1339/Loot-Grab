@@ -130,11 +130,13 @@ class Character(object):
     IMAGES_HIT_WIDTH = 48
     IMAGES_HIT_HEIGHT = 68
 
-    def __init__(self, character_type, character_id, x, y, current_level, current_floor):
+    def __init__(self, character_type, character_id, x, y, num_lives, num_bullets, current_level, current_floor):
         self.character_type = character_type
         self.character_id = character_id
         self.x = x
         self.y = y
+        self.num_lives = num_lives
+        self.num_bullets = num_bullets
         self.current_level = current_level
         self.current_floor = current_floor
 

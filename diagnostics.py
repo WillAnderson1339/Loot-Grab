@@ -70,16 +70,26 @@ def show_diagnotics(win, font, show_portal_info, levels, player, hit_pause):
         x = start_x + col_1_width
         y = start_y
         num_floors = len(level.floors)
-        for i in range(num_floors):
-            ladders = level.get_floor_ladder_coords(i)
+        for floor_id in range(num_floors):
+            ladders = level.get_floor_ladder_coords(floor_id)
             for j in range(len(ladders)):
-                foo = ladders[j]
+                ladder = ladders[j]
 
-                ladder_x1 = foo[0]
-                ladder_y1 = foo[1]
-                ladder_x2 = foo[2]
-                ladder_y2 = foo[3]
-                text = "Fl " + str(i) + " ldr " + str(j) + ":  (" + str(ladder_x1) + ", " + str(
+                ladder_x1 = ladder[0]
+                ladder_y1 = ladder[1]
+                ladder_x2 = ladder[2]
+                ladder_y2 = ladder[3]
+
+                wind_direction = level.get_floor_wind_direction(floor_id)
+                if wind_direction == DIR_LEFT:
+                    wind_direction_str = " L"
+                elif wind_direction == DIR_RIGHT:
+                    wind_direction_str = " R"
+                else:
+                    wind_direction_str = " ?"
+
+
+                text = "Fl " + str(floor_id) + wind_direction_str + " ldr " + str(j) + ":  (" + str(ladder_x1) + ", " + str(
                     ladder_y1) + ")  (" + str(ladder_x2) + ", " + str(ladder_y2) + ")"
                 print_text = font.render(text, 1, colour)
                 win.blit(print_text, (x, y))

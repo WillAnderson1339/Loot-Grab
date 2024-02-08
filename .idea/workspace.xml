@@ -4,11 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Added shooting enemies!">
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Added toggle to show diagnostics for portal or ladder info">
+      <change afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Left__00_delete--me.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Character.py" beforeDir="false" afterPath="$PROJECT_DIR$/Character.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Floor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Floor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Loot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Loot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Left__00_.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__000.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__000.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__001.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__001.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__002.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__002.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__003.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__003.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__004.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__004.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__005.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__005.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__006.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__006.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__007.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__007.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Thug - 1/Run_Right__008.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Thug - 1/Run_Right__008.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -347,7 +362,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707335768857</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Added toggle to show diagnostics for portal or ladder info">
+      <option name="closed" value="true" />
+      <created>1707356411138</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1707356411138</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -363,7 +386,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Ladder rungs and now draw UP" />
     <MESSAGE value="getting up and down working" />
     <MESSAGE value="Up is working (not Down yet)" />
     <MESSAGE value="BOTH up and down work!" />
@@ -388,17 +410,18 @@
     <MESSAGE value="worked on the 2 tumbleweed sizes. Added random generating -- but too many!" />
     <MESSAGE value="created timer function to spawn enemies" />
     <MESSAGE value="Added shooting enemies!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added shooting enemies!" />
+    <MESSAGE value="Added toggle to show diagnostics for portal or ladder info" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added toggle to show diagnostics for portal or ladder info" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="self.walkCount" language="Python" />
       </configuration>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="475">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="507">
         <watch expression="portal.portal_id" />
       </inline-watch>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="664">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="661">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>

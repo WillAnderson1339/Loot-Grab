@@ -16,8 +16,39 @@ coin_gold_1 = [pygame.image.load('res/Loot/Coin - 1__000.png'),
                pygame.image.load('res/Loot/Coin - 1__006.png'),
                pygame.image.load('res/Loot/Coin - 1__006.png')]
 
+heart_small = [pygame.image.load('res/Loot/Heart - 1__000.png'),
+               pygame.image.load('res/Loot/Heart - 1__000.png'),
+               pygame.image.load('res/Loot/Heart - 1__000.png'),
+               pygame.image.load('res/Loot/Heart - 1__000.png'),
+               pygame.image.load('res/Loot/Heart - 1__000.png'),
+               pygame.image.load('res/Loot/Heart - 1__000.png'),
+               pygame.image.load('res/Loot/Heart - 1__000.png'),
+               pygame.image.load('res/Loot/Heart - 1__000.png'),
+               pygame.image.load('res/Loot/Heart - 1__000.png')]
+
+heart_medium = [pygame.image.load('res/Loot/Heart - 2__000.png'),
+                pygame.image.load('res/Loot/Heart - 2__000.png'),
+                pygame.image.load('res/Loot/Heart - 2__000.png'),
+                pygame.image.load('res/Loot/Heart - 2__000.png'),
+                pygame.image.load('res/Loot/Heart - 2__000.png'),
+                pygame.image.load('res/Loot/Heart - 2__000.png'),
+                pygame.image.load('res/Loot/Heart - 2__000.png'),
+                pygame.image.load('res/Loot/Heart - 2__000.png'),
+                pygame.image.load('res/Loot/Heart - 2__000.png')]
+
+heart_large = [pygame.image.load('res/Loot/Heart - 3__000.png'),
+               pygame.image.load('res/Loot/Heart - 3__000.png'),
+               pygame.image.load('res/Loot/Heart - 3__000.png'),
+               pygame.image.load('res/Loot/Heart - 3__000.png'),
+               pygame.image.load('res/Loot/Heart - 3__000.png'),
+               pygame.image.load('res/Loot/Heart - 3__000.png'),
+               pygame.image.load('res/Loot/Heart - 3__000.png'),
+               pygame.image.load('res/Loot/Heart - 3__000.png'),
+               pygame.image.load('res/Loot/Heart - 3__000.png')]
+
 sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
 sound_ding = pygame.mixer.Sound('res/ding-1.mp3')
+sound_miss = pygame.mixer.Sound('res/grunt-1.mp3')
 
 class Loot(object):
     def __init__(self, loot_id, x, y, loot_type, facing):
@@ -31,22 +62,46 @@ class Loot(object):
             case constants.LOOT_COIN_GOLD:
                 self.image_list = coin_gold_1
                 self.spin_count = self.facing
-                self.loot_value = LOOT_VALUE_GOLD
-                self.sound = sound_loot
+                self.loot_value = LOOT_VALUE_COIN_GOLD
+                self.sound_success = sound_loot
+                self.sound_miss = sound_miss
+
+            case constants.LOOT_HEART_SMALL:
+                self.image_list = heart_small
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_HEART_SMALL
+                self.sound_success = sound_ding
+                self.sound_miss = sound_miss
+
+            case constants.LOOT_HEART_MEDIUM:
+                self.image_list = heart_medium
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_HEART_MEDIUM
+                self.sound_success = sound_ding
+                self.sound_miss = sound_miss
+
+            case constants.LOOT_HEART_LARGE:
+                self.image_list = heart_large
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_HEART_LARGE
+                self.sound_success = sound_loot
+                self.sound_miss = sound_miss
 
             # loot objects are created with this as an uninitialized loot object (i.e. function return when not found)
             case constants.LOOT_UNKNOWN:
                 self.image_list = coin_gold_1
                 self.spin_count = self.facing
-                self.loot_value = LOOT_VALUE_GOLD
-                self.sound = sound_loot
+                self.loot_value = LOOT_VALUE_COIN_GOLD
+                self.sound_success = sound_loot
+                self.sound_miss = sound_miss
 
             case _:
                 print("Loot Type", self.loot_type, "not yet coded!")
                 self.image_list = coin_gold_1
                 self.spin_count = self.facing
-                self.loot_value = LOOT_VALUE_GOLD
-                self.sound = sound_loot
+                self.loot_value = LOOT_VALUE_COIN_GOLD
+                self.sound_success = sound_loot
+                self.sound_miss = sound_miss
 
         # setup the hit box
         self.hit_box_left_indent = 2
@@ -105,5 +160,8 @@ class Loot(object):
         height = self.image_list[0].get_height()
         return height
 
-    def loot_sound(self):
-        self.sound.play()
+    def loot_sound(self, sound_type=0):
+        if sound_type == 0:
+            self.sound_success.play()
+        else:
+            self.sound_miss.play()

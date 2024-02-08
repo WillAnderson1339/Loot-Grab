@@ -43,9 +43,13 @@ class Level(object):
             rect = (x, y, width, height)
             floor_id = i
             ladders = []
+            random_num = random.randint(0, 1)
+            if random_num == 0:
+                wind_direction= DIR_LEFT
+            else:
+                wind_direction = DIR_RIGHT
 
-            #self.floors.append((floor_id, colour, rect, ladders))
-            floor = Floor(floor_id, colour, rect, ladders)
+            floor = Floor(floor_id, colour, rect, ladders, wind_direction)
             self.floors.append(floor)
 
         # add the bottom floor
@@ -57,9 +61,13 @@ class Level(object):
         rect = (x, y, width, height)
         floor_id = self.num_floors
         ladders = []
+        random_num = random.randint(0, 1)
+        if random_num == 0:
+            wind_direction = DIR_LEFT
+        else:
+            wind_direction = DIR_RIGHT
 
-        #self.floors.append((floor_id, colour, rect, ladders))
-        floor = Floor(floor_id, colour, rect, ladders)
+        floor = Floor(floor_id, colour, rect, ladders, wind_direction)
         self.floors.append(floor)
 
         # Once all the floors are create the ladders can be added
@@ -203,15 +211,28 @@ class Level(object):
         facing = random.randint(0, 9)
         start_x = 50
         loot_interval = LOOT_INTERVAL
-        loot_type = LOOT_COIN_GOLD
+
         for floor in self.floors:
-            sizing_loot = Loot(-1, 0,0, loot_type, 0)
+
+            sizing_loot_type = LOOT_COIN_GOLD
+            sizing_loot = Loot(-1, 0,0, sizing_loot_type, 0)
             width = sizing_loot.get_loot_width()
             height = sizing_loot.get_loot_height()
             num_loot = WINDOW_WIDTH // (loot_interval + width) - 1
             x = start_x
             y = self.get_floor_y(floor.floor_id) - height - LOOT_FLOAT
             for i in range(num_loot):
+                # determine random loot type
+                random_num = random.randint(0, 199)
+                if 0 <= random_num < LOOT_CHANCE_OF_HEART_SMALL:
+                    loot_type = LOOT_HEART_SMALL
+                elif LOOT_CHANCE_OF_HEART_SMALL <= random_num < LOOT_CHANCE_OF_HEART_MEDIUM:
+                    loot_type = LOOT_HEART_MEDIUM
+                elif LOOT_CHANCE_OF_HEART_MEDIUM <= random_num < LOOT_CHANCE_OF_HEART_LARGE:
+                    loot_type = LOOT_HEART_LARGE
+                else:
+                    loot_type = LOOT_COIN_GOLD
+
                 okay_to_place = True
                 if (self.is_location_in_ladder(floor.floor_id, x, y) is True or self.is_location_in_ladder(floor.floor_id, x + width, y) is True):
                     okay_to_place = False
@@ -230,26 +251,34 @@ class Level(object):
 
         floor_id = len(self.floors) - 2
         # floor = self.get_floor(floor_id)
-        enemy_type = CHARACTER_TYPE_TUMBLEWEED_1
+        enemy_type = CHARACTER_TYPE_TUMBLEWEED_2
         enemy_id = len(self.enemies)
-        tumbleweed = Character(enemy_type, enemy_id, -100, -100, 0, 0)
-        height = tumbleweed.get_character_height()
+        num_lives = 1
+        num_bullets = 999
+        level_id = self.level_id
+        enemy = Character(enemy_type, enemy_id, -100, -100, num_lives, num_bullets, level_id, floor_id)
+        height = enemy.get_character_height()
         x = 100
         y = self.get_floor_y(floor_id) - height
-        tumbleweed.move(x, y, DIR_LEFT)
+        wind_direction = self.get_floor_wind_direction(floor_id)
+        enemy.move(x, y, wind_direction)
 
-        self.enemies.append(tumbleweed)
+        self.enemies.append(enemy)
 
         floor_id -= 1
         enemy_type = CHARACTER_TYPE_THUG_1
         enemy_id = len(self.enemies)
-        tumbleweed = Character(enemy_type, enemy_id, -100, -100, 0, 0)
-        height = tumbleweed.get_character_height()
+        num_lives = 1
+        num_bullets = 999
+        level_id = self.level_id
+        enemy = Character(enemy_type, enemy_id, -100, -100, num_lives, num_bullets, level_id, floor_id)
+        height = enemy.get_character_height()
         x = 100
         y = self.get_floor_y(floor_id) - height
-        tumbleweed.move(x, y, DIR_LEFT)
+        wind_direction = self.get_floor_wind_direction(floor_id)
+        enemy.move(x, y, wind_direction)
 
-        self.enemies.append(tumbleweed)
+        self.enemies.append(enemy)
 
     def draw(self, win):
         # draw the floors
@@ -283,7 +312,7 @@ class Level(object):
     def get_floor(self, floor_id):
         """Returns the floor with the matching ID. Returns an empty floor if ID not found."""
         ladders = []
-        found_floor = Floor(-1, (0,0,0), (0,0,0,0), ladders)
+        found_floor = Floor(-1, (0,0,0), (0,0,0,0), ladders, DIR_LEFT)
         found = False
         if (floor_id >= 0 and floor_id < len(self.floors)):
             for floor in self.floors:
@@ -341,20 +370,23 @@ class Level(object):
         """Returns the y of the floor for the floor ID. Returns -1 if ID not found."""
         y = -1
 
-        '''
-        if (floor_id >= 0 and floor_id < len(self.floors)):
-            for floor in self.floors:
-                if floor[0] == floor_id:
-                    rect = floor[2]
-                    y = rect[1]
-                    break
-        '''
         floor = self.get_floor(floor_id)
         if floor.floor_id != -1:
             rect = floor.rect
             y = rect[1]
             y = floor.rect[1]
+
         return y
+
+    def get_floor_wind_direction(self, floor_id):
+        """Returns the wind direction of the floor for the floor ID. Returns DIR_NO_MOVE if ID not found."""
+        wind_direction = DIR_NO_MOVE
+
+        floor = self.get_floor(floor_id)
+        if floor.floor_id != -1:
+            wind_direction = floor.wind_direction
+
+        return wind_direction
 
     def get_floor_id(self, y):
         """Returns the ID of the floor for the floor y. Returns -1 if ID not found."""
@@ -503,14 +535,35 @@ class Level(object):
 
         return found_loot
 
-    def hit_loot(self, loot, player):
+    def action_player_touching_loot(self, loot, player):
         """The player has hit a loot - need to do the hitting loot action like adding score and removing the loot"""
 
         # print("in Loot ID " + str(loot.loot_id))
         self.loots.remove(loot)
-        player.score += loot.loot_value
 
-        loot.loot_sound()
+        # touching coin
+        if loot.loot_type == LOOT_COIN_GOLD or loot.loot_type == LOOT_COIN_SILVER or loot.loot_type == LOOT_COIN_BRONZE:
+            player.score += loot.loot_value
+            loot.loot_sound()
+
+        # touching heart
+        elif loot.loot_type == LOOT_HEART_SMALL or loot.loot_type == LOOT_HEART_MEDIUM:
+            # for small and medium heart only add if less than starting number of lives
+            if player.num_lives < SCORE_START_NUM_LIVES:
+                player.num_lives += loot.loot_value
+                loot.loot_sound()
+            else:
+                loot.loot_sound(-1)
+
+        # touching large heart
+        elif loot.loot_type == LOOT_HEART_LARGE:
+            player.num_lives += loot.loot_value
+            loot.loot_sound()
+            loot.loot_sound()
+
+        else:
+            print("ERROR: action_player_touching_loot unknown loot type", loot.loot_type)
+
 
     def check_if_spawning_enemy(self):
         """Checks to see if an enemy should be added and if so creates one and adds it to the level"""
@@ -537,11 +590,23 @@ class Level(object):
             # floor = self.get_floor(floor_id)
             enemy_type += 2
             enemy_id = len(self.enemies)
-            enemy = Character(enemy_type, enemy_id, -100, -100, self.level_id, floor_id)
+            num_lives = 1
+            num_bullets = 999
+            enemy = Character(enemy_type, enemy_id, -100, -100, num_lives, num_bullets, self.level_id, floor_id)
             height = enemy.get_character_height()
             x = 100
             y = self.get_floor_y(floor_id) - height
-            enemy.move(x, y, DIR_LEFT)
+            if enemy_type == CHARACTER_TYPE_TUMBLEWEED_1 or enemy_type == CHARACTER_TYPE_TUMBLEWEED_2:
+                # use wind direction of level
+                wind_direction = self.get_floor_wind_direction(floor_id)
+            else:
+                # else random direction
+                random_num = random.randint(0, 1)
+                if random_num == 0:
+                    wind_direction= DIR_LEFT
+                else:
+                    wind_direction = DIR_RIGHT
+            enemy.move(x, y, wind_direction)
 
             print("spawning enemy type: ", enemy_type)
             self.enemies.append(enemy)
