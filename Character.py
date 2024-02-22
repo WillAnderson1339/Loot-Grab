@@ -161,7 +161,7 @@ class Character(object):
         self.score = 0
 
         # set up the character specific data
-        match character_type:
+        match self.character_type:
             case constants.CHARACTER_TYPE_HERO_1:
                 self.vel = VELOCITY_HERO
                 self.jumpCount = JUMP_HEIGHT_HERO
@@ -170,7 +170,7 @@ class Character(object):
                 self.images_walk_right = hero_1_walk_right
                 self.images_walk_left = hero_1_walk_left
                 self.hit_box_left_indent = 9
-                self.hit_box_right_indent = 7
+                self.hit_box_right_indent = 10
                 self.hit_box_top_indent = 2
                 self.hit_box_bottom_indent = 2
 
@@ -205,8 +205,8 @@ class Character(object):
                 self.images_idle = thug_1_idle
                 self.images_walk_right = thug_1_right
                 self.images_walk_left = thug_1_left
-                self.hit_box_left_indent = 12
-                self.hit_box_right_indent = 10
+                self.hit_box_left_indent = 13
+                self.hit_box_right_indent = 13
                 self.hit_box_top_indent = 14
                 self.hit_box_bottom_indent = 2
 
@@ -436,15 +436,7 @@ class Character(object):
         height = self.get_character_height()
         x = target_x + self.hit_box_left_indent
         y = target_y + self.hit_box_top_indent
-        # the tumbleweed hit box moves up and down with the bounce
-        # if self.character_type == CHARACTER_TYPE_TUMBLEWEED_1:
-        #     offset = self.walkCount // 3
-        #     # print("walkCount", self.walkCount, "offset", offset)
-        #     if 0 < offset <= 5:
-        #         y -= offset * 5
-                # print("adjusting y by ", offset * 5)
-            # else:
-            #     y += offset * 2
+
         width = width - self.hit_box_left_indent - self.hit_box_right_indent
         height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
         hit_box = (x, y, width, height)

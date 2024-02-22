@@ -4,23 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Added Heart png">
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 2__008.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Heart - 3__000-.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/miss-1.mp3" afterDir="false" />
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Added Silver coins">
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__000.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__001.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__002.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__003.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__004.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__005.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__006.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__007.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/Loot/Coin - 3__008.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Character.py" beforeDir="false" afterPath="$PROJECT_DIR$/Character.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Loot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Loot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/Loot/Heart - 3__000.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Loot/Heart - 3__000.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/Loot/Heart - 3__000-.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -383,7 +382,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707364271108</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Added Silver coins">
+      <option name="closed" value="true" />
+      <created>1708568833295</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1708568833295</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -399,7 +406,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="BOTH up and down work!" />
     <MESSAGE value="Moved diagnostics code into a file" />
     <MESSAGE value="first impl of Portal" />
     <MESSAGE value="portal works and first impl backgrounds" />
@@ -424,23 +430,10 @@
     <MESSAGE value="Added toggle to show diagnostics for portal or ladder info" />
     <MESSAGE value="Added Heart Loot (3 sizes)" />
     <MESSAGE value="Added Heart png" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Heart png" />
+    <MESSAGE value="Added Silver coins" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Silver coins" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>234</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Level.py</url>
-          <line>233</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="self.walkCount" language="Python" />

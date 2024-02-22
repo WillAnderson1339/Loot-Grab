@@ -230,10 +230,11 @@ class Level(object):
                     loot_type = LOOT_HEART_MEDIUM
                 elif LOOT_CHANCE_OF_HEART_MEDIUM <= random_num < LOOT_CHANCE_OF_HEART_LARGE:
                     loot_type = LOOT_HEART_LARGE
+                elif LOOT_CHANCE_OF_HEART_LARGE <= random_num < LOOT_CHANCE_OF_BULLET_SMALL:
+                    loot_type = LOOT_BULLET_SMALL
                 else:
                     if 0 <= self.difficulty_multiplier < DIFFICULTY_GROUP_1:
-                        # loot_type = LOOT_COIN_BRONZE
-                        loot_type = LOOT_COIN_SILVER
+                        loot_type = LOOT_COIN_BRONZE
                     elif DIFFICULTY_GROUP_1 <= self.difficulty_multiplier < DIFFICULTY_GROUP_2:
                         loot_type = LOOT_COIN_SILVER
                     elif DIFFICULTY_GROUP_2 <= self.difficulty_multiplier < DIFFICULTY_GROUP_3:
@@ -241,8 +242,7 @@ class Level(object):
                     else:
                         random_num = random.randint(1, 3)
                         if random_num == 1:
-                            # loot_type = LOOT_COIN_BRONZE
-                            loot_type = LOOT_COIN_SILVER
+                            loot_type = LOOT_COIN_BRONZE
                         elif random_num == 2:
                             loot_type = LOOT_COIN_SILVER
                         else:
@@ -573,6 +573,13 @@ class Level(object):
         # touching large heart - add lives regardless of current life count
         elif loot.loot_type == LOOT_HEART_LARGE:
             player.num_lives += loot.loot_value
+            loot.loot_sound()
+            loot.loot_sound()
+
+
+        # touching large heart - add lives regardless of current life count
+        elif loot.loot_type == LOOT_BULLET_SMALL:
+            player.num_bullets += loot.loot_value
             loot.loot_sound()
             loot.loot_sound()
 
