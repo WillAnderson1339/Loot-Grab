@@ -231,7 +231,22 @@ class Level(object):
                 elif LOOT_CHANCE_OF_HEART_MEDIUM <= random_num < LOOT_CHANCE_OF_HEART_LARGE:
                     loot_type = LOOT_HEART_LARGE
                 else:
-                    loot_type = LOOT_COIN_GOLD
+                    if 0 <= self.difficulty_multiplier < DIFFICULTY_GROUP_1:
+                        # loot_type = LOOT_COIN_BRONZE
+                        loot_type = LOOT_COIN_SILVER
+                    elif DIFFICULTY_GROUP_1 <= self.difficulty_multiplier < DIFFICULTY_GROUP_2:
+                        loot_type = LOOT_COIN_SILVER
+                    elif DIFFICULTY_GROUP_2 <= self.difficulty_multiplier < DIFFICULTY_GROUP_3:
+                        loot_type = LOOT_COIN_GOLD
+                    else:
+                        random_num = random.randint(1, 3)
+                        if random_num == 1:
+                            # loot_type = LOOT_COIN_BRONZE
+                            loot_type = LOOT_COIN_SILVER
+                        elif random_num == 2:
+                            loot_type = LOOT_COIN_SILVER
+                        else:
+                            loot_type = LOOT_COIN_GOLD
 
                 okay_to_place = True
                 if (self.is_location_in_ladder(floor.floor_id, x, y) is True or self.is_location_in_ladder(floor.floor_id, x + width, y) is True):
@@ -546,7 +561,7 @@ class Level(object):
             player.score += loot.loot_value
             loot.loot_sound()
 
-        # touching heart
+        # touching small or medium heart
         elif loot.loot_type == LOOT_HEART_SMALL or loot.loot_type == LOOT_HEART_MEDIUM:
             # for small and medium heart only add if less than starting number of lives
             if player.num_lives < SCORE_START_NUM_LIVES:
@@ -555,7 +570,7 @@ class Level(object):
             else:
                 loot.loot_sound(-1)
 
-        # touching large heart
+        # touching large heart - add lives regardless of current life count
         elif loot.loot_type == LOOT_HEART_LARGE:
             player.num_lives += loot.loot_value
             loot.loot_sound()

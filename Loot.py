@@ -16,6 +16,16 @@ coin_gold_1 = [pygame.image.load('res/Loot/Coin - 1__000.png'),
                pygame.image.load('res/Loot/Coin - 1__006.png'),
                pygame.image.load('res/Loot/Coin - 1__006.png')]
 
+coin_silver_1 = [pygame.image.load('res/Loot/Coin - 2__000.png'),
+               pygame.image.load('res/Loot/Coin - 2__001.png'),
+               pygame.image.load('res/Loot/Coin - 2__002.png'),
+               pygame.image.load('res/Loot/Coin - 2__003.png'),
+               pygame.image.load('res/Loot/Coin - 2__004.png'),
+               pygame.image.load('res/Loot/Coin - 2__005.png'),
+               pygame.image.load('res/Loot/Coin - 2__006.png'),
+               pygame.image.load('res/Loot/Coin - 2__007.png'),
+               pygame.image.load('res/Loot/Coin - 2__008.png')]
+
 heart_small = [pygame.image.load('res/Loot/Heart - 1__000.png'),
                pygame.image.load('res/Loot/Heart - 1__000.png'),
                pygame.image.load('res/Loot/Heart - 1__000.png'),
@@ -48,7 +58,7 @@ heart_large = [pygame.image.load('res/Loot/Heart - 3__000.png'),
 
 sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
 sound_ding = pygame.mixer.Sound('res/ding-1.mp3')
-sound_miss = pygame.mixer.Sound('res/grunt-1.mp3')
+sound_miss = pygame.mixer.Sound('res/miss-1.mp3')
 
 class Loot(object):
     def __init__(self, loot_id, x, y, loot_type, facing):
@@ -59,6 +69,21 @@ class Loot(object):
         self.facing = facing
 
         match self.loot_type:
+            case constants.LOOT_COIN_BRONZE:
+                # self.image_list = coin_bronze_1
+                self.image_list = coin_silver_1
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_COIN_BRONZE
+                self.sound_success = sound_loot
+                self.sound_miss = sound_miss
+
+            case constants.LOOT_COIN_SILVER:
+                self.image_list = coin_silver_1
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_COIN_SILVER
+                self.sound_success = sound_loot
+                self.sound_miss = sound_miss
+
             case constants.LOOT_COIN_GOLD:
                 self.image_list = coin_gold_1
                 self.spin_count = self.facing
