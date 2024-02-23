@@ -335,6 +335,13 @@ class Level(object):
                     found_floor = floor
         return found_floor
 
+    def get_num_floors(self):
+        """Returns the number of floors on this level"""
+
+        num_floors = len(self.floors) - 1
+
+        return num_floors
+
     def get_num_floor_ladders(self, floor_id):
         """Returns the number of ladders for the floor ID. Returns -1 if ID not found."""
         num_ladders = -1

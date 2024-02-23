@@ -462,27 +462,14 @@ if __name__ == '__main__':
                     print("in portal but jumping so moving instead!")
 
                 # if in ladder restrict horizontal movement to within the ladder
-                ##if player.is_in_ladder is False or (player.x - player.vel) >= player.in_ladder_min_x - (player.width * 0.3):
                 width = player.get_character_width()
                 if player.is_in_ladder is False or target_x >= player.in_ladder_min_x - (width * 0.3):
-                    # player.x -= player.vel
-                    ## player.move(DIR_LEFT, level.difficulty_multiplier)
                     player.move(target_x, target_y, DIR_LEFT)
-                    # player.is_left = True
-                    # player.is_right = False
-                    # player.is_standing = False
-
-                # moved to player function move()
-                # # if going off-screen reposition to the right side
-                # if player.is_in_ladder is False and player.x <= player.width * -1:
-                #     player.x = WINDOW_WIDTH - player.width
 
                 # check to see if walked into any loot
                 loot = level.is_player_in_loot(player)
                 if loot.loot_id != -1:
                     level.action_player_touching_loot(loot, player)
-                    #print("in Loot ID " + str(loot.loot_id))
-                    # player.score += loot.loot_value
 
             else:
                 new_level_id = level.get_portal_target(portal_id)
@@ -491,22 +478,15 @@ if __name__ == '__main__':
                 sound_portal.play()
 
                 # setup player on new level
-                # player.x = WINDOW_WIDTH - 100
-                # player.y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
+                new_level = levels[new_level_id]
+                player.current_floor = new_level.get_num_floors()
                 player.position_player_on_new_level()
-                level = levels[new_level_id]
-                player.current_floor = len(level.floors) - 1
 
             kp_key_states[KP_LEFT] = 1
 
 
         #elif keys[pygame.K_RIGHT] and kp_key_states[KP_RIGHT] == 0:
         elif keys[pygame.K_RIGHT]:
-            # x = player.x + player.vel
-            # y = player.y
-            # level = levels[player.current_level]
-            # portal_id = level.is_location_in_portal(x, y)
-
             # calculate move so can compare for various results before moving
             level = levels[player.current_level]
             target_x, target_y, target_hit_box = player.calc_move_result(DIR_RIGHT, level.difficulty_multiplier)
@@ -518,20 +498,9 @@ if __name__ == '__main__':
                     print("in portal but jumping so moving instead!")
 
                 # if in ladder restrict horizontal movement to within the ladder
-                # if player.is_in_ladder is False or (player.x + player.vel) <= player.in_ladder_max_x - (player.width * 0.5):
                 width = player.get_character_width()
                 if player.is_in_ladder is False or target_x <= player.in_ladder_max_x - (width * 0.5):
-                    # player.x -= player.vel
-                    ## player.move(DIR_LEFT, level.difficulty_multiplier)
                     player.move(target_x, target_y, DIR_RIGHT)
-                    # player.x += player.vel
-                    # player.is_right = True
-                    # player.is_left = False
-                    # player.is_standing = False
-
-                # if going off-screen reposition to the left side
-                # if player.is_in_ladder is False and player.x >= WINDOW_WIDTH:
-                #     player.x = 0
 
                 # check to see if walked into any loot
                 loot = level.is_player_in_loot(player)
@@ -546,11 +515,9 @@ if __name__ == '__main__':
                 sound_portal.play()
 
                 # setup player on new level
-                # player.x = WINDOW_WIDTH - 100
-                # player.y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
-                player.position_player_on_new_level()
                 level = levels[new_level_id]
                 player.current_floor = len(level.floors) - 1
+                player.position_player_on_new_level()
 
             kp_key_states[KP_RIGHT] = 1
 
@@ -689,12 +656,7 @@ if __name__ == '__main__':
                     elif player.is_down == True:
                         player.target_floor = player.target_floor - 1
 
-                    # player.y -= RUNG_HEIGHT
                     player.move(target_x, target_y, DIR_UP)
-
-                    # set direction to up
-                    # player.is_up = True
-                    # player.is_down = False
 
                     # if reached top of ladder
                     # normal up is to check the floor above
@@ -710,7 +672,6 @@ if __name__ == '__main__':
                     foot_y = player.y + dims[1]
                     if foot_y <= y_of_floor_above:
                         player.current_floor = player.target_floor
-                        # player.y = y_of_floor_above - dims[1]   # ensures the feet are exactly on the floor y
                         target_y = y_of_floor_above - dims[1]
                         player.move(target_x, target_y, DIR_NO_MOVE) # ensures the feet are exactly on the floor y
                         player.is_up = False
@@ -734,15 +695,6 @@ if __name__ == '__main__':
             else:
                 direction = DIR_RIGHT
             player.jump_move(direction)
-            # if player.jumpCount >= (JUMP_HEIGHT * -1):
-            #     neg = 1
-            #     if player.jumpCount < 0:
-            #         neg = -1
-            #     player.y -= int((player.jumpCount ** 2) * 0.5 * neg)
-            #     player.jumpCount -= 1
-            # else:
-            #     player.is_jumping = False
-            #     player.jumpCount = JUMP_HEIGHT
 
         redraw_game_window(player)
     

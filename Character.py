@@ -97,11 +97,8 @@ skeleton_1_walk_left = [pygame.image.load('res/Skeleton/Walk_Left__001.png'),
                     pygame.image.load('res/Skeleton/Walk_Left__008.png')]
 
 
-hero_1_idle = [pygame.image.load('res/Hero - 1/Idle__000.png'), pygame.image.load('res/Hero - 1/Idle__001.png'),
-               pygame.image.load('res/Hero - 1/Idle__002.png'), pygame.image.load('res/Hero - 1/Idle__003.png'),
-               pygame.image.load('res/Hero - 1/Idle__004.png'), pygame.image.load('res/Hero - 1/Idle__005.png'),
-               pygame.image.load('res/Hero - 1/Idle__006.png'), pygame.image.load('res/Hero - 1/Idle__007.png'),
-               pygame.image.load('res/Hero - 1/Idle__008.png')]
+# hero idel image list not setup for animation. First image is left. Second image is right
+hero_1_idle = [pygame.image.load('res/Hero - 1/Idle__000.png'), pygame.image.load('res/Hero - 1/Idle__001.png')]
 
 hero_1_walk_right = [pygame.image.load('res/Hero - 1/Run_Right__000.png'),
                      pygame.image.load('res/Hero - 1/Run_Right__001.png'),
@@ -152,9 +149,10 @@ class Character(object):
         self.walkCount = 0
         self.jumpCount = 0
         self.is_standing = True
-        self.shoot_dir = DIR_RIGHT
+        self.facing_direction = DIR_LEFT
+        self.shoot_dir = DIR_RIGHT  # TO DO replace this with using self.is_facing
         self.target_floor = -1
-        self.in_ladder_min_x = -1
+        self.in_ladder_min_x = -1   # to do  change to new way to implement in ladder
         self.in_ladder_max_x = -1
         self.in_ladder_min_y = -1
         self.in_ladder_max_y = -1
@@ -245,19 +243,24 @@ class Character(object):
         if self.walkCount + 1 >= 27:
             self.walkCount = 0
 
-        if not(self.is_standing):
-            if self.is_left:
+        # if moving
+        if self.is_standing == False:
+            # if self.is_left:
+            if self.facing_direction == DIR_LEFT:
                 win.blit(self.images_walk_left[self.walkCount//3], (self.x,self.y))
-            elif self.is_right:
+            # elif self.is_right:
+            elif self.facing_direction == DIR_RIGHT:
                 win.blit(self.images_walk_right[self.walkCount//3], (self.x,self.y))
+
+        # else standing
         else:
-            '''
-            if self.is_right:
-                win.blit(self.images_walk_right[0], (self.x, self.y))
+            if self.facing_direction == DIR_LEFT:
+                # win.blit(self.images_walk_left[0], (self.x, self.y))
+                win.blit(self.images_idle[0], (self.x, self.y))
             else:
-                win.blit(self.images_walk_left[0], (self.x, self.y))
-            '''
-            win.blit(self.images_idle[0], (self.x, self.y))
+                # win.blit(self.images_walk_right[0], (self.x, self.y))
+                win.blit(self.images_idle[1], (self.x, self.y))
+            # win.blit(self.images_idle[0], (self.x, self.y))
 
         # update the hit box
         # width = self.get_character_width()
@@ -271,35 +274,11 @@ class Character(object):
 
         # draw hit box
         if SHOW_PLAYER_HITBOX == True:
-            '''
-            # update the hit box
-            idle_dims = self.get_image_idle_dims()
-            x = self.x + self.hit_box_left_indent
-            y = self.y + self.hit_box_top_indent
-            width = idle_dims[0] - self.hit_box_left_indent - self.hit_box_right_indent
-            height = idle_dims[1] - self.hit_box_top_indent - self.hit_box_bottom_indent
-            self.hit_box = (x, y, width, height)
-            #self.hitbox = (self.x + 0, self.y + 0, self.IMAGES_HIT_WIDTH, self.IMAGES_HEIGHT - 2)
-            '''
             pygame.draw.rect(win, COLOUR_PLAYER_HITBOX, self.hit_box,1)
 
         if SHOW_DIAGNOSTICS == True:
-            #width = 15  # default value just something recognizable if the standing/left/right etc does not work
-            #height = 15
             width = self.get_character_width()
             height = self.get_character_height()
-            '''
-            if not (self.is_standing):
-                if self.is_left:
-                    width = self.images_walk_left[self.walkCount//3].get_width()
-                    height = self.images_walk_left[self.walkCount//3].get_height()
-                elif self.is_right:
-                    width = self.images_walk_right[self.walkCount//3].get_width()
-                    height = self.images_walk_right[self.walkCount//3].get_height()
-            else:
-                width = self.images_idle[0].get_width()
-                height = self.images_idle[0].get_height()
-            '''
             image_rect = (self.x, self.y, width, height)
             pygame.draw.rect(win, COLOUR_PLAYER_PERIMETER, image_rect,2)
 
@@ -309,12 +288,10 @@ class Character(object):
     def move(self, target_x, target_y, direction):
         """Performs the move action. difficulty_multiplier is used to make the speed faster"""
 
-        # print("moving", direction, difficulty_multiplier)
-        # target_x, target_y, target_hit_box = self.calc_move_result(direction, difficulty_multiplier)
-
         self.x = target_x
         self.y = target_y
 
+        # this if statement is used for debugging only
         if self.character_type == CHARACTER_TYPE_TUMBLEWEED_2:
             foo = 5
             if foo == 4:
@@ -339,6 +316,7 @@ class Character(object):
                 self.is_left = True
                 self.is_right = False
                 self.is_standing = False
+                self.facing_direction = DIR_LEFT
                 self.shoot_dir = DIR_LEFT
             case constants.DIR_RIGHT:
                 # x_change = int(self.vel * difficulty_multiplier)
@@ -346,57 +324,30 @@ class Character(object):
                 self.is_left = False
                 self.is_right = True
                 self.is_standing = False
+                self.facing_direction = DIR_RIGHT
                 self.shoot_dir = DIR_RIGHT
             case constants.DIR_NO_MOVE:
                 x_change = 0
                 y_change = 0
                 pass
             case _:
-                print ("ERROR: unknown move direction", direction)
+                print("ERROR: unknown move direction", direction)
                 x_change = 0
                 y_change = 0
-        """
-
-        # print("x_change = ", x_change)
-
-        self.x += x_change
-        self.y += y_change
-
-        # if going off-screen reposition to the right side
-        if self.is_in_ladder is False and self.x <= self.width * -1:
-            self.x = WINDOW_WIDTH - self.width
-
-        # update the hit box
-        self.update_hit_box()
-        # width = self.get_character_width()
-        # height = self.get_character_height()
-        # x = self.x + self.hit_box_left_indent
-        # y = self.y + self.hit_box_top_indent
-        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        # self.hit_box = (x, y, width, height)
-        """
 
     def auto_move(self, difficulty_multiplier):
         """actions the move for non-player characters"""
-
-        # target_x = self.x + self.vel
-        # target_y = self.y
 
         if self.is_left:
             direction = DIR_LEFT
         else:
             direction = DIR_RIGHT
-        # difficulty_modifier = 1
         target_x, target_y, hit_box = self.calc_move_result(direction, difficulty_multiplier)
-        # print("Before move: x = ", self.x, "y = ", self.y)
 
         if self.is_left:
             self.move(target_x, target_y, direction)
         else:
             self.move(target_x, target_y, direction)
-
-        # print("After move: x = ", self.x, "y = ", self.y)
 
         if self.character_type == CHARACTER_TYPE_TUMBLEWEED_1 or self.character_type == CHARACTER_TYPE_TUMBLEWEED_2:
             y_change = self.jump_move(direction)
@@ -499,11 +450,7 @@ class Character(object):
         return target_x, target_y, hit_box
 
     def position_player_on_new_level(self, portal_id = -1):
-        """Positions  on new level at portal_id. If portal_id = -1 (default) player is positioned in bottom right."""
-        # self.x = WINDOW_WIDTH - 100
-        # self.y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
-
-        # self.move(DIR_NO_MOVE, 1)
+        """Positions on new level at portal_id. If portal_id = -1 (default) player is positioned in bottom right."""
 
         target_x = WINDOW_WIDTH - 100
         target_y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
@@ -568,3 +515,4 @@ class Character(object):
         """Returns the character position.  Used to determine if the position is in contact with another object"""
 
         return self.x, self.y
+
