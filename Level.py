@@ -573,9 +573,9 @@ class Level(object):
             # for small and medium heart only add if less than starting number of lives
             if player.num_lives < SCORE_START_NUM_LIVES:
                 player.num_lives += loot.loot_value
-                loot.loot_sound()
+                loot.loot_sound(SOUND_TYPE_LOOT_SUCCESS)
             else:
-                loot.loot_sound(-1)
+                loot.loot_sound(SOUND_TYPE_LOOT_MISS)
 
         # touching large heart - add lives regardless of current life count
         elif loot.loot_type == LOOT_HEART_LARGE:

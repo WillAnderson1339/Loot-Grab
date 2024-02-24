@@ -3,6 +3,11 @@ import pygame
 import constants
 from constants import *
 
+pygame.init()
+
+sound_yee_haw_hero = pygame.mixer.Sound('res/yeehaw-1.mp3')
+sound_yee_haw_heroess = pygame.mixer.Sound('res/yeehaw-2.mp3')
+
 tumbleweed_1_idle = [pygame.image.load('res/Tumbleweed - 1/Idle__000.png')]
 
 tumbleweed_1_right = [pygame.image.load('res/Tumbleweed - 1/Right__000.png'),
@@ -97,7 +102,7 @@ skeleton_1_walk_left = [pygame.image.load('res/Skeleton/Walk_Left__001.png'),
                     pygame.image.load('res/Skeleton/Walk_Left__008.png')]
 
 
-# hero idel image list not setup for animation. First image is left. Second image is right
+# hero idle image list not setup for animation. First image is left. Second image is right
 hero_1_idle = [pygame.image.load('res/Hero - 1/Idle__000.png'), pygame.image.load('res/Hero - 1/Idle__001.png')]
 
 hero_1_walk_right = [pygame.image.load('res/Hero - 1/Run_Right__000.png'),
@@ -119,6 +124,26 @@ hero_1_walk_left = [pygame.image.load('res/Hero - 1/Run_Left__000.png'),
                     pygame.image.load('res/Hero - 1/Run_Left__006.png'),
                     pygame.image.load('res/Hero - 1/Run_Left__007.png'),
                     pygame.image.load('res/Hero - 1/Run_Left__008.png')]
+
+hero_1_slide_right = [pygame.image.load('res/Hero - 1/Slide_Right__000.png'),
+                     pygame.image.load('res/Hero - 1/Slide_Right__001.png'),
+                     pygame.image.load('res/Hero - 1/Slide_Right__002.png'),
+                     pygame.image.load('res/Hero - 1/Slide_Right__003.png'),
+                     pygame.image.load('res/Hero - 1/Slide_Right__004.png'),
+                     pygame.image.load('res/Hero - 1/Slide_Right__005.png'),
+                     pygame.image.load('res/Hero - 1/Slide_Right__006.png'),
+                     pygame.image.load('res/Hero - 1/Slide_Right__007.png'),
+                     pygame.image.load('res/Hero - 1/Slide_Right__008.png')]
+
+hero_1_slide_left = [pygame.image.load('res/Hero - 1/Slide_Left__000.png'),
+                    pygame.image.load('res/Hero - 1/Slide_Left__001.png'),
+                    pygame.image.load('res/Hero - 1/Slide_Left__002.png'),
+                    pygame.image.load('res/Hero - 1/Slide_Left__003.png'),
+                    pygame.image.load('res/Hero - 1/Slide_Left__004.png'),
+                    pygame.image.load('res/Hero - 1/Slide_Left__005.png'),
+                    pygame.image.load('res/Hero - 1/Slide_Left__006.png'),
+                    pygame.image.load('res/Hero - 1/Slide_Left__007.png'),
+                    pygame.image.load('res/Hero - 1/Slide_Left__008.png')]
 
 
 class Character(object):
@@ -148,7 +173,10 @@ class Character(object):
         self.idleCount = 0
         self.walkCount = 0
         self.jumpCount = 0
+        self.slideCount = 0
+        self.slide_ended = False
         self.is_standing = True
+        self.is_sliding = False
         self.facing_direction = DIR_LEFT
         self.shoot_dir = DIR_RIGHT  # TO DO replace this with using self.is_facing
         self.target_floor = -1
@@ -157,6 +185,7 @@ class Character(object):
         self.in_ladder_min_y = -1
         self.in_ladder_max_y = -1
         self.score = 0
+        self.slide_sound = sound_yee_haw_hero
 
         # set up the character specific data
         match self.character_type:
@@ -167,6 +196,8 @@ class Character(object):
                 self.images_idle = hero_1_idle
                 self.images_walk_right = hero_1_walk_right
                 self.images_walk_left = hero_1_walk_left
+                self.images_slide_right = hero_1_slide_right
+                self.images_slide_left = hero_1_slide_left
                 self.hit_box_left_indent = 9
                 self.hit_box_right_indent = 10
                 self.hit_box_top_indent = 2
@@ -224,15 +255,6 @@ class Character(object):
                 print("ERROR: unknown character type", character_type)
 
         # setup the hit box
-        #idle_dims = self.get_image_idle_dims()
-        # width = self.get_character_width()
-        # height = self.get_character_height()
-        # x = self.x + self.hit_box_left_indent
-        # y = self.y + self.hit_box_top_indent
-        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-
-        # self.hit_box = (x, y, width, height)
         self.hit_box = self.calc_hit_box(self.x, self.y)
 
     def draw(self, win):
@@ -243,34 +265,28 @@ class Character(object):
         if self.walkCount + 1 >= 27:
             self.walkCount = 0
 
+        # if sliding
+        if self.is_sliding == True:
+            y_change = self.calc_slide_y_change()
+
+            if self.facing_direction == DIR_LEFT:
+                win.blit(self.images_slide_left[self.walkCount//3], (self.x,self.y + y_change))
+            elif self.facing_direction == DIR_RIGHT:
+                win.blit(self.images_slide_right[self.walkCount//3], (self.x,self.y + y_change))
+
         # if moving
-        if self.is_standing == False:
-            # if self.is_left:
+        elif self.is_standing == False:
             if self.facing_direction == DIR_LEFT:
                 win.blit(self.images_walk_left[self.walkCount//3], (self.x,self.y))
-            # elif self.is_right:
             elif self.facing_direction == DIR_RIGHT:
                 win.blit(self.images_walk_right[self.walkCount//3], (self.x,self.y))
 
         # else standing
         else:
             if self.facing_direction == DIR_LEFT:
-                # win.blit(self.images_walk_left[0], (self.x, self.y))
                 win.blit(self.images_idle[0], (self.x, self.y))
             else:
-                # win.blit(self.images_walk_right[0], (self.x, self.y))
                 win.blit(self.images_idle[1], (self.x, self.y))
-            # win.blit(self.images_idle[0], (self.x, self.y))
-
-        # update the hit box
-        # width = self.get_character_width()
-        # height = self.get_character_height()
-        # x = self.x + self.hit_box_left_indent
-        # y = self.y + self.hit_box_top_indent
-        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        # self.hit_box = (x, y, width, height)
-
 
         # draw hit box
         if SHOW_PLAYER_HITBOX == True:
@@ -284,12 +300,13 @@ class Character(object):
 
         # increment the walkCount
         self.walkCount += 1
+        if self.is_sliding == True: # and self.walkCount % 3 == 0:
+            self.slideCount += 1
+            if self.slideCount >= 100:
+                self.slideCount = 0
 
     def move(self, target_x, target_y, direction):
-        """Performs the move action. difficulty_multiplier is used to make the speed faster"""
-
-        self.x = target_x
-        self.y = target_y
+        """Performs the move action. difficulty_multiplier is inc speed. Call calc_move_result for target x,y"""
 
         # this if statement is used for debugging only
         if self.character_type == CHARACTER_TYPE_TUMBLEWEED_2:
@@ -297,43 +314,40 @@ class Character(object):
             if foo == 4:
                 print("foobar")
 
-        self.hit_box = self.calc_hit_box(self.x, self.y)
-
         match direction:
             case constants.DIR_UP:
-                # x_change = 0
-                # y_change = int(self.vel * difficulty_multiplier)
                 self.is_up = True
                 self.is_down = False
             case constants.DIR_DOWN:
-                # x_change = 0
-                # y_change = int(self.vel * difficulty_multiplier * -1)
                 self.is_up = False
                 self.is_down = True
             case constants.DIR_LEFT:
-                # x_change = int(self.vel * difficulty_multiplier * -1)
-                # y_change = 0
                 self.is_left = True
                 self.is_right = False
                 self.is_standing = False
                 self.facing_direction = DIR_LEFT
                 self.shoot_dir = DIR_LEFT
             case constants.DIR_RIGHT:
-                # x_change = int(self.vel * difficulty_multiplier)
-                # y_change = 0
                 self.is_left = False
                 self.is_right = True
                 self.is_standing = False
                 self.facing_direction = DIR_RIGHT
                 self.shoot_dir = DIR_RIGHT
             case constants.DIR_NO_MOVE:
-                x_change = 0
-                y_change = 0
                 pass
             case _:
                 print("ERROR: unknown move direction", direction)
-                x_change = 0
-                y_change = 0
+
+        # if called with a y value too low adjust to lowest possible y value
+        width, height = self.get_image_idle_dims()
+        max_y = WINDOW_HEIGHT - (height + FLOOR_HEIGHT)
+        if target_y > max_y:
+            target_y = max_y
+
+        self.x = target_x
+        self.y = target_y
+
+        self.hit_box = self.calc_hit_box(self.x, self.y)
 
     def auto_move(self, difficulty_multiplier):
         """actions the move for non-player characters"""
@@ -368,7 +382,6 @@ class Character(object):
             if self.jumpCount < 0:
                 neg = -1
             y_change = int((self.jumpCount ** 2) * 0.5 * neg)
-            # y -= int((self.jumpCount ** 2) * 0.5 * neg)
             y -= y_change
             self.jumpCount -= 1
         else:
@@ -379,17 +392,48 @@ class Character(object):
 
         return y_change
 
+    def slide_move(self, start_sliding=True):
+        """Performs the sliding move. call with False to end sliding move"""
+
+        # play slide sound
+        # if self.is_sliding == False:
+        #     self.play_sound()
+
+        print("slide_move called with ", str(start_sliding))
+
+        if start_sliding == True and self.slide_ended == False:
+            self.is_sliding = True
+
+        elif start_sliding == False:
+            self.is_sliding = False
+            # self.slide_ended = False
+            self.slideCount = 0
+
+        self.hit_box = self.calc_hit_box(self.x, self.y)
+
     def calc_hit_box(self, target_x, target_y):
         """Returns the hit box for the supplied x and y"""
 
         # update the hit box
-        width = self.get_character_width()
-        height = self.get_character_height()
-        x = target_x + self.hit_box_left_indent
-        y = target_y + self.hit_box_top_indent
+        if self.is_sliding == False:
+            width = self.get_character_width()
+            height = self.get_character_height()
+            x = target_x + self.hit_box_left_indent
+            y = target_y + self.hit_box_top_indent
 
-        width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+            width = width - self.hit_box_left_indent - self.hit_box_right_indent
+            height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+
+        else:
+            width, height = self.get_image_slide_dims()
+            y_change = self.calc_slide_y_change()
+            slide_left_indent, slide_right_indent, slide_top_indent, slide_bottom_indent = self.get_slide_hit_box_indents()
+            x = target_x + slide_left_indent
+            y = target_y + slide_top_indent + y_change
+
+            width = width - slide_left_indent - slide_right_indent
+            height = height - slide_top_indent - slide_bottom_indent
+
         hit_box = (x, y, width, height)
 
         return hit_box
@@ -410,10 +454,23 @@ class Character(object):
                 x_change = 0
                 y_change = int(RUNG_HEIGHT)
             case constants.DIR_LEFT:
-                x_change = int(self.vel * difficulty_multiplier * -1)
+                slide_reduction = self.get_slide_reduction()
+                x_change = int(self.vel * difficulty_multiplier - slide_reduction)
+                if x_change < 0:
+                    print("slide ground to a halt!")
+                    x_change = 0
+                    self.slide_ended = True
+                    self.slide_move(False)
+                x_change *= -1
                 y_change = 0
             case constants.DIR_RIGHT:
-                x_change = int(self.vel * difficulty_multiplier)
+                slide_reduction = self.get_slide_reduction()
+                x_change = int(self.vel * difficulty_multiplier - slide_reduction)
+                if x_change < 0:
+                    print("slide ground to a halt!")
+                    x_change = 0
+                    self.slide_ended = True
+                    self.slide_move(False)
                 y_change = 0
             case constants.DIR_NO_MOVE:
                 x_change = 0
@@ -439,21 +496,17 @@ class Character(object):
 
         # calculate the hit box
         hit_box = self.calc_hit_box(target_x, target_y)
-        # width = self.get_character_width()
-        # height = self.get_character_height()
-        # hit_x = target_x + self.hit_box_left_indent
-        # hit_y = target_y + self.hit_box_top_indent
-        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        # hit_box = (hit_x, hit_y, width, height)
 
         return target_x, target_y, hit_box
 
     def position_player_on_new_level(self, portal_id = -1):
         """Positions on new level at portal_id. If portal_id = -1 (default) player is positioned in bottom right."""
 
+        width, height = self.get_image_idle_dims()
+
         target_x = WINDOW_WIDTH - 100
-        target_y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
+        # target_y = WINDOW_HEIGHT - (68 + FLOOR_HEIGHT + 4)
+        target_y = WINDOW_HEIGHT - (height + FLOOR_HEIGHT)
 
         self.move(target_x, target_y, DIR_NO_MOVE)
 
@@ -468,6 +521,44 @@ class Character(object):
         height = self.images_walk_right[0].get_height()
         return (width, height)
 
+    def get_image_slide_dims(self):
+        width = self.images_slide_right[0].get_width()
+        height = self.images_slide_right[0].get_height()
+        return (width, height)
+
+    def calc_slide_y_change(self):
+        """Returns the y change value when sliding - the x,y of the character position does not change while sliding"""
+        idle_dims = self.get_image_idle_dims()
+        slide_dims = self.get_image_slide_dims()
+        y_change = idle_dims[1] - slide_dims[1] + 5
+
+        return y_change
+
+    def get_slide_hit_box_indents(self):
+        """Returns the hit box indents when sliding (did not want to create class level vars for this)"""
+        slide_hit_box_left_indent = 3
+        slide_hit_box_right_indent = 10
+        slide_hit_box_top_indent = 7
+        slide_hit_box_bottom_indent = 2
+
+        return slide_hit_box_left_indent, slide_hit_box_right_indent, slide_hit_box_top_indent, slide_hit_box_bottom_indent
+
+    def get_slide_reduction(self):
+        """Sliding has an increasing slide reduction to halt slide progress"""
+        reduction = 0
+
+        level_one = 50
+        level_two = 75
+        level_three = 100
+        if self.is_sliding == True:
+            if 0 <= self.slideCount < level_one:
+                reduction = 0
+            elif level_one <= self.slideCount < level_two:
+                reduction = 3
+            elif level_two <= self.slideCount < level_three:
+                reduction = 6
+
+        return reduction
 
     def get_character_width(self):
         """Returns the width of the player"""
@@ -516,3 +607,8 @@ class Character(object):
 
         return self.x, self.y
 
+    def play_sound(self, sound = SOUND_TYPE_PLAYER_SLIDE):
+        """Plays a sound. Default is the slide"""
+
+        if sound == SOUND_TYPE_PLAYER_SLIDE:
+            self.slide_sound.play()

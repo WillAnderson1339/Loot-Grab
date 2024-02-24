@@ -147,26 +147,53 @@ def show_diagnotics(win, font, show_portal_info, levels, player, hit_pause):
     '''
 
     # column 4 shows misc info
-    x += col_3_width
-    y = start_y
-    text = "is_jumping:  " + str(player.is_jumping)
-    print_text = font.render(text, 1, colour)
-    win.blit(print_text, (x, y))
+    if show_portal_info == True:
+        x += col_3_width
+        y = start_y
+        text = "is_sliding:  " + str(player.is_sliding)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
 
-    y += row_height
-    text = "Diff Multiplier:  " + str(level.difficulty_multiplier)
-    print_text = font.render(text, 1, colour)
-    win.blit(print_text, (x, y))
+        y += row_height
+        text = "Diff Multiplier:  " + str(level.difficulty_multiplier)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
 
-    y += row_height
-    text = "Speed:  " + str(level.difficulty_multiplier * player.vel)
-    print_text = font.render(text, 1, colour)
-    win.blit(print_text, (x, y))
+        y += row_height
+        text = "Speed:  " + str(level.difficulty_multiplier * player.vel)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
 
-    y += row_height
-    text = "hit_pause:  " + str(hit_pause)
-    print_text = font.render(text, 1, colour)
-    win.blit(print_text, (x, y))
+        y += row_height
+        text = "walkCount:  " + str(player.walkCount) + "/" + str(player.walkCount//3) + "/" + str(player.slideCount) + "/" + str(player.slide_ended)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
+    else:
+        x += col_3_width
+        y = start_y
+        text = "is_jump/ladder:  " + str(player.is_jumping) + " / " + str(player.is_in_ladder)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
+
+        y += row_height
+        text = "is_l/r:  " + str(player.is_left) + " / " + str(player.is_right)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
+
+        y += row_height
+        text = "is_u/d:  " + str(player.is_up) + " / " + str(player.is_down)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
+
+        y += row_height
+        text = "is_stand/slide:  " + str(player.is_standing) + " / "+ str(player.is_sliding)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
+
+        y += row_height
+        text = "facing:  " + str(player.facing_direction)
+        print_text = font.render(text, 1, colour)
+        win.blit(print_text, (x, y))
 
 
 '''

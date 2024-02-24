@@ -78,7 +78,7 @@ bullet_small = [pygame.image.load('res/Loot/Bullet - 1__000.png'),
 
 sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
 sound_ding = pygame.mixer.Sound('res/ding-1.mp3')
-sound_miss = pygame.mixer.Sound('res/miss-1.mp3')
+sound_miss = pygame.mixer.Sound('res/loot-miss-1.mp3')
 
 class Loot(object):
     def __init__(self, loot_id, x, y, loot_type, facing):
@@ -259,8 +259,8 @@ class Loot(object):
 
         return hit_box
 
-    def loot_sound(self, sound_type=0):
-        if sound_type == 0:
+    def loot_sound(self, sound_type=SOUND_TYPE_LOOT_SUCCESS):
+        if sound_type == SOUND_TYPE_LOOT_SUCCESS:
             self.sound_success.play()
         else:
             self.sound_miss.play()

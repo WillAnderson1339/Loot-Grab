@@ -46,18 +46,6 @@ class Projectile(object):
                 print("ERROR: unknown projectile type", projectile_type)
 
         # setup the hit box
-        # self.hit_box_left_indent = 2
-        # self.hit_box_right_indent = 2
-        # self.hit_box_top_indent = 2
-        # self.hit_box_bottom_indent = 2
-        # width = self.get_projectile_width()
-        # height = self.get_projectile_height()
-        # x = self.x + self.hit_box_left_indent
-        # y = self.y + self.hit_box_top_indent
-        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        # self.hit_box = (x, y, width, height)
-
         self.hit_box = self.calc_hit_box(self.x, self.y)
 
     def draw(self, win):
@@ -71,13 +59,6 @@ class Projectile(object):
         win.blit(image, (self.x, self.y))
 
         # update the hit box
-        # width = self.get_projectile_width()
-        # height = self.get_projectile_height()
-        # x = self.x + self.hit_box_left_indent
-        # y = self.y + self.hit_box_top_indent
-        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        # self.hit_box = (x, y, width, height)
         self.hit_box = self.calc_hit_box(self.x, self.y)
 
         # draw hit box

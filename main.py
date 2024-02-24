@@ -45,7 +45,7 @@ pygame.display.set_caption("Loot Grab")
 levels = []
 
 # key press pause counts. use KP_ constants to access list
-kp_key_states = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+kp_key_states = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 font_stats = pygame.font.SysFont('comicsans', 25, True)
 font_diagnostics = pygame.font.SysFont('consolas', 15, False)
@@ -63,16 +63,25 @@ bullets = []
 pause = False       # used for game over - but should implement a pause too?
 
 def paused():
-    colour = COLOUR_GAME_OVER
+    """Used to pause the game. Triggered by Game Over or pressing the 'p' key"""
+
+    # game over
+    if player.num_lives == -99:
+        text = "Game Over! "
+        colour = COLOUR_GAME_OVER
+    else:
+        text = "Paused"
+        colour = COLOUR_GAME_OVER
 
     x = WINDOW_WIDTH // 2
     y = WINDOW_HEIGHT // 2
 
-    text = "Game Over! "
     print_text = font_pause.render(text, 1, colour)
     x -= print_text.get_width() // 2
     y -= print_text.get_height() // 2
     win.blit(print_text, (x, y))
+
+    global pause
 
     while pause:
         for event in pygame.event.get():
@@ -80,6 +89,13 @@ def paused():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
+            keys = pygame.key.get_pressed()
+
+            # pressing the 'p' key again will unpause the game
+            if keys[pygame.K_p] and kp_key_states[KP_p] == 0 and player.num_lives != -99:
+                pause = False
+                kp_key_states[KP_p] = 0
 
         pygame.display.update()
         clock.tick(15)
@@ -196,6 +212,13 @@ def check_kp_pause_counts():
         kp_key_states[KP_m] += 1
     if kp_key_states[KP_d] > 0:
         kp_key_states[KP_d] += 1
+    if kp_key_states[KP_s] > 0:
+        kp_key_states[KP_s] += 1
+    if kp_key_states[KP_p] > 0:
+        kp_key_states[KP_p] += 1
+    if kp_key_states[KP_e] > 0:
+        kp_key_states[KP_e] += 1
+        # print("key e state = ", str(kp_key_states[KP_e]))
     if kp_key_states[KP_foo] > 0:
         kp_key_states[KP_foo] += 1
     if kp_key_states[KP_bar] > 0:
@@ -216,6 +239,12 @@ def check_kp_pause_counts():
         kp_key_states[KP_m] = 0
     if kp_key_states[KP_d] > max_pause_needed:
         kp_key_states[KP_d] = 0
+    if kp_key_states[KP_s] > max_pause_needed:
+        kp_key_states[KP_s] = 0
+    if kp_key_states[KP_p] > max_pause_needed:
+        kp_key_states[KP_p] = 0
+    if kp_key_states[KP_e] > max_pause_needed:
+        kp_key_states[KP_e] = 0
     if kp_key_states[KP_foo] > max_pause_needed:
         kp_key_states[KP_foo] = 0
     if kp_key_states[KP_bar] > max_pause_needed:
@@ -396,6 +425,12 @@ if __name__ == '__main__':
                 player.current_floor = current_floor
                 player.position_player_on_new_level()
 
+        # if had pressed the slide key and now released it
+        if (player.is_sliding == True or player.slide_ended == True) and not keys[pygame.K_s]:
+            print("had pressed the slide key and now released it")
+            player.slide_ended = False
+            player.slide_move(False)
+
         # shoot key
         if keys[pygame.K_SPACE] and kp_key_states[KP_SPACE] == 0:
             if player.shoot_dir == DIR_LEFT:
@@ -407,16 +442,52 @@ if __name__ == '__main__':
                 width = player.get_character_width()
                 height = player.get_character_width()
                 projectile_id = 101
-                x = round(player.x + width // 2)
-                y = round(player.y + height // 2)
-                bullet = Projectile(PROJECTILE_HERO_BULLET, projectile_id, x, y, 6, (0, 0, 0), facing)
+                # x = round(player.x + width // 2)
+                # y = round(player.y + height // 2)
+                x_pos, y_pos = player.get_character_position()
+                x_pos = round(x_pos + width // 2)
+                y_pos = round(y_pos + height // 2)
+                bullet = Projectile(PROJECTILE_HERO_BULLET, projectile_id, x_pos, y_pos, 6, (0, 0, 0), facing)
                 bullets.append(bullet)
                 bullet.projectile_sound()
                 player.num_bullets -= 1
-                # sound_bullet.play()
                 print("Shoot!")
 
             kp_key_states[KP_SPACE] = 1
+
+        # sliding
+        elif keys[pygame.K_s] and kp_key_states[KP_s] == 0 and player.slide_ended == False:
+            player.slide_move()
+
+            kp_key_states[KP_s] = 1
+
+        # pausing
+        elif keys[pygame.K_p] and kp_key_states[KP_p] == 0:
+            pause = True
+            paused()
+
+            kp_key_states[KP_p] = 1
+
+        # creating a new enemy (for testing)
+        elif keys[pygame.K_e] and kp_key_states[KP_e] == 0:
+            if DEV_MODE == True:
+                enemy_type = CHARACTER_TYPE_TUMBLEWEED_1
+                level = levels[player.current_level]
+                enemy_id = len(level.enemies)
+                num_lives = 1
+                num_bullets = 999
+                floor_id = player.current_floor
+                enemy = Character(enemy_type, enemy_id, -100, -100, num_lives, num_bullets, level.level_id, floor_id)
+                height = enemy.get_character_height()
+                x = 100
+                y = level.get_floor_y(floor_id) - height
+                direction = player.facing_direction
+                enemy.move(x, y, direction)
+
+                print("creating enemy type: ", enemy_type)
+                level.enemies.append(enemy)
+
+                kp_key_states[KP_e] = 1
 
         # toggle playing the music
         elif keys[pygame.K_m] and kp_key_states[KP_m] == 0:
@@ -442,18 +513,13 @@ if __name__ == '__main__':
                 else:
                     show_portal_info = True
 
-
             kp_key_states[KP_d] = 1
 
         #if keys[pygame.K_LEFT] and kp_key_states[KP_LEFT] == 0:
         if keys[pygame.K_LEFT]:
-            # x = player.x - player.vel + 0     # -5 is to check if the player foot is in the portal (not his hat)
-            # y = player.y
-
             # calculate move so can compare for various results before moving
             level = levels[player.current_level]
             target_x, target_y, target_hit_box = player.calc_move_result(DIR_LEFT, level.difficulty_multiplier)
-            # portal_id = level.is_location_in_portal(x, y)
             portal_id = level.is_location_in_portal(target_x, target_y)
 
             # if not in portal just allow move
@@ -526,8 +592,9 @@ if __name__ == '__main__':
             level = levels[player.current_level]
             target_x, target_y, target_hit_box = player.calc_move_result(DIR_DOWN, level.difficulty_multiplier)
             dims = player.get_image_idle_dims()
-            x = player.x + (dims[0] // 2)
-            y = player.y + dims[1]
+            x_pos, y_pos = player.get_character_position()
+            x_pos += (dims[0] // 2)
+            y_pos += dims[1]
             y_of_top_rung = level.get_ladder_top_rung_y(player.current_floor + 1)
 
             # normal going down (ladders are stored at the floor below and go up)
@@ -540,13 +607,12 @@ if __name__ == '__main__':
             else:
                 floor_number = player.current_floor
 
-            # in_ladder = level.is_location_in_ladder(floor_number, x, y)
             in_ladder = level.is_player_move_in_ladder(target_hit_box, floor_number)
             if in_ladder == True:
                 # set ladder info
                 if player.is_in_ladder is False:
                     player.is_in_ladder = True
-                    ladder_coords = level.get_ladder_coords(floor_number, x, y)
+                    ladder_coords = level.get_ladder_coords(floor_number, x_pos, y_pos)
                     if ladder_coords[0] != -1:
                         player.in_ladder_min_x = ladder_coords[0]
                         player.in_ladder_max_x = ladder_coords[2]
@@ -561,17 +627,11 @@ if __name__ == '__main__':
                     player.target_floor = player.target_floor + 1 # player.current_floor
 
                 floor_y = level.get_floor_y(player.current_floor)
+
                 # if this is the first step set y to the top rung
                 if player.y + dims[1] == floor_y:
-                    # player.y = y_of_top_rung - dims[1]
                     target_y = y_of_top_rung - dims[1]
-                # else:
-                #     player.y += RUNG_HEIGHT
                 player.move(target_x, target_y, DIR_DOWN)
-
-                # set direction to down
-                # player.is_up = False
-                # player.is_down = True
 
                 # if reached bottom of ladder
                 y_of_floor_below = level.get_floor_y(floor_number)
@@ -600,8 +660,9 @@ if __name__ == '__main__':
                     player.in_ladder_max_y = -1
                     player.target_floor = -1
 
-                player.is_right = False
                 player.is_left = False
+                player.is_right = False
+                # player.is_sliding = False
                 player.walkCount = 0
                 kp_key_states[KP_DOWN] = 1
         else:
@@ -618,8 +679,11 @@ if __name__ == '__main__':
                 level = levels[player.current_level]
                 target_x, target_y, target_hit_box = player.calc_move_result(DIR_UP, level.difficulty_multiplier)
                 dims = player.get_image_idle_dims()
-                x = player.x + (dims[0] // 2)
-                y = player.y + dims[1]
+                # x = player.x + (dims[0] // 2)
+                # y = player.y + dims[1]
+                x_pos, y_pos = player.get_character_position()
+                x_pos += (dims[0] // 2)
+                y_pos += dims[1]
 
                 # normal going up use the current floor (ladders are stored at the floor below and go up)
                 if player.current_floor > player.target_floor or player.target_floor == -1: #" or player.is_down is True:
@@ -631,7 +695,6 @@ if __name__ == '__main__':
                 else:
                     floor_number = player.target_floor
 
-                # in_ladder = level.is_location_in_ladder(floor_number, x, y)
                 y_of_top_rung = level.get_ladder_top_rung_y(floor_number)
                 if (player.y + dims[1] == y_of_top_rung):
                     in_ladder = True
@@ -642,7 +705,7 @@ if __name__ == '__main__':
                     # set ladder info
                     if player.is_in_ladder is False:
                         player.is_in_ladder = True
-                        ladder_coords = level.get_ladder_coords(floor_number, x, y)
+                        ladder_coords = level.get_ladder_coords(floor_number, x_pos, y_pos)
                         if ladder_coords[0] != -1:
                             player.in_ladder_min_x = ladder_coords[0]
                             player.in_ladder_max_x = ladder_coords[2]
@@ -685,12 +748,13 @@ if __name__ == '__main__':
                 else:
                     player.is_jumping = True
 
-                player.is_right = False
                 player.is_left = False
+                player.is_right = False
+                # player.is_sliding = False
                 player.walkCount = 0
                 kp_key_states[KP_UP] = 1
         else:
-            if player.is_left:
+            if player.facing_direction == DIR_LEFT:
                 direction = DIR_LEFT
             else:
                 direction = DIR_RIGHT

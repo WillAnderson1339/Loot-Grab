@@ -9,8 +9,8 @@ IMAGE_OBJECT_HERO_BULLET = 1
 
 # Character constants
 CHARACTER_TYPE_HERO_1 = 1
-CHARACTER_TYPE_TUMBLEWEED_1 = 2
-CHARACTER_TYPE_TUMBLEWEED_2 = 3
+CHARACTER_TYPE_TUMBLEWEED_1 = 2     # large tumbleweed
+CHARACTER_TYPE_TUMBLEWEED_2 = 3     # small tumbleweed
 CHARACTER_TYPE_THUG_1 = 4
 CHARACTER_TYPE_SKELETON_1 = 5
 JUMP_HEIGHT_HERO = 6
@@ -21,6 +21,11 @@ JUMP_HEIGHT_SKELETON = 0
 
 # projectile constants
 PROJECTILE_HERO_BULLET = 101
+
+# sound constants
+SOUND_TYPE_LOOT_SUCCESS = 1
+SOUND_TYPE_LOOT_MISS = 2
+SOUND_TYPE_PLAYER_SLIDE = 3
 
 # velocity constants
 VELOCITY_HERO = 5
@@ -105,15 +110,20 @@ KP_RIGHT = 3
 KP_SPACE = 4
 KP_m     = 5
 KP_d     = 6
-KP_foo   = 7  # getting ready for next key to implement
-KP_bar   = 8  # getting ready for next key to implement
+KP_s     = 7
+KP_p     = 8
+KP_e     = 9
+KP_foo   = 10  # getting ready for next key to implement
+KP_bar   = 11  # getting ready for next key to implement
 
 
 # game stats
 COLOUR_STATS = (204, 51, 255)
+COLOUR_PAUSE = (115, 25, 15)
 COLOUR_GAME_OVER = (215, 25, 15)
 
 # diagnostics
+DEV_MODE = True
 SHOW_DIAGNOSTICS = False
 SHOW_PLAYER_HITBOX = True
 SHOW_LOOT_HITBOX = True
