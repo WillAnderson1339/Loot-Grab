@@ -7,6 +7,7 @@ pygame.init()
 
 sound_yee_haw_hero = pygame.mixer.Sound('res/yeehaw-1.mp3')
 sound_yee_haw_heroess = pygame.mixer.Sound('res/yeehaw-2.mp3')
+sound_slide_1 = pygame.mixer.Sound('res/slide-1.mp3')
 
 tumbleweed_1_idle = [pygame.image.load('res/Tumbleweed - 1/Idle__000.png')]
 
@@ -51,6 +52,28 @@ tumbleweed_2_left = [pygame.image.load('res/Tumbleweed - 2/Right__000.png'),
                      pygame.image.load('res/Tumbleweed - 2/Right__006.png'),
                      pygame.image.load('res/Tumbleweed - 2/Right__007.png'),
                      pygame.image.load('res/Tumbleweed - 2/Right__008.png')]
+
+tumbleweed_3_idle = [pygame.image.load('res/Tumbleweed - 1/Idle__000.png')]
+
+tumbleweed_3_right = [pygame.image.load('res/Tumbleweed - 3/Right__000.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__001.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__002.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__003.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__004.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__005.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__006.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__007.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__008.png')]
+
+tumbleweed_3_left = [pygame.image.load('res/Tumbleweed - 3/Right__000.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__001.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__002.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__003.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__004.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__005.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__006.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__007.png'),
+                     pygame.image.load('res/Tumbleweed - 3/Right__008.png')]
 
 thug_1_idle = [pygame.image.load('res/Thug - 1/Idle__000.png')]
 
@@ -185,7 +208,7 @@ class Character(object):
         self.in_ladder_min_y = -1
         self.in_ladder_max_y = -1
         self.score = 0
-        self.slide_sound = sound_yee_haw_hero
+        self.slide_sound = sound_slide_1
 
         # set up the character specific data
         match self.character_type:
@@ -227,6 +250,18 @@ class Character(object):
                 self.hit_box_top_indent = 24
                 self.hit_box_bottom_indent = 4
                 
+            case constants.CHARACTER_TYPE_TUMBLEWEED_3:
+                self.vel = VELOCITY_TUMBLEWEED_3
+                self.jumpCount = JUMP_HEIGHT_TUMBLEWEED_3
+                self.jump_height = JUMP_HEIGHT_TUMBLEWEED_3
+                self.images_idle = tumbleweed_3_idle
+                self.images_walk_right = tumbleweed_3_right
+                self.images_walk_left = tumbleweed_3_left
+                self.hit_box_left_indent = 21
+                self.hit_box_right_indent = 21
+                self.hit_box_top_indent = 25
+                self.hit_box_bottom_indent = 10
+
             case constants.CHARACTER_TYPE_THUG_1:
                 self.vel = VELOCITY_THUG
                 self.jumpCount = JUMP_HEIGHT_THUG
@@ -363,7 +398,9 @@ class Character(object):
         else:
             self.move(target_x, target_y, direction)
 
-        if self.character_type == CHARACTER_TYPE_TUMBLEWEED_1 or self.character_type == CHARACTER_TYPE_TUMBLEWEED_2:
+        if (self.character_type == CHARACTER_TYPE_TUMBLEWEED_1 or
+                self.character_type == CHARACTER_TYPE_TUMBLEWEED_2 or
+                self.character_type == CHARACTER_TYPE_TUMBLEWEED_3):
             y_change = self.jump_move(direction)
             new_y = hit_box[1] - y_change
             new_hit_box = (hit_box[0], new_y, hit_box[2], hit_box[3])
@@ -395,14 +432,13 @@ class Character(object):
     def slide_move(self, start_sliding=True):
         """Performs the sliding move. call with False to end sliding move"""
 
-        # play slide sound
-        # if self.is_sliding == False:
-        #     self.play_sound()
 
         print("slide_move called with ", str(start_sliding))
 
         if start_sliding == True and self.slide_ended == False:
             self.is_sliding = True
+            # play slide sound
+            self.play_sound()
 
         elif start_sliding == False:
             self.is_sliding = False
@@ -461,6 +497,7 @@ class Character(object):
                     x_change = 0
                     self.slide_ended = True
                     self.slide_move(False)
+                    self.play_sound(SOUND_TYPE_PLAYER_SLIDE, False)
                 x_change *= -1
                 y_change = 0
             case constants.DIR_RIGHT:
@@ -471,6 +508,7 @@ class Character(object):
                     x_change = 0
                     self.slide_ended = True
                     self.slide_move(False)
+                    self.play_sound(SOUND_TYPE_PLAYER_SLIDE, False)
                 y_change = 0
             case constants.DIR_NO_MOVE:
                 x_change = 0
@@ -607,8 +645,11 @@ class Character(object):
 
         return self.x, self.y
 
-    def play_sound(self, sound = SOUND_TYPE_PLAYER_SLIDE):
+    def play_sound(self, sound = SOUND_TYPE_PLAYER_SLIDE, repeating=False):
         """Plays a sound. Default is the slide"""
 
         if sound == SOUND_TYPE_PLAYER_SLIDE:
-            self.slide_sound.play()
+            if repeating:
+                self.slide_sound.play()
+            else:
+                self.slide_sound.stop()

@@ -430,6 +430,7 @@ if __name__ == '__main__':
             print("had pressed the slide key and now released it")
             player.slide_ended = False
             player.slide_move(False)
+            player.play_sound(SOUND_TYPE_PLAYER_SLIDE, False)
 
         # shoot key
         if keys[pygame.K_SPACE] and kp_key_states[KP_SPACE] == 0:
@@ -471,7 +472,7 @@ if __name__ == '__main__':
         # creating a new enemy (for testing)
         elif keys[pygame.K_e] and kp_key_states[KP_e] == 0:
             if DEV_MODE == True:
-                enemy_type = CHARACTER_TYPE_TUMBLEWEED_1
+                enemy_type = CHARACTER_TYPE_TUMBLEWEED_3
                 level = levels[player.current_level]
                 enemy_id = len(level.enemies)
                 num_lives = 1
