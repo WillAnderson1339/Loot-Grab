@@ -615,9 +615,13 @@ class Level(object):
         if random_num < probability:
             floor_id = random.randint(0, len(self.floors) - 1)
             # y = self.get_floor_y(floor_id)
-            enemy_type = random.randint(0, 3)
+            enemy_type = random.randint(CHARACTER_TYPE_TUMBLEWEED_1, CHARACTER_TYPE_SKELETON_1)
+            # if spawning tumbleweeds at higher difficulty levels spawn the harder versions
+            if self.difficulty_multiplier > 1.4 and (CHARACTER_TYPE_TUMBLEWEED_1 <= enemy_type <= CHARACTER_TYPE_TUMBLEWEED_2):
+                enemy_type += 1
+
             # floor = self.get_floor(floor_id)
-            enemy_type += 2
+            # enemy_type += 2
             enemy_id = len(self.enemies)
             num_lives = 1
             num_bullets = 999
@@ -656,3 +660,8 @@ class Level(object):
             print("remove_enemy called but enemy id not found: ", enemy_id)
 
         return found_in_list
+
+    def remove_all_enemies(self):
+        """Called to remove all enemies from the floor. Used in development - but could be a power loot idea..."""
+
+        self.enemies.clear()

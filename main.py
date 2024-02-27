@@ -275,6 +275,10 @@ def action_enemy_touching_player(enemy_type, player, tumbleweed_hit_pause):
                 score_change = SCORE_TUMBLEWEED_1
             case constants.CHARACTER_TYPE_TUMBLEWEED_2:
                 score_change = SCORE_TUMBLEWEED_2
+            case constants.CHARACTER_TYPE_TUMBLEWEED_3:
+                score_change = SCORE_TUMBLEWEED_3
+            case constants.CHARACTER_TYPE_TUMBLEWEED_4:
+                score_change = SCORE_TUMBLEWEED_4
             case constants.CHARACTER_TYPE_THUG_1:
                 score_change = SCORE_THUG_1
             case constants.CHARACTER_TYPE_SKELETON_1:
@@ -294,6 +298,20 @@ def action_player_shot_enemy(enemy_id, projectile):
     bullets.pop(bullets.index(projectile))
 
     sound_grunt.play()
+
+def action_player_touching_portal(player):
+    """Performs the player using a portal action"""
+
+    new_level_id = level.get_portal_target(portal_id)
+    print("Level change to ", new_level_id)
+    player.current_level = new_level_id
+    sound_portal.play()
+
+    # setup player on new level
+    new_level = levels[new_level_id]
+    player.current_floor = new_level.get_num_floors()
+    player.position_player_on_new_level()
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -472,7 +490,7 @@ if __name__ == '__main__':
         # creating a new enemy (for testing)
         elif keys[pygame.K_e] and kp_key_states[KP_e] == 0:
             if DEV_MODE == True:
-                enemy_type = CHARACTER_TYPE_TUMBLEWEED_3
+                enemy_type = CHARACTER_TYPE_TUMBLEWEED_4
                 level = levels[player.current_level]
                 enemy_id = len(level.enemies)
                 num_lives = 1
@@ -498,6 +516,12 @@ if __name__ == '__main__':
             else:
                 playing_music = True
                 pygame.mixer.music.play(-1)
+
+            # for development sometimes need to clear all enemies (so they stop hitting the player!)
+            # should move this to its own key but using 'm' just for ease
+            if DEV_MODE == True:
+                level = levels[player.current_level]
+                level.remove_all_enemies()
 
             kp_key_states[KP_m] = 1
 
@@ -539,15 +563,7 @@ if __name__ == '__main__':
                     level.action_player_touching_loot(loot, player)
 
             else:
-                new_level_id = level.get_portal_target(portal_id)
-                print("Level change to ", new_level_id)
-                player.current_level = new_level_id
-                sound_portal.play()
-
-                # setup player on new level
-                new_level = levels[new_level_id]
-                player.current_floor = new_level.get_num_floors()
-                player.position_player_on_new_level()
+                action_player_touching_portal(player)
 
             kp_key_states[KP_LEFT] = 1
 
@@ -576,15 +592,7 @@ if __name__ == '__main__':
                     sound_loot.play()
 
             else:
-                new_level_id = level.get_portal_target(portal_id)
-                print("Level change to ", new_level_id)
-                player.current_level = new_level_id
-                sound_portal.play()
-
-                # setup player on new level
-                level = levels[new_level_id]
-                player.current_floor = len(level.floors) - 1
-                player.position_player_on_new_level()
+                action_player_touching_portal((player))
 
             kp_key_states[KP_RIGHT] = 1
 

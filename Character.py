@@ -75,6 +75,28 @@ tumbleweed_3_left = [pygame.image.load('res/Tumbleweed - 3/Right__000.png'),
                      pygame.image.load('res/Tumbleweed - 3/Right__007.png'),
                      pygame.image.load('res/Tumbleweed - 3/Right__008.png')]
 
+tumbleweed_4_idle = [pygame.image.load('res/Tumbleweed - 4/Idle__000.png')]
+
+tumbleweed_4_right = [pygame.image.load('res/Tumbleweed - 4/Right__000.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__001.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__002.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__003.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__004.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__005.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__006.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__007.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__008.png')]
+
+tumbleweed_4_left = [pygame.image.load('res/Tumbleweed - 4/Right__000.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__001.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__002.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__003.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__004.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__005.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__006.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__007.png'),
+                     pygame.image.load('res/Tumbleweed - 4/Right__008.png')]
+
 thug_1_idle = [pygame.image.load('res/Thug - 1/Idle__000.png')]
 
 thug_1_right = [pygame.image.load('res/Thug - 1/Run_Right__000.png'),
@@ -259,8 +281,20 @@ class Character(object):
                 self.images_walk_left = tumbleweed_3_left
                 self.hit_box_left_indent = 21
                 self.hit_box_right_indent = 21
-                self.hit_box_top_indent = 25
-                self.hit_box_bottom_indent = 10
+                self.hit_box_top_indent = 18
+                self.hit_box_bottom_indent = 15
+
+            case constants.CHARACTER_TYPE_TUMBLEWEED_4:
+                self.vel = VELOCITY_TUMBLEWEED_4
+                self.jumpCount = JUMP_HEIGHT_TUMBLEWEED_4
+                self.jump_height = JUMP_HEIGHT_TUMBLEWEED_4
+                self.images_idle = tumbleweed_4_idle
+                self.images_walk_right = tumbleweed_4_right
+                self.images_walk_left = tumbleweed_4_left
+                self.hit_box_left_indent = 13
+                self.hit_box_right_indent = 12
+                self.hit_box_top_indent = 12
+                self.hit_box_bottom_indent = 9
 
             case constants.CHARACTER_TYPE_THUG_1:
                 self.vel = VELOCITY_THUG
@@ -269,8 +303,8 @@ class Character(object):
                 self.images_idle = thug_1_idle
                 self.images_walk_right = thug_1_right
                 self.images_walk_left = thug_1_left
-                self.hit_box_left_indent = 13
-                self.hit_box_right_indent = 13
+                self.hit_box_left_indent = 14
+                self.hit_box_right_indent = 14
                 self.hit_box_top_indent = 14
                 self.hit_box_bottom_indent = 2
 
@@ -400,7 +434,8 @@ class Character(object):
 
         if (self.character_type == CHARACTER_TYPE_TUMBLEWEED_1 or
                 self.character_type == CHARACTER_TYPE_TUMBLEWEED_2 or
-                self.character_type == CHARACTER_TYPE_TUMBLEWEED_3):
+                self.character_type == CHARACTER_TYPE_TUMBLEWEED_3 or
+                self.character_type == CHARACTER_TYPE_TUMBLEWEED_4):
             y_change = self.jump_move(direction)
             new_y = hit_box[1] - y_change
             new_hit_box = (hit_box[0], new_y, hit_box[2], hit_box[3])
@@ -433,7 +468,7 @@ class Character(object):
         """Performs the sliding move. call with False to end sliding move"""
 
 
-        print("slide_move called with ", str(start_sliding))
+        print("slide_move called with", str(start_sliding))
 
         if start_sliding == True and self.slide_ended == False:
             self.is_sliding = True
@@ -490,7 +525,8 @@ class Character(object):
                 x_change = 0
                 y_change = int(RUNG_HEIGHT)
             case constants.DIR_LEFT:
-                slide_reduction = self.get_slide_reduction()
+                slide_reduction = self.get_move_reduction()
+                # slide_reduction = 0
                 x_change = int(self.vel * difficulty_multiplier - slide_reduction)
                 if x_change < 0:
                     print("slide ground to a halt!")
@@ -501,7 +537,7 @@ class Character(object):
                 x_change *= -1
                 y_change = 0
             case constants.DIR_RIGHT:
-                slide_reduction = self.get_slide_reduction()
+                slide_reduction = self.get_move_reduction()
                 x_change = int(self.vel * difficulty_multiplier - slide_reduction)
                 if x_change < 0:
                     print("slide ground to a halt!")
@@ -581,13 +617,16 @@ class Character(object):
 
         return slide_hit_box_left_indent, slide_hit_box_right_indent, slide_hit_box_top_indent, slide_hit_box_bottom_indent
 
-    def get_slide_reduction(self):
-        """Sliding has an increasing slide reduction to halt slide progress"""
+    def get_move_reduction(self):
+        """Returns the move reduction (if any)"""
+
         reduction = 0
 
         level_one = 50
         level_two = 75
         level_three = 100
+
+        # Sliding has an increasing slide reduction to halt slide progress
         if self.is_sliding == True:
             if 0 <= self.slideCount < level_one:
                 reduction = 0
@@ -595,6 +634,9 @@ class Character(object):
                 reduction = 3
             elif level_two <= self.slideCount < level_three:
                 reduction = 6
+            # reduction = (2 ** self.slideCount) / 5
+
+            print("slideCount =", self.slideCount, "slide reduction =", reduction)
 
         return reduction
 

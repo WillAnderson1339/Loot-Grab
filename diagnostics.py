@@ -39,7 +39,7 @@ def show_diagnotics(win, font, show_portal_info, levels, player, hit_pause):
     win.blit(print_text, (x, y))
 
     y += row_height
-    num_enemies = 0 # need to change to the len of the enemies list
+    num_enemies = len(level.enemies) # need to change to the len of the enemies list
     text = "  Enemies Alive: " + str(num_enemies)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
@@ -165,7 +165,7 @@ def show_diagnotics(win, font, show_portal_info, levels, player, hit_pause):
         win.blit(print_text, (x, y))
 
         y += row_height
-        text = "walkCount:  " + str(player.walkCount) + "/" + str(player.walkCount//3) + "/" + str(player.slideCount) + "/" + str(player.slide_ended)
+        text = "walk/step Count:  " + str(player.walkCount) + "/" + str(player.slideCount) + "/" + str(player.slide_ended)
         print_text = font.render(text, 1, colour)
         win.blit(print_text, (x, y))
     else:
