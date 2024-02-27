@@ -628,13 +628,19 @@ class Character(object):
 
         # Sliding has an increasing slide reduction to halt slide progress
         if self.is_sliding == True:
-            if 0 <= self.slideCount < level_one:
-                reduction = 0
-            elif level_one <= self.slideCount < level_two:
-                reduction = 3
-            elif level_two <= self.slideCount < level_three:
-                reduction = 6
+            # method 1
+            # if 0 <= self.slideCount < level_one:
+            #     reduction = 0
+            # elif level_one <= self.slideCount < level_two:
+            #     reduction = 3
+            # elif level_two <= self.slideCount < level_three:
+            #     reduction = 6
+
+            # method 2
             # reduction = (2 ** self.slideCount) / 5
+
+            # method 3
+            reduction = (1.06 ** self.slideCount) / 2
 
             print("slideCount =", self.slideCount, "slide reduction =", reduction)
 
