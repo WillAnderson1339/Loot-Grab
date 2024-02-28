@@ -209,28 +209,9 @@ class Character(object):
 
         # self.width = self.IMAGES_WIDTH
         # self.height = self.IMAGES_HEIGHT
-        self.is_jumping = False
-        self.is_in_ladder = False
-        self.is_left = False
-        self.is_right = False
-        self.is_up = False
-        self.is_down = False
-        self.idleCount = 0
-        self.walkCount = 0
-        self.jumpCount = 0
-        self.slideCount = 0
-        self.slide_ended = False
-        self.is_standing = True
-        self.is_sliding = False
-        self.facing_direction = DIR_LEFT
-        self.shoot_dir = DIR_RIGHT  # TO DO replace this with using self.is_facing
-        self.target_floor = -1
-        self.in_ladder_min_x = -1   # to do  change to new way to implement in ladder
-        self.in_ladder_max_x = -1
-        self.in_ladder_min_y = -1
-        self.in_ladder_max_y = -1
         self.score = 0
         self.slide_sound = sound_slide_1
+        self.reset_movement_vars()
 
         # set up the character specific data
         match self.character_type:
@@ -325,6 +306,28 @@ class Character(object):
 
         # setup the hit box
         self.hit_box = self.calc_hit_box(self.x, self.y)
+
+    def reset_movement_vars(self):
+        self.is_jumping = False
+        self.is_in_ladder = False
+        self.is_left = False
+        self.is_right = False
+        self.is_up = False
+        self.is_down = False
+        self.idleCount = 0
+        self.walkCount = 0
+        self.jumpCount = 0
+        self.slideCount = 0
+        self.slide_ended = False
+        self.is_standing = True
+        self.is_sliding = False
+        self.facing_direction = DIR_LEFT
+        self.shoot_dir = DIR_LEFT  # TO DO replace this with using self.is_facing
+        self.target_floor = -1
+        self.in_ladder_min_x = -1   # to do  change to new way to implement in ladder
+        self.in_ladder_max_x = -1
+        self.in_ladder_min_y = -1
+        self.in_ladder_max_y = -1
 
     def draw(self, win):
         # character_type = self.character_type
@@ -575,6 +578,8 @@ class Character(object):
 
     def position_player_on_new_level(self, portal_id = -1):
         """Positions on new level at portal_id. If portal_id = -1 (default) player is positioned in bottom right."""
+
+        self.reset_movement_vars()
 
         width, height = self.get_image_idle_dims()
 

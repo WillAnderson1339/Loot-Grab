@@ -450,7 +450,10 @@ class Level(object):
         return ladder_coords
 
     def is_player_move_in_ladder(self, player_hit_box, floor_number):
+        """Returns True/False and the rec if True. Rect will be -1, -1, -1, -1 when False"""
+
         in_ladder = False
+        ladder_hit_box = (-1, -1, -1, -1)
 
         if 0 <= floor_number < len(self.floors):
             floor = self.floors[floor_number]
@@ -469,7 +472,10 @@ class Level(object):
                     in_ladder = True
                     break
 
-        return in_ladder
+        if in_ladder == False:
+            ladder_hit_box = (-1, -1, -1, -1)
+
+        return in_ladder, ladder_hit_box
 
     def is_location_in_ladder(self, floor_id, x, y):
         """Returns True if the x,y point is in a ladder on floor with ID. Returns False if not."""

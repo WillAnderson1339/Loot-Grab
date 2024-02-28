@@ -616,17 +616,21 @@ if __name__ == '__main__':
             else:
                 floor_number = player.current_floor
 
-            in_ladder = level.is_player_move_in_ladder(target_hit_box, floor_number)
+            in_ladder, ladder_coords = level.is_player_move_in_ladder(target_hit_box, floor_number)
             if in_ladder == True:
                 # set ladder info
                 if player.is_in_ladder is False:
                     player.is_in_ladder = True
-                    ladder_coords = level.get_ladder_coords(floor_number, x_pos, y_pos)
+                    # ladder_coords = level.get_ladder_coords(floor_number, x_pos, y_pos)  # changed to getting coords from call to is_player_move_in_ladder()
                     if ladder_coords[0] != -1:
+                        # player.in_ladder_min_x = ladder_coords[0]
+                        # player.in_ladder_max_x = ladder_coords[2]
+                        # player.in_ladder_min_y = ladder_coords[1]
+                        # player.in_ladder_max_y = ladder_coords[3]
                         player.in_ladder_min_x = ladder_coords[0]
-                        player.in_ladder_max_x = ladder_coords[2]
+                        player.in_ladder_max_x = ladder_coords[0] + ladder_coords[2]
                         player.in_ladder_min_y = ladder_coords[1]
-                        player.in_ladder_max_y = ladder_coords[3]
+                        player.in_ladder_max_y = ladder_coords[1] + ladder_coords[3]
 
                 # starting down set target to floor below
                 if player.target_floor == -1:
@@ -707,19 +711,24 @@ if __name__ == '__main__':
                 y_of_top_rung = level.get_ladder_top_rung_y(floor_number)
                 if (player.y + dims[1] == y_of_top_rung):
                     in_ladder = True
+                    ladder_coords = (-1, -1, -1, -1)    # should replace this with the actual ladder coords
                 else:
-                    in_ladder = level.is_player_move_in_ladder(target_hit_box, floor_number)
+                    in_ladder, ladder_coords = level.is_player_move_in_ladder(target_hit_box, floor_number)
 
                 if in_ladder == True:
                     # set ladder info
                     if player.is_in_ladder is False:
                         player.is_in_ladder = True
-                        ladder_coords = level.get_ladder_coords(floor_number, x_pos, y_pos)
+                        # ladder_coords = level.get_ladder_coords(floor_number, x_pos, y_pos)  # changed to getting coords from call to is_player_move_in_ladder()
                         if ladder_coords[0] != -1:
+                            # player.in_ladder_min_x = ladder_coords[0]
+                            # player.in_ladder_max_x = ladder_coords[2]
+                            # player.in_ladder_min_y = ladder_coords[1]
+                            # player.in_ladder_max_y = ladder_coords[3]
                             player.in_ladder_min_x = ladder_coords[0]
-                            player.in_ladder_max_x = ladder_coords[2]
+                            player.in_ladder_max_x = ladder_coords[0] + ladder_coords[2]
                             player.in_ladder_min_y = ladder_coords[1]
-                            player.in_ladder_max_y = ladder_coords[3]
+                            player.in_ladder_max_y = ladder_coords[1] + ladder_coords[3]
 
                     # starting up set target to floor above
                     if player.target_floor == -1:
