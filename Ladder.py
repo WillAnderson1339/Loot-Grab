@@ -10,6 +10,10 @@ class Ladder(object):
         self.height = height
         self.colour = colour
         self.direction = direction
+        self.hit_box_left_indent = 0
+        self.hit_box_right_indent = 0
+        self.hit_box_top_indent = 0
+        self.hit_box_bottom_indent = 0
 
         self.num_rungs = self.height // RUNG_HEIGHT
         if direction == UP:
@@ -20,10 +24,11 @@ class Ladder(object):
             self.y_of_2nd_top_rung = self.y_of_top_rung - (RUNG_HEIGHT * direction)
 
         # setup the hit box
-        x = self.x
-        y = self.y - self.height
+        target_x = self.x
+        target_y = self.y - self.height
 
-        self.hit_box = (x, y, self.width, self.height)
+        # self.hit_box = (target_x, target_y, self.width, self.height)
+        self.hit_box = self.calc_hit_box(target_x, target_y)
 
 
     def draw(self, win):
@@ -51,6 +56,22 @@ class Ladder(object):
         # draw hit box
         if SHOW_LADDER_HITBOX is True:
             pygame.draw.rect(win, COLOUR_LADDER_HITBOX, self.hit_box,1)
+
+    def calc_hit_box(self, target_x, target_y):
+        """Returns the hit box for the supplied x and y"""
+
+        # calc the hit box
+        width = self.width
+        height = self.height
+
+        x = target_x + self.hit_box_left_indent
+        y = target_y + self.hit_box_top_indent
+        width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+
+        hit_box = (x, y, width, height)
+
+        return hit_box
 
     def get_rung_width(self):
         """Returns the width of the rung on this ladder"""

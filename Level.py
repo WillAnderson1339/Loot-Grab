@@ -134,13 +134,15 @@ class Level(object):
                 ladder_locations.append((x - LADDER_WIDTH - 20, x + LADDER_WIDTH + 20))  # 20 padding so not too close
 
     def create_portals(self):
-        # create the up portals
+        """Creates the portals on the level"""
+
+        portal_id = 0
         width = PORTAL_WIDTH
         height = PORTAL_HEIGHT
         colour = PORTAL_COLOUR
-        direction = UP
-        portal_id = 0
 
+        # create the up portals
+        direction = UP
         for i in range(self.num_up_portals):
             # if only 1 up portal place it on the top floor at the left most edge
             if self.num_up_portals == 1:
@@ -171,9 +173,9 @@ class Level(object):
             portal_id += 1
 
         # create the down portals
-        width = PORTAL_WIDTH
-        height = PORTAL_HEIGHT
-        colour = PORTAL_COLOUR
+        # width = PORTAL_WIDTH
+        # height = PORTAL_HEIGHT
+        # colour = PORTAL_COLOUR
         direction = DOWN
         for i in range(self.num_down_portals):
             # if only 1 up portal place it on the bottom floor at the right most edge
@@ -223,7 +225,7 @@ class Level(object):
             y = self.get_floor_y(floor.floor_id) - height - LOOT_FLOAT
             for i in range(num_loot):
                 # determine random loot type
-                random_num = random.randint(0, 199)
+                random_num = random.randint(0, LOOT_PROBABILITY_MAX)
                 if 0 <= random_num < LOOT_CHANCE_OF_HEART_SMALL:
                     loot_type = LOOT_HEART_SMALL
                 elif LOOT_CHANCE_OF_HEART_SMALL <= random_num < LOOT_CHANCE_OF_HEART_MEDIUM:
@@ -491,7 +493,7 @@ class Level(object):
 
     def get_ladder_coords(self, floor_id, x, y):
         """Returns the rect of the ladder the point (x,y) is in on floor with ID. Returns a rect of -1 if ID not found."""
-        #in_ladder = False
+
         rect = (-1, -1, -1, -1)
 
         ladder_coords = self.get_floor_ladder_coords(floor_id)
@@ -504,6 +506,7 @@ class Level(object):
 
     def get_portal_coords(self):
         """Returns a list of coords of portal(s). Returns an empty list if no portals found."""
+
         portal_coords = []
 
         for portal in self.portals:
@@ -516,6 +519,7 @@ class Level(object):
 
     def is_location_in_portal(self, x, y):
         """Returns the ID of the portal the x,y point is in if in a portal. Returns -1 if not."""
+
         portal_id = -1
 
         i = 0
@@ -527,6 +531,22 @@ class Level(object):
             i += 1
 
         return portal_id
+
+    def is_player_in_portal(self, player):
+        """Returns the ID of the portal if the player hit box is in a portal hit box. Returns -1 if not."""
+
+        portal_id = -1
+        player_hit_box = player.hit_box
+
+        for portal in self.portals:
+            portal_hit_box = portal.hit_box
+
+            found = do_rectangles_overlap(player_hit_box, portal_hit_box)
+            if found is True:
+                portal_id = portal.portal_id
+
+        return portal_id
+
 
     def get_portal_target(self, portal_id):
         """Returns the target level of a portal. Returns -1 if portal direction is not known"""
@@ -563,7 +583,7 @@ class Level(object):
 
         return found_loot
 
-    def action_player_touching_loot(self, loot, player):
+    def action_player_touching_loot(self, player, loot):
         """The player has hit a loot - need to do the hitting loot action like adding score and removing the loot"""
 
         # print("in Loot ID " + str(loot.loot_id))
@@ -601,7 +621,9 @@ class Level(object):
 
 
     def check_if_spawning_enemy(self):
-        """Checks to see if an enemy should be added and if so creates one and adds it to the level"""
+        """Checks to see if an enemy should be added and if so creates one on the level. Returns True if spawned"""
+
+        spawned_enemy = False
 
         if self.difficulty_multiplier > 1.0:
             foo = 5
@@ -609,7 +631,6 @@ class Level(object):
 
         probability = self.difficulty_multiplier
         probability -= 1.0  # modifier is a number in the form 1.x where x is a decimal 0-9
-        # probability = self.difficulty_multiplier - 1.0
         probability *= 10
         probability = round(probability, 0) # corrects rounding in python float subtraction
         probability *= 1
@@ -650,6 +671,10 @@ class Level(object):
             print("spawning enemy type: ", enemy_type)
             self.enemies.append(enemy)
 
+            spawned_enemy = True
+
+        return spawned_enemy
+
 
     def remove_enemy(self, enemy_id):
         """Removes the enemy from the enemies list. Returns True if id is found (and removed)"""
@@ -671,3 +696,72 @@ class Level(object):
         """Called to remove all enemies from the floor. Used in development - but could be a power loot idea..."""
 
         self.enemies.clear()
+
+    def count_loot(self):
+        """Returns the total number of loot on this level. This function could be changed to return counts of each"""
+
+        loot_bronze = 0
+        loot_silver = 0
+        loot_gold = 0
+        loot_heart_small = 0
+        loot_heart_medium = 0
+        loot_heart_large = 0
+        loot_bullet_small = 0
+
+        # count each type of loot
+        for loot in self.loots:
+            match loot.loot_type:
+                case constants.LOOT_COIN_BRONZE:
+                    loot_bronze += 1
+                case constants.LOOT_COIN_SILVER:
+                    loot_silver += 1
+                case constants.LOOT_COIN_GOLD:
+                    loot_gold += 1
+                case constants.LOOT_HEART_SMALL:
+                    loot_heart_small += 1
+                case constants.LOOT_HEART_MEDIUM:
+                    loot_heart_medium += 1
+                case constants.LOOT_HEART_LARGE:
+                    loot_heart_large += 1
+                case constants.LOOT_BULLET_SMALL:
+                    loot_bullet_small += 1
+                case _:
+                    print("in level.count_loot(): Loot Type", loot.loot_type, "not yet coded!")
+
+        total = loot_bronze + loot_silver + loot_gold + loot_heart_small + loot_heart_medium + loot_heart_large + loot_bullet_small
+
+        return total
+
+    def count_enemies(self):
+        """Returns the total number of enemies on this level. This function could be changed to return counts of each"""
+
+        thug_count = 0
+        skelleton_count = 0
+        tumbleweed_1_count = 0
+        tumbleweed_2_count = 0
+        tumbleweed_3_count = 0
+        tumbleweed_4_count = 0
+
+        # count each type of loot
+        for enemy in self.enemies:
+            match enemy.character_type:
+                case constants.CHARACTER_TYPE_THUG_1:
+                    thug_count += 1
+                case constants.CHARACTER_TYPE_SKELETON_1:
+                    skelleton_count += 1
+                case constants.CHARACTER_TYPE_TUMBLEWEED_1:
+                    tumbleweed_1_count += 1
+                case constants.CHARACTER_TYPE_TUMBLEWEED_2:
+                    tumbleweed_2_count += 1
+                case constants.CHARACTER_TYPE_TUMBLEWEED_3:
+                    tumbleweed_3_count += 1
+                case constants.CHARACTER_TYPE_TUMBLEWEED_4:
+                    tumbleweed_4_count += 1
+                case _:
+                    print("in level.count_enemies(): character Type", enemy.character_type, "not yet coded!")
+
+        total = thug_count + skelleton_count + tumbleweed_1_count + tumbleweed_2_count + tumbleweed_3_count + tumbleweed_4_count
+
+        return total
+
+

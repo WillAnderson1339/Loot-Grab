@@ -50,6 +50,7 @@ kp_key_states = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 font_stats = pygame.font.SysFont('comicsans', 25, True)
 font_diagnostics = pygame.font.SysFont('consolas', 15, False)
 font_pause = pygame.font.SysFont("comicsansms", 90)
+font_pause_stats = pygame.font.SysFont("comicsansms", 30)
 
 show_diagnostics = SHOW_DIAGNOSTICS
 show_portal_info = True
@@ -61,6 +62,11 @@ show_portal_info = True
 bullets = []
 
 pause = False       # used for game over - but should implement a pause too?
+
+total_loot = 0
+total_enemies = 0
+total_loot_grabbed = 0
+total_enemies_shot = 0
 
 def paused():
     """Used to pause the game. Triggered by Game Over or pressing the 'p' key"""
@@ -79,6 +85,29 @@ def paused():
     print_text = font_pause.render(text, 1, colour)
     x -= print_text.get_width() // 2
     y -= print_text.get_height() // 2
+    win.blit(print_text, (x, y))
+
+    global total_enemies
+    global total_enemies_shot
+    global total_loot
+    global total_loot_grabbed
+
+    text = "Stats:"
+    x -= 30
+    y += 100
+    print_text = font_pause_stats.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+    x += 30
+
+    text = "  Total Loot " + str(total_loot) + "  Grabbed " + str(total_loot_grabbed)
+    y += 30
+    print_text = font_pause_stats.render(text, 1, colour)
+    win.blit(print_text, (x, y))
+
+    text = "  Total Enemies " + str(total_enemies) + "  Shot " + str(total_enemies_shot)
+    y += 30
+    print_text = font_pause_stats.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
     global pause
@@ -288,12 +317,30 @@ def action_enemy_touching_player(enemy_type, player, tumbleweed_hit_pause):
 
         sound_grunt.play()
 
+def action_player_touching_loot(player, loot):
+    """Performs the player touching loot action - changes score etc"""
+
+    global total_loot_grabbed
+
+    level = levels[player.current_level]
+
+    level.action_player_touching_loot(player, loot)
+
+    sound_loot.play()
+
+    total_loot_grabbed += 1
+
+
 def action_player_shot_enemy(enemy_id, projectile):
     """Performs the player shot enemy action - changes score etc"""
+
+    global total_enemies_shot
 
     # print("hit!")
     level = levels[player.current_level]
     level.remove_enemy(enemy_id)
+
+    total_enemies_shot += 1
 
     bullets.pop(bullets.index(projectile))
 
@@ -346,6 +393,10 @@ if __name__ == '__main__':
     level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
     levels.append(level)
 
+    # set the totals (for showing the score)
+    for level in levels:
+        total_loot += level.count_loot()
+        total_enemies += level.count_enemies()
 
     # set up the player
     x = WINDOW_WIDTH - 100
@@ -382,7 +433,9 @@ if __name__ == '__main__':
             # timer event
             elif event.type == TIMER_EVENT_ENEMY_SPAWN_CHECK:
                 level = levels[player.current_level]
-                level.check_if_spawning_enemy()
+                spawned_enemy = level.check_if_spawning_enemy()
+                if spawned_enemy is True:
+                    total_enemies += 1
 
 
         if player.num_lives == -99:
@@ -402,7 +455,6 @@ if __name__ == '__main__':
 
         # move enemies
         level = levels[player.current_level]
-        # level.check_if_spawning_enemy()
         hit_box_list = level.auto_move_enemies(level.difficulty_multiplier)
 
         # update the tumbleweed pause timer (so tumbleweed passes player and does not continually decrement score)
@@ -411,13 +463,13 @@ if __name__ == '__main__':
         if tumbleweed_hit_pause > 20:
             tumbleweed_hit_pause = 0
 
-        # check to see if the enemy is touching the player
+        # check to see if anything is touching something
         for item in hit_box_list:
             rect_enemy = item[0]
             enemy_type = item[1]
             enemy_id = item[2]
 
-            # check to see if the enemy is touching the player
+            # check to see if an enemy is hit by a shot
             for bullet in bullets:
                 rect_projectile = bullet.get_hit_rect()
                 if do_rectangles_overlap(rect_enemy, rect_projectile) is True:
@@ -444,7 +496,7 @@ if __name__ == '__main__':
                 player.position_player_on_new_level()
 
         # if had pressed the slide key and now released it
-        if (player.is_sliding == True or player.slide_ended == True) and not keys[pygame.K_s]:
+        if (player.is_sliding is True or player.slide_ended is True) and not keys[pygame.K_s]:
             print("had pressed the slide key and now released it")
             player.slide_ended = False
             player.slide_move(False)
@@ -545,12 +597,13 @@ if __name__ == '__main__':
             # calculate move so can compare for various results before moving
             level = levels[player.current_level]
             target_x, target_y, target_hit_box = player.calc_move_result(DIR_LEFT, level.difficulty_multiplier)
-            portal_id = level.is_location_in_portal(target_x, target_y)
+            # portal_id = level.is_location_in_portal(target_x, target_y)
+            portal_id = level.is_player_in_portal(player)
 
             # if not in portal just allow move
-            if portal_id == -1 or player.is_jumping is True:
+            if portal_id == -1 or player.is_jumping is True or player.is_sliding is True:
                 if portal_id != -1 and player.is_jumping is True:
-                    print("in portal but jumping so moving instead!")
+                    print("in portal but jumping or sliding so moving instead!")
 
                 # if in ladder restrict horizontal movement to within the ladder
                 width = player.get_character_width()
@@ -560,7 +613,8 @@ if __name__ == '__main__':
                 # check to see if walked into any loot
                 loot = level.is_player_in_loot(player)
                 if loot.loot_id != -1:
-                    level.action_player_touching_loot(loot, player)
+                    # level.action_player_touching_loot(loot, player)
+                    action_player_touching_loot(player, loot)
 
             else:
                 action_player_touching_portal(player)
@@ -573,12 +627,13 @@ if __name__ == '__main__':
             # calculate move so can compare for various results before moving
             level = levels[player.current_level]
             target_x, target_y, target_hit_box = player.calc_move_result(DIR_RIGHT, level.difficulty_multiplier)
-            portal_id = level.is_location_in_portal(target_x, target_y)
+            # portal_id = level.is_location_in_portal(target_x, target_y)
+            portal_id = level.is_player_in_portal(player)
 
             # if not in portal just allow move
-            if portal_id == -1 or player.is_jumping is True:
+            if portal_id == -1 or player.is_jumping is True or player.is_sliding is True:
                 if portal_id != -1 and player.is_jumping is True:
-                    print("in portal but jumping so moving instead!")
+                    print("in portal but jumping or sliding so moving instead!")
 
                 # if in ladder restrict horizontal movement to within the ladder
                 width = player.get_character_width()
@@ -588,8 +643,9 @@ if __name__ == '__main__':
                 # check to see if walked into any loot
                 loot = level.is_player_in_loot(player)
                 if loot.loot_id != -1:
-                    level.action_player_touching_loot(loot, player)
-                    sound_loot.play()
+                    # level.action_player_touching_loot(loot, player)
+                    action_player_touching_loot(player, loot)
+                    # sound_loot.play()
 
             else:
                 action_player_touching_portal((player))
@@ -694,9 +750,9 @@ if __name__ == '__main__':
                 dims = player.get_image_idle_dims()
                 # x = player.x + (dims[0] // 2)
                 # y = player.y + dims[1]
-                x_pos, y_pos = player.get_character_position()
-                x_pos += (dims[0] // 2)
-                y_pos += dims[1]
+                # x_pos, y_pos = player.get_character_position()
+                # x_pos += (dims[0] // 2)
+                # y_pos += dims[1]
 
                 # normal going up use the current floor (ladders are stored at the floor below and go up)
                 if player.current_floor > player.target_floor or player.target_floor == -1: #" or player.is_down is True:
@@ -710,25 +766,27 @@ if __name__ == '__main__':
 
                 y_of_top_rung = level.get_ladder_top_rung_y(floor_number)
                 if (player.y + dims[1] == y_of_top_rung):
-                    in_ladder = True
-                    ladder_coords = (-1, -1, -1, -1)    # should replace this with the actual ladder coords
+                    target_in_ladder = True
+                    # ladder_hit_box = (-1, -1, -1, -1)    # should replace this with the actual ladder coords
+                    ladder_hit_box = level.get_ladder_coords(floor_number, target_x, target_y)    # returns the coords not hitbox but close enough
                 else:
-                    in_ladder, ladder_coords = level.is_player_move_in_ladder(target_hit_box, floor_number)
+                    target_in_ladder, ladder_hit_box = level.is_player_move_in_ladder(target_hit_box, floor_number)
 
-                if in_ladder == True:
-                    # set ladder info
+                if target_in_ladder is True or player.is_in_ladder is True:
+
+                    # if entering ladder set ladder info
                     if player.is_in_ladder is False:
                         player.is_in_ladder = True
                         # ladder_coords = level.get_ladder_coords(floor_number, x_pos, y_pos)  # changed to getting coords from call to is_player_move_in_ladder()
-                        if ladder_coords[0] != -1:
+                        if ladder_hit_box[0] != -1:
                             # player.in_ladder_min_x = ladder_coords[0]
                             # player.in_ladder_max_x = ladder_coords[2]
                             # player.in_ladder_min_y = ladder_coords[1]
                             # player.in_ladder_max_y = ladder_coords[3]
-                            player.in_ladder_min_x = ladder_coords[0]
-                            player.in_ladder_max_x = ladder_coords[0] + ladder_coords[2]
-                            player.in_ladder_min_y = ladder_coords[1]
-                            player.in_ladder_max_y = ladder_coords[1] + ladder_coords[3]
+                            player.in_ladder_min_x = ladder_hit_box[0]
+                            player.in_ladder_max_x = ladder_hit_box[0] + ladder_hit_box[2]
+                            player.in_ladder_min_y = ladder_hit_box[1]
+                            player.in_ladder_max_y = ladder_hit_box[1] + ladder_hit_box[3]
 
                     # starting up set target to floor above
                     if player.target_floor == -1:

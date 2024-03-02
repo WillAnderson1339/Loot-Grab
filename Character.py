@@ -224,9 +224,9 @@ class Character(object):
                 self.images_walk_left = hero_1_walk_left
                 self.images_slide_right = hero_1_slide_right
                 self.images_slide_left = hero_1_slide_left
-                self.hit_box_left_indent = 9
-                self.hit_box_right_indent = 10
-                self.hit_box_top_indent = 2
+                self.hit_box_left_indent = 16
+                self.hit_box_right_indent = 16
+                self.hit_box_top_indent = 4
                 self.hit_box_bottom_indent = 2
 
             case constants.CHARACTER_TYPE_TUMBLEWEED_1:
@@ -316,7 +316,7 @@ class Character(object):
         self.is_down = False
         self.idleCount = 0
         self.walkCount = 0
-        self.jumpCount = 0
+        self.jumpCount = JUMP_HEIGHT_HERO
         self.slideCount = 0
         self.slide_ended = False
         self.is_standing = True
@@ -589,7 +589,6 @@ class Character(object):
 
         self.move(target_x, target_y, DIR_NO_MOVE)
 
-
     def get_image_idle_dims(self):
         width = self.images_idle[0].get_width()
         height = self.images_idle[0].get_height()
@@ -667,7 +666,7 @@ class Character(object):
 
         if self.is_left is True:
             width = self.images_walk_left[self.walkCount // 3].get_width()
-        elif self.is_right:
+        elif self.is_right is True:
             width = self.images_walk_right[self.walkCount // 3].get_width()
 
         return width
@@ -688,7 +687,7 @@ class Character(object):
 
         if self.is_left is True:
             height = self.images_walk_left[self.walkCount // 3].get_height()
-        elif self.is_right:
+        elif self.is_right is True:
             height = self.images_walk_right[self.walkCount // 3].get_height()
 
         return height

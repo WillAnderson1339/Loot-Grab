@@ -191,13 +191,6 @@ class Loot(object):
                 self.hit_box_bottom_indent = 0
 
         # setup the hit box
-        # width = self.get_loot_width()
-        # height = self.get_loot_height()
-        # x = self.x + self.hit_box_left_indent
-        # y = self.y + self.hit_box_top_indent
-        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        # self.hit_box = (x, y, width, height)
         self.hit_box = self.calc_hit_box(self.x, self.y)
 
     def draw(self, win):
@@ -207,16 +200,6 @@ class Loot(object):
             self.spin_count = 0
 
         win.blit(self.image_list[self.spin_count // 3], (self.x, self.y))
-
-        # update the hit box
-        # LOOT DOES NOT MOVE SO SHOULD NOT UPDATE THE HIT BOX!
-        # width = self.get_loot_width()
-        # height = self.get_loot_height()
-        # x = self.x + self.hit_box_left_indent
-        # y = self.y + self.hit_box_top_indent
-        # width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        # height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        # self.hit_box = (x, y, width, height)
 
         # draw hit box
         if SHOW_LOOT_HITBOX is True:
@@ -232,6 +215,22 @@ class Loot(object):
         # increment the spinCount
         self.spin_count += 1
 
+    def calc_hit_box(self, target_x, target_y):
+        """Returns the hit box for the supplied x and y"""
+
+        # update the hit box
+        width = self.get_loot_width()
+        height = self.get_loot_height()
+
+        x = self.x + self.hit_box_left_indent
+        y = self.y + self.hit_box_top_indent
+        width = width - self.hit_box_left_indent - self.hit_box_right_indent
+        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
+
+        hit_box = (x, y, width, height)
+
+        return hit_box
+
     def get_loot_width(self):
         """Returns the width of the loot"""
 
@@ -243,21 +242,6 @@ class Loot(object):
 
         height = self.image_list[0].get_height()
         return height
-
-    def calc_hit_box(self, target_x, target_y):
-        """Returns the hit box for the supplied x and y"""
-
-        # update the hit box
-        width = self.get_loot_width()
-        height = self.get_loot_height()
-        x = self.x + self.hit_box_left_indent
-        y = self.y + self.hit_box_top_indent
-
-        width = width - self.hit_box_left_indent - self.hit_box_right_indent
-        height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        hit_box = (x, y, width, height)
-
-        return hit_box
 
     def loot_sound(self, sound_type=SOUND_TYPE_LOOT_SUCCESS):
         if sound_type == SOUND_TYPE_LOOT_SUCCESS:

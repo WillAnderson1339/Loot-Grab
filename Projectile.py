@@ -79,13 +79,18 @@ class Projectile(object):
         # update the hit box
         width = self.get_projectile_width()
         height = self.get_projectile_height()
+
         x = self.x + self.hit_box_left_indent
         y = self.y + self.hit_box_top_indent
         width = width - self.hit_box_left_indent - self.hit_box_right_indent
         height = height - self.hit_box_top_indent - self.hit_box_bottom_indent
-        self.hit_box = (x, y, width, height)
+        # self.hit_box = (x, y, width, height)
 
-        return self.hit_box
+        hit_box = (x, y, width, height)
+
+        # return self.hit_box
+        return hit_box
+
     def get_projectile_width(self):
         """Returns the width of the loot"""
 
