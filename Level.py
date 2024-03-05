@@ -224,44 +224,56 @@ class Level(object):
             x = start_x
             y = self.get_floor_y(floor.floor_id) - height - LOOT_FLOAT
             for i in range(num_loot):
-                # determine random loot type
-                random_num = random.randint(0, LOOT_PROBABILITY_MAX)
-                if 0 <= random_num < LOOT_CHANCE_OF_HEART_SMALL:
-                    loot_type = LOOT_HEART_SMALL
-                elif LOOT_CHANCE_OF_HEART_SMALL <= random_num < LOOT_CHANCE_OF_HEART_MEDIUM:
-                    loot_type = LOOT_HEART_MEDIUM
-                elif LOOT_CHANCE_OF_HEART_MEDIUM <= random_num < LOOT_CHANCE_OF_HEART_LARGE:
-                    loot_type = LOOT_HEART_LARGE
-                elif LOOT_CHANCE_OF_HEART_LARGE <= random_num < LOOT_CHANCE_OF_BULLET_SMALL:
-                    loot_type = LOOT_BULLET_SMALL
-                else:
-                    if 0 <= self.difficulty_multiplier < DIFFICULTY_GROUP_1:
-                        loot_type = LOOT_COIN_BRONZE
-                    elif DIFFICULTY_GROUP_1 <= self.difficulty_multiplier < DIFFICULTY_GROUP_2:
-                        loot_type = LOOT_COIN_SILVER
-                    elif DIFFICULTY_GROUP_2 <= self.difficulty_multiplier < DIFFICULTY_GROUP_3:
-                        loot_type = LOOT_COIN_GOLD
+                done_placing = False        # done is used to continue generating the loot until a loot allowed to be placed on this level is created
+                while done_placing is False:
+                    # determine random loot type
+                    random_num = random.randint(0, LOOT_PROBABILITY_MAX)
+                    min_required_level = 0
+                    if 0 <= random_num < LOOT_CHANCE_OF_HEART_SMALL:
+                        loot_type = LOOT_HEART_SMALL
+                    elif LOOT_CHANCE_OF_HEART_SMALL <= random_num < LOOT_CHANCE_OF_HEART_MEDIUM:
+                        loot_type = LOOT_HEART_MEDIUM
+                    elif LOOT_CHANCE_OF_HEART_MEDIUM <= random_num < LOOT_CHANCE_OF_HEART_LARGE:
+                        loot_type = LOOT_HEART_LARGE
+                        min_required_level = MIN_LEVEL_FOR_HEART_LARGE
+                    elif LOOT_CHANCE_OF_HEART_LARGE <= random_num < LOOT_CHANCE_OF_BULLET_SMALL:
+                        loot_type = LOOT_BULLET_SMALL
+                    elif LOOT_CHANCE_OF_BULLET_SMALL <= random_num < LOOT_CHANCE_OF_DIAMOND:
+                        loot_type = LOOT_DIAMOND
+                        min_required_level = MIN_LEVEL_FOR_DIAMOND
                     else:
-                        random_num = random.randint(1, 3)
-                        if random_num == 1:
+                        if 0 <= self.difficulty_multiplier < DIFFICULTY_GROUP_1:
                             loot_type = LOOT_COIN_BRONZE
-                        elif random_num == 2:
+                        elif DIFFICULTY_GROUP_1 <= self.difficulty_multiplier < DIFFICULTY_GROUP_2:
                             loot_type = LOOT_COIN_SILVER
-                        else:
+                        elif DIFFICULTY_GROUP_2 <= self.difficulty_multiplier < DIFFICULTY_GROUP_3:
                             loot_type = LOOT_COIN_GOLD
+                        else:
+                            random_num = random.randint(1, 3)
+                            if random_num == 1:
+                                loot_type = LOOT_COIN_BRONZE
+                            elif random_num == 2:
+                                loot_type = LOOT_COIN_SILVER
+                            else:
+                                loot_type = LOOT_COIN_GOLD
 
-                okay_to_place = True
-                if (self.is_location_in_ladder(floor.floor_id, x, y) is True or self.is_location_in_ladder(floor.floor_id, x + width, y) is True):
-                    okay_to_place = False
-                if self.is_location_in_portal(x, y) is True or self.is_location_in_portal(x + width, y) is True:
-                    okay_to_place = False
+                    if self.level_id >= min_required_level:
+                        okay_to_place = True
+                        if (self.is_location_in_ladder(floor.floor_id, x, y) is True or self.is_location_in_ladder(floor.floor_id, x + width, y) is True):
+                            okay_to_place = False
+                        if self.is_location_in_portal(x, y) is True or self.is_location_in_portal(x + width, y) is True:
+                            okay_to_place = False
 
-                if okay_to_place is True:
-                    loot = Loot(loot_id, x, y, loot_type, facing)
-                    self.loots.append(loot)
-                    loot_id += 1
+                        if okay_to_place is True:
+                            loot = Loot(loot_id, x, y, loot_type, facing)
+                            self.loots.append(loot)
+                            loot_id += 1
 
-                x += loot_interval + sizing_loot.get_loot_width()
+                        x += loot_interval + sizing_loot.get_loot_width()
+                        done_placing = True
+
+                    else:
+                        print("skipping creating loot type", loot_type, "on level", self.level_id)
 
     def create_enemies(self):
         """Creates the enemies for the level"""
@@ -607,15 +619,17 @@ class Level(object):
         elif loot.loot_type == LOOT_HEART_LARGE:
             player.num_lives += loot.loot_value
             loot.loot_sound()
-            loot.loot_sound()
 
 
         # touching large heart - add lives regardless of current life count
         elif loot.loot_type == LOOT_BULLET_SMALL:
             player.num_bullets += loot.loot_value
             loot.loot_sound()
-            loot.loot_sound()
 
+        # touching diamond
+        elif loot.loot_type == LOOT_DIAMOND:
+            player.score += loot.loot_value
+            loot.loot_sound()
         else:
             print("ERROR: action_player_touching_loot unknown loot type", loot.loot_type)
 
@@ -707,6 +721,7 @@ class Level(object):
         loot_heart_medium = 0
         loot_heart_large = 0
         loot_bullet_small = 0
+        loot_diamond = 0
 
         # count each type of loot
         for loot in self.loots:
@@ -725,10 +740,12 @@ class Level(object):
                     loot_heart_large += 1
                 case constants.LOOT_BULLET_SMALL:
                     loot_bullet_small += 1
+                case constants.LOOT_DIAMOND:
+                    loot_diamond += 1
                 case _:
                     print("in level.count_loot(): Loot Type", loot.loot_type, "not yet coded!")
 
-        total = loot_bronze + loot_silver + loot_gold + loot_heart_small + loot_heart_medium + loot_heart_large + loot_bullet_small
+        total = loot_bronze + loot_silver + loot_gold + loot_heart_small + loot_heart_medium + loot_heart_large + loot_bullet_small + loot_diamond
 
         return total
 

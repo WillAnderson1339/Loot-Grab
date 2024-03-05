@@ -411,6 +411,13 @@ if __name__ == '__main__':
     player = Character(player_type, player_id, x, y, num_lives, num_bullets, current_level, current_floor)
     player.position_player_on_new_level()
 
+    # for dev coding work - create sample loot
+    # level = levels[current_level]
+    # x = 100
+    # y = level.get_floor_y(player.current_floor) - 30
+    # loot_testing = Loot(1339, x, y, LOOT_DIAMOND, DIR_LEFT)
+    # level.loots.append(loot_testing)
+
 
     tumbleweed_hit_pause = 0
 

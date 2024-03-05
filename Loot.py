@@ -76,11 +76,31 @@ bullet_small = [pygame.image.load('res/Loot/Bullet - 1__000.png'),
                pygame.image.load('res/Loot/Bullet - 1__000.png'),
                pygame.image.load('res/Loot/Bullet - 1__000.png')]
 
+diamond = [pygame.image.load('res/Loot/Diamond - 1__000.png'),
+               pygame.image.load('res/Loot/Diamond - 1__000.png'),
+               pygame.image.load('res/Loot/Diamond - 1__000.png'),
+               pygame.image.load('res/Loot/Diamond - 1__000.png'),
+               pygame.image.load('res/Loot/Diamond - 1__000.png'),
+               pygame.image.load('res/Loot/Diamond - 1__000.png'),
+               pygame.image.load('res/Loot/Diamond - 1__000.png'),
+               pygame.image.load('res/Loot/Diamond - 1__000.png'),
+               pygame.image.load('res/Loot/Diamond - 1__000.png')]
+
 sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
 sound_ding = pygame.mixer.Sound('res/ding-1.mp3')
 sound_miss = pygame.mixer.Sound('res/loot-miss-1.mp3')
 
 class Loot(object):
+    """
+    When adding new Loot types do the following:
+      - add the image list with the png file(s)
+      - add the constants
+      - add the case statement to the init function
+      - add the elif statement to create_loots function in the level class
+      - add the action_player_touching_loot function in the level class
+      - add the code to couint_loot function in the level class
+    """
+
     def __init__(self, loot_id, x, y, loot_type, facing):
         self.loot_id = loot_id
         self.x = x
@@ -159,6 +179,17 @@ class Loot(object):
                 self.image_list = bullet_small
                 self.spin_count = self.facing
                 self.loot_value = LOOT_VALUE_BULLET_SMALL
+                self.sound_success = sound_loot
+                self.sound_miss = sound_miss
+                self.hit_box_left_indent = 7
+                self.hit_box_right_indent = 7
+                self.hit_box_top_indent = 3
+                self.hit_box_bottom_indent = 3
+
+            case constants.LOOT_DIAMOND:
+                self.image_list = diamond
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_DIAMOND
                 self.sound_success = sound_loot
                 self.sound_miss = sound_miss
                 self.hit_box_left_indent = 7
