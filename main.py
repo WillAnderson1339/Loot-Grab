@@ -49,7 +49,7 @@ kp_key_states = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 font_stats = pygame.font.SysFont('comicsans', 25, True)
 font_diagnostics = pygame.font.SysFont('consolas', 15, False)
-font_pause = pygame.font.SysFont("comicsansms", 90)
+font_pause = pygame.font.SysFont("comicsansms", 80)
 font_pause_stats = pygame.font.SysFont("comicsansms", 30)
 
 show_diagnostics = SHOW_DIAGNOSTICS
@@ -71,21 +71,29 @@ total_enemies_shot = 0
 def paused():
     """Used to pause the game. Triggered by Game Over or pressing the 'p' key"""
 
-    # game over
+    # background for message
+    x = WINDOW_WIDTH * .25
+    y = WINDOW_HEIGHT * .25
+    width = WINDOW_WIDTH * .5
+    height = WINDOW_HEIGHT * .4
+    message_rect = (x, y, width, height)
+    pygame.draw.rect(win, COLOUR_MESSAGE_BACKGROUND, message_rect, 0, 10)
+
+    # message title
     if player.num_lives == -99:
-        text = "Game Over! "
+        title = "Game Over! "
         colour = COLOUR_GAME_OVER
     else:
-        text = "Paused"
-        colour = COLOUR_GAME_OVER
+        title = "Paused"
+        colour = COLOUR_PAUSE
 
-    x = WINDOW_WIDTH // 2
-    y = WINDOW_HEIGHT // 2
+    x = message_rect[0] + (message_rect[2] // 2)
+    y = message_rect[1]
 
-    print_text = font_pause.render(text, 1, colour)
-    x -= print_text.get_width() // 2
-    y -= print_text.get_height() // 2
-    win.blit(print_text, (x, y))
+    print_title = font_pause.render(title, 1, colour)
+    x -= print_title.get_width() // 2
+    # y += print_title.get_height()
+    win.blit(print_title, (x, y))
 
     global total_enemies
     global total_enemies_shot
@@ -93,21 +101,26 @@ def paused():
     global total_loot_grabbed
 
     text = "Stats:"
-    x -= 30
-    y += 100
     print_text = font_pause_stats.render(text, 1, colour)
+    x = message_rect[0] + (message_rect[2] // 2)
+    x -= 200
+    y += print_title.get_height()
     win.blit(print_text, (x, y))
 
-    x += 30
+    # x += 30
 
     text = "  Total Loot " + str(total_loot) + "  Grabbed " + str(total_loot_grabbed)
-    y += 30
     print_text = font_pause_stats.render(text, 1, colour)
+    x = message_rect[0] + (message_rect[2] // 2)
+    x -= 190
+    y += print_text.get_height()
     win.blit(print_text, (x, y))
 
     text = "  Total Enemies " + str(total_enemies) + "  Shot " + str(total_enemies_shot)
-    y += 30
     print_text = font_pause_stats.render(text, 1, colour)
+    # x = WINDOW_WIDTH // 2
+    # x -= print_text.get_width() // 2
+    y += print_text.get_height()
     win.blit(print_text, (x, y))
 
     global pause
@@ -412,11 +425,11 @@ if __name__ == '__main__':
     player.position_player_on_new_level()
 
     # for dev coding work - create sample loot
-    # level = levels[current_level]
-    # x = 100
-    # y = level.get_floor_y(player.current_floor) - 30
-    # loot_testing = Loot(1339, x, y, LOOT_DIAMOND, DIR_LEFT)
-    # level.loots.append(loot_testing)
+    level = levels[current_level]
+    x = 100
+    y = level.get_floor_y(player.current_floor) - 30
+    loot_testing = Loot(1339, x, y, LOOT_DIAMOND, DIR_LEFT)
+    level.loots.append(loot_testing)
 
 
     tumbleweed_hit_pause = 0
@@ -451,17 +464,18 @@ if __name__ == '__main__':
         # check if any key press pause counts are needed
         check_kp_pause_counts()
 
+        level = levels[player.current_level]
+
         # move bullets
         for bullet in bullets:
             if bullet.x < WINDOW_WIDTH and bullet.x > 0:
-                bullet.x += bullet.vel
+                bullet.x += bullet.vel * level.difficulty_multiplier
             else:
                 bullets.pop(bullets.index(bullet))
 
         keys = pygame.key.get_pressed()
 
         # move enemies
-        level = levels[player.current_level]
         hit_box_list = level.auto_move_enemies(level.difficulty_multiplier)
 
         # update the tumbleweed pause timer (so tumbleweed passes player and does not continually decrement score)
@@ -476,11 +490,14 @@ if __name__ == '__main__':
             enemy_type = item[1]
             enemy_id = item[2]
 
-            # check to see if an enemy is hit by a shot
-            for bullet in bullets:
-                rect_projectile = bullet.get_hit_rect()
-                if do_rectangles_overlap(rect_enemy, rect_projectile) is True:
-                    action_player_shot_enemy(enemy_id, bullet)
+            # bullets do not hit tumbleweeds
+            bullets_ignore_types = [CHARACTER_TYPE_TUMBLEWEED_1, CHARACTER_TYPE_TUMBLEWEED_2, CHARACTER_TYPE_TUMBLEWEED_3, CHARACTER_TYPE_TUMBLEWEED_4]
+            if enemy_type not in bullets_ignore_types:
+                # check to see if an enemy is hit by a shot
+                for bullet in bullets:
+                    rect_projectile = bullet.get_hit_rect()
+                    if do_rectangles_overlap(rect_enemy, rect_projectile) is True:
+                        action_player_shot_enemy(enemy_id, bullet)
 
             # check to see if the enemy is touching the player
             rect_player = player.hit_box

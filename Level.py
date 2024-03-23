@@ -238,7 +238,10 @@ class Level(object):
                         min_required_level = MIN_LEVEL_FOR_HEART_LARGE
                     elif LOOT_CHANCE_OF_HEART_LARGE <= random_num < LOOT_CHANCE_OF_BULLET_SMALL:
                         loot_type = LOOT_BULLET_SMALL
-                    elif LOOT_CHANCE_OF_BULLET_SMALL <= random_num < LOOT_CHANCE_OF_DIAMOND:
+                    elif LOOT_CHANCE_OF_BULLET_SMALL <= random_num < LOOT_CHANCE_OF_BULLET_LARGE:
+                        loot_type = LOOT_BULLET_LARGE
+                        min_required_level = MIN_LEVEL_FOR_BULLET_LARGE
+                    elif LOOT_CHANCE_OF_BULLET_LARGE <= random_num < LOOT_CHANCE_OF_DIAMOND:
                         loot_type = LOOT_DIAMOND
                         min_required_level = MIN_LEVEL_FOR_DIAMOND
                     else:
@@ -621,8 +624,17 @@ class Level(object):
             loot.loot_sound()
 
 
-        # touching large heart - add lives regardless of current life count
+        # touching small bullet - add bullet
         elif loot.loot_type == LOOT_BULLET_SMALL:
+            # only add if less than allowed number of bullets
+            if player.num_bullets + loot.loot_value <= SCORE_MAX_BULLETS:
+                player.num_bullets += loot.loot_value
+                loot.loot_sound(SOUND_TYPE_LOOT_SUCCESS)
+            else:
+                loot.loot_sound(SOUND_TYPE_LOOT_MISS)
+
+        # touching large bullet - add bullets
+        elif loot.loot_type == LOOT_BULLET_LARGE:
             player.num_bullets += loot.loot_value
             loot.loot_sound()
 
@@ -721,6 +733,7 @@ class Level(object):
         loot_heart_medium = 0
         loot_heart_large = 0
         loot_bullet_small = 0
+        loot_bullet_large = 0
         loot_diamond = 0
 
         # count each type of loot
@@ -740,12 +753,15 @@ class Level(object):
                     loot_heart_large += 1
                 case constants.LOOT_BULLET_SMALL:
                     loot_bullet_small += 1
+                case constants.LOOT_BULLET_LARGE:
+                    loot_bullet_large += 1
                 case constants.LOOT_DIAMOND:
                     loot_diamond += 1
                 case _:
                     print("in level.count_loot(): Loot Type", loot.loot_type, "not yet coded!")
 
-        total = loot_bronze + loot_silver + loot_gold + loot_heart_small + loot_heart_medium + loot_heart_large + loot_bullet_small + loot_diamond
+        total = (loot_bronze + loot_silver + loot_gold + loot_heart_small + loot_heart_medium + loot_heart_large +
+                 loot_bullet_small + loot_bullet_large + loot_diamond)
 
         return total
 

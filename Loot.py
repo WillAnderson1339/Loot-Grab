@@ -76,15 +76,25 @@ bullet_small = [pygame.image.load('res/Loot/Bullet - 1__000.png'),
                pygame.image.load('res/Loot/Bullet - 1__000.png'),
                pygame.image.load('res/Loot/Bullet - 1__000.png')]
 
+bullet_large = [pygame.image.load('res/Loot/Bullet - 2__000.png'),
+               pygame.image.load('res/Loot/Bullet - 2__000.png'),
+               pygame.image.load('res/Loot/Bullet - 2__000.png'),
+               pygame.image.load('res/Loot/Bullet - 2__000.png'),
+               pygame.image.load('res/Loot/Bullet - 2__000.png'),
+               pygame.image.load('res/Loot/Bullet - 2__000.png'),
+               pygame.image.load('res/Loot/Bullet - 2__000.png'),
+               pygame.image.load('res/Loot/Bullet - 2__000.png'),
+               pygame.image.load('res/Loot/Bullet - 2__000.png')]
+
 diamond = [pygame.image.load('res/Loot/Diamond - 1__000.png'),
-               pygame.image.load('res/Loot/Diamond - 1__000.png'),
-               pygame.image.load('res/Loot/Diamond - 1__000.png'),
-               pygame.image.load('res/Loot/Diamond - 1__000.png'),
-               pygame.image.load('res/Loot/Diamond - 1__000.png'),
-               pygame.image.load('res/Loot/Diamond - 1__000.png'),
-               pygame.image.load('res/Loot/Diamond - 1__000.png'),
-               pygame.image.load('res/Loot/Diamond - 1__000.png'),
-               pygame.image.load('res/Loot/Diamond - 1__000.png')]
+               pygame.image.load('res/Loot/Diamond - 1__001.png'),
+               pygame.image.load('res/Loot/Diamond - 1__002.png'),
+               pygame.image.load('res/Loot/Diamond - 1__003.png'),
+               pygame.image.load('res/Loot/Diamond - 1__004.png'),
+               pygame.image.load('res/Loot/Diamond - 1__005.png'),
+               pygame.image.load('res/Loot/Diamond - 1__006.png'),
+               pygame.image.load('res/Loot/Diamond - 1__007.png'),
+               pygame.image.load('res/Loot/Diamond - 1__008.png')]
 
 sound_loot = pygame.mixer.Sound('res/loot-1.mp3')
 sound_ding = pygame.mixer.Sound('res/ding-1.mp3')
@@ -98,7 +108,7 @@ class Loot(object):
       - add the case statement to the init function
       - add the elif statement to create_loots function in the level class
       - add the action_player_touching_loot function in the level class
-      - add the code to couint_loot function in the level class
+      - add the code to count_loot function in the level class
     """
 
     def __init__(self, loot_id, x, y, loot_type, facing):
@@ -186,6 +196,17 @@ class Loot(object):
                 self.hit_box_top_indent = 3
                 self.hit_box_bottom_indent = 3
 
+            case constants.LOOT_BULLET_LARGE:
+                self.image_list = bullet_large
+                self.spin_count = self.facing
+                self.loot_value = LOOT_VALUE_BULLET_LARGE
+                self.sound_success = sound_loot
+                self.sound_miss = sound_miss
+                self.hit_box_left_indent = 7
+                self.hit_box_right_indent = 7
+                self.hit_box_top_indent = 3
+                self.hit_box_bottom_indent = 3
+
             case constants.LOOT_DIAMOND:
                 self.image_list = diamond
                 self.spin_count = self.facing
@@ -194,7 +215,7 @@ class Loot(object):
                 self.sound_miss = sound_miss
                 self.hit_box_left_indent = 7
                 self.hit_box_right_indent = 7
-                self.hit_box_top_indent = 3
+                self.hit_box_top_indent = 12
                 self.hit_box_bottom_indent = 3
 
             # loot objects are created with this as an uninitialized loot object (i.e. function return when not found)
