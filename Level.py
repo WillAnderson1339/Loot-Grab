@@ -152,7 +152,7 @@ class Level(object):
             else:
                 # find the y coord
                 num_floors = len(self.floors)
-                floor_id = random.randint(0, num_floors)
+                floor_id = random.randint(0, num_floors - 1)
                 y = self.get_floor_y(floor_id) - PORTAL_HEIGHT
 
                 # find the x coord
@@ -187,7 +187,7 @@ class Level(object):
             else:
                 # find the y coord
                 num_floors = len(self.floors)
-                floor_id = random.randint(0, num_floors)
+                floor_id = random.randint(0, num_floors - 1)
                 y = self.get_floor_y(floor_id) - PORTAL_HEIGHT
 
                 # find the x coord
@@ -414,6 +414,8 @@ class Level(object):
             rect = floor.rect
             y = rect[1]
             y = floor.rect[1]
+        else:
+            print("get_floor_y called with invalid floor id", floor_id)
 
         return y
 
