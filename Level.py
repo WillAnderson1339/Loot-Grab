@@ -694,7 +694,7 @@ class Level(object):
                     wind_direction = DIR_RIGHT
             enemy.move(x, y, wind_direction)
 
-            print("spawning enemy type: ", enemy_type)
+            # print("spawning enemy type: ", enemy_type)
             self.enemies.append(enemy)
 
             spawned_enemy = True

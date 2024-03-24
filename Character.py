@@ -328,6 +328,7 @@ class Character(object):
         self.in_ladder_max_x = -1
         self.in_ladder_min_y = -1
         self.in_ladder_max_y = -1
+        self.in_ladder_top_rung_y = -1
 
     def draw(self, win):
         # character_type = self.character_type

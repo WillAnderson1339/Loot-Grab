@@ -4,23 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="Added the diamond loot">
-      <change afterPath="$PROJECT_DIR$/res/Loot/Bullet - 2__000.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__001.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__002.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__003.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__004.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__005.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__006.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__007.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__008.png" afterDir="false" />
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="added message background, the large bullet loot, animation on the diamond and the velocity on bullets and bullets do not hit tumbleweeds">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Character.py" beforeDir="false" afterPath="$PROJECT_DIR$/Character.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Loot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Loot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/Loot/Diamond - 1__000.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/Loot/Diamond - 1__000.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/Loot/Diamond - 2__000.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -479,7 +467,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709682267374</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="added message background, the large bullet loot, animation on the diamond and the velocity on bullets and bullets do not hit tumbleweeds">
+      <option name="closed" value="true" />
+      <created>1711234031046</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1711234031046</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +491,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Added scoring, loot hit sound and portal sound" />
     <MESSAGE value="Moved sound into Loot class" />
     <MESSAGE value="New Player class move functions for Left and Right" />
     <MESSAGE value="New Player class move functions for Up and Down" />
@@ -520,18 +515,10 @@
     <MESSAGE value="corrected bug where moving outside a ladder was allowed" />
     <MESSAGE value="Fixed hit box for portals and ladders. Added total scoring" />
     <MESSAGE value="Added the diamond loot" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added the diamond loot" />
+    <MESSAGE value="added message background, the large bullet loot, animation on the diamond and the velocity on bullets and bullets do not hit tumbleweeds" />
+    <option name="LAST_COMMIT_MESSAGE" value="added message background, the large bullet loot, animation on the diamond and the velocity on bullets and bullets do not hit tumbleweeds" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>352</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="floor_number" language="Python" />
@@ -540,7 +527,7 @@
       <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="570">
         <watch expression="portal.portal_id" />
       </inline-watch>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="785">
+      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="799">
         <watch expression="floor_number" />
       </inline-watch>
     </watches-manager>
