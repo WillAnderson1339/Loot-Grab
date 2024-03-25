@@ -51,10 +51,13 @@ font_stats = pygame.font.SysFont('comicsans', 25, True)
 font_diagnostics = pygame.font.SysFont('consolas', 15, False)
 font_pause = pygame.font.SysFont("comicsansms", 80)
 font_pause_stats = pygame.font.SysFont("comicsansms", 30)
+font_pause_neg_score_change = pygame.font.SysFont('comicsans', 25, True)
 
 show_diagnostics = SHOW_DIAGNOSTICS
 show_portal_info = True
 
+show_message_count = 0
+show_message_text = ""
 
 # num_player_lives_XXX = SCORE_START_NUM_LIVES
 # num_player_bullets_XXX = SCORE_START_NUM_BULLETS
@@ -70,6 +73,12 @@ total_enemies_shot = 0
 
 def paused():
     """Used to pause the game. Triggered by Game Over or pressing the 'p' key"""
+
+    global playing_music
+    global pygame
+    # if music was playing turn stop it while paused
+    if playing_music is True:
+        pygame.mixer.music.stop()
 
     # background for message
     x = WINDOW_WIDTH * .25
@@ -142,6 +151,10 @@ def paused():
         pygame.display.update()
         clock.tick(15)
 
+    # if music was playing turn it back on
+    if playing_music is True:
+        pygame.mixer.music.play(-1)
+
 
 def show_stats(win, font, levels, player):
     """Displays the player game stats like lives, score, etc."""
@@ -195,24 +208,47 @@ def show_stats(win, font, levels, player):
 
 def redraw_game_window(player):
 
-    # draw background
-    # pygame.draw.rect(win, (175,225,240), (0, 0, WINDOW_WIDTH, WINDOW_HEIGHT))
     level = levels[player.current_level]
+
+    # draw background
     background = level.background
     win.blit(images_background[background], (0,0))
 
     # draw level
-    level = levels[player.current_level]
     level.draw(win)
-    '''
-    for level in levels:
-        if level.id == current_level:
-            level.draw(win)
-            break
-    '''
 
     # draw characters
     player.draw(win)
+
+    # draw player message
+    global show_message_count
+    global show_message_text
+    global font_pause_neg_score_change
+    if show_message_count > 0:
+        player_x, player_y = player.get_character_position()
+        player_width = player.get_character_width()
+        text = show_message_text
+        colour = COLOUR_NEG_SCORE_TEXT
+        print_text = font_pause_neg_score_change.render(text, 1, colour)
+
+        # background for message
+        width = print_text.get_width() + 20
+        height = print_text.get_height() + 4
+        x = player_x + (player_width // 2) - (width // 2)
+        y = player_y - height - 2
+        # width = 40
+        # height = 20
+        message_rect = (x, y, width, height)
+        pygame.draw.rect(win, COLOUR_MESSAGE_BACKGROUND, message_rect, 0, 10)
+
+        # message text
+        x += 10
+        y += 2
+        win.blit(print_text, (x, y))
+
+        show_message_count += 1
+        if show_message_count >= MESSAGE_TEXT_TIMER_LIMIT:
+            show_message_count = 0
 
     # draw bullets
     for bullet in bullets:
@@ -221,8 +257,6 @@ def redraw_game_window(player):
     # show diagnostics (function will check for show/not show)
     if show_diagnostics is True:
         show_diagnotics(win, font_diagnostics, show_portal_info, levels, player, tumbleweed_hit_pause)
-
-
     else:
         show_stats(win, font_stats, levels, player)
 
@@ -292,7 +326,7 @@ def check_kp_pause_counts():
     if kp_key_states[KP_bar] > max_pause_needed:
         kp_key_states[KP_bar] = 0
 
-def create_random_level(level_id):
+def create_random_level(levels, level_id):
     num_floors = random.randint(2, 5)
     num_enemies = random.randint(2, 8)
     num_up_portals = random.randint(1, 2)
@@ -302,6 +336,38 @@ def create_random_level(level_id):
     green = random.randint(0, 255)
     blue = random.randint(0, 255)
     colour = (red, green, blue)
+    difficulty_multiplier = 1.0 + (0.2 * level_id)
+    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
+    levels.append(level)
+
+def create_levels(levels):
+    """Creates the levels"""
+
+    # create first level (the first level is special - it has no down portal)
+    level_id = 0
+    num_floors = 4
+    num_enemies = 2
+    num_up_portals = 1
+    num_down_portals = 0
+    background = 0
+    colour = (90, 165, 120)
+    difficulty_multiplier = 1.0
+    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
+    levels.append(level)
+
+    num_levels_to_create = 6
+    # create random levels - could change this to planned levels with colours, backgrounds, enemies etc
+    for i in range(num_levels_to_create):
+        create_random_level(levels, i + 1)
+
+    # create last level (the last level is special - it has no up portal)
+    level_id = len(levels)
+    num_floors = 5
+    num_enemies = 6
+    num_up_portals = 0
+    num_down_portals = 1
+    background = 7
+    colour = (150, 175, 75)
     difficulty_multiplier = 1.0 + (0.2 * level_id)
     level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
     levels.append(level)
@@ -329,6 +395,10 @@ def action_enemy_touching_player(enemy_type, player, tumbleweed_hit_pause):
         player.score += score_change
 
         sound_grunt.play()
+        global show_message_count
+        global show_message_text
+        show_message_count = 1
+        show_message_text = str(score_change)
 
 def action_player_touching_loot(player, loot):
     """Performs the player touching loot action - changes score etc"""
@@ -376,35 +446,8 @@ def action_player_touching_portal(player):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
-    # set up the levels
-    # create first level (the first level is special - it has no down portal)
-    level_id = 0
-    num_floors = 4
-    num_enemies = 2
-    num_up_portals = 1
-    num_down_portals = 0
-    background = 0
-    colour = (90, 165, 120)
-    difficulty_multiplier = 1.0
-    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
-    levels.append(level)
-
-    num_levels_to_create = 6
-    # create random levels - could change this to planned levels with colours, backgrounds, enemies etc
-    for i in range(num_levels_to_create):
-        create_random_level(i + 1)
-
-    # create last level (the last level is special - it has no up portal)
-    level_id = len(levels)
-    num_floors = 5
-    num_enemies = 6
-    num_up_portals = 0
-    num_down_portals = 1
-    background = 7
-    colour = (150, 175, 75)
-    difficulty_multiplier = 1.0 + (0.2 * level_id)
-    level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
-    levels.append(level)
+    # create the levels
+    create_levels(levels)
 
     # set the totals (for showing the score)
     for level in levels:
@@ -886,3 +929,4 @@ if __name__ == '__main__':
         redraw_game_window(player)
     
     pygame.quit()
+
