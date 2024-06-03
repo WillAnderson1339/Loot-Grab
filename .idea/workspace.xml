@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="fixed the bug where portal was created off the screen">
+    <list default="true" id="916f4885-6bc0-45bd-a46a-185626963819" name="Changes" comment="added message box for negative score (hitting enemy)">
+      <change afterPath="$PROJECT_DIR$/Documentation/New Bitmap image.bmp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Documentation/Screen Grab - Lose on Level 6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/diagnostics.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,16 +43,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.main.executor": "Debug",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "settings.editor.selected.configurable": "preferences.keymap"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Python.main.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Loot Grab" />
@@ -89,14 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1704931298549</updated>
-    </task>
-    <task id="LOCAL-00002" summary="First Commit">
-      <option name="closed" value="true" />
-      <created>1705001719837</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1705001719837</updated>
     </task>
     <task id="LOCAL-00003" summary="Broke classes out into files&#10;First implementation of Level">
       <option name="closed" value="true" />
@@ -482,7 +477,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711244089263</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="added message box for negative score (hitting enemy)">
+      <option name="closed" value="true" />
+      <created>1711404499135</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1711404499135</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,7 +501,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="New Player class move functions for Up and Down" />
     <MESSAGE value="Added diff multiplier to level creation" />
     <MESSAGE value="1st implementation of enemies!" />
     <MESSAGE value="Implemented score life hearts" />
@@ -523,20 +525,7 @@
     <MESSAGE value="added message background, the large bullet loot, animation on the diamond and the velocity on bullets and bullets do not hit tumbleweeds" />
     <MESSAGE value="fixed the bug where could not move down a ladder" />
     <MESSAGE value="fixed the bug where portal was created off the screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed the bug where portal was created off the screen" />
-  </component>
-  <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="floor_number" language="Python" />
-        <watch expression="self.walkCount" language="Python" />
-      </configuration>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/Level.py" line="572">
-        <watch expression="portal.portal_id" />
-      </inline-watch>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/main.py" line="842">
-        <watch expression="floor_number" />
-      </inline-watch>
-    </watches-manager>
+    <MESSAGE value="added message box for negative score (hitting enemy)" />
+    <option name="LAST_COMMIT_MESSAGE" value="added message box for negative score (hitting enemy)" />
   </component>
 </project>

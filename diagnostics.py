@@ -1,7 +1,7 @@
 
 from constants import *
 
-def show_diagnotics(win, font, show_portal_info, levels, player, hit_pause):
+def show_diagnotics(win, font, show_portal_info, levels, player):
     colour = COLOUR_DIAGNOSTICS
     start_x = 50
     start_y = 10

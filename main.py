@@ -6,6 +6,12 @@ from Character import *
 from Projectile import *
 from Level import *
 
+from Game import *
+
+pygame.init()
+clock = pygame.time.Clock()
+
+"""1 - done
 images_background = [
     pygame.image.load('res/Backgrounds/Mountains 5.png'),
     pygame.image.load('res/Backgrounds/Mountains 4.png'),
@@ -20,11 +26,6 @@ images_objects = [
     pygame.image.load('res/Objects/Heart_1__000.png'),
     pygame.image.load('res/Objects/Bullet_1__000.png')]
 
-
-
-pygame.init()
-
-clock = pygame.time.Clock()
 
 sound_bullet = pygame.mixer.Sound('res/bullet.mp3')
 hitSound = pygame.mixer.Sound('res/hit.mp3')
@@ -43,10 +44,12 @@ win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Loot Grab")
 
 levels = []
+"""
 
 # key press pause counts. use KP_ constants to access list
 kp_key_states = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+"""1 - done
 font_stats = pygame.font.SysFont('comicsans', 25, True)
 font_diagnostics = pygame.font.SysFont('consolas', 15, False)
 font_pause = pygame.font.SysFont("comicsansms", 80)
@@ -64,16 +67,18 @@ show_message_text = ""
 
 bullets = []
 
-pause = False       # used for game over - but should implement a pause too?
-
 total_loot = 0
 total_enemies = 0
 total_loot_grabbed = 0
 total_enemies_shot = 0
+"""
+pause = False       # used for game over - but should implement a pause too?
 
 def paused():
     """Used to pause the game. Triggered by Game Over or pressing the 'p' key"""
 
+    game.paused()
+    """ 2 - done
     global playing_music
     global pygame
     # if music was playing turn stop it while paused
@@ -132,6 +137,8 @@ def paused():
     y += print_text.get_height()
     win.blit(print_text, (x, y))
 
+    """
+
     global pause
 
     while pause:
@@ -144,7 +151,7 @@ def paused():
             keys = pygame.key.get_pressed()
 
             # pressing the 'p' key again will unpause the game
-            if keys[pygame.K_p] and kp_key_states[KP_p] == 0 and player.num_lives != -99:
+            if keys[pygame.K_p] and kp_key_states[KP_p] == 0 and game.player.num_lives != -99:
                 pause = False
                 kp_key_states[KP_p] = 0
 
@@ -152,12 +159,13 @@ def paused():
         clock.tick(15)
 
     # if music was playing turn it back on
-    if playing_music is True:
+    if game.is_playing_music is True:
         pygame.mixer.music.play(-1)
 
+"""1 - done
 
 def show_stats(win, font, levels, player):
-    """Displays the player game stats like lives, score, etc."""
+    #Displays the player game stats like lives, score, etc.
 
     # show the player lives as hearts
     start_x = WINDOW_WIDTH - 200
@@ -197,7 +205,7 @@ def show_stats(win, font, levels, player):
     x = start_x
     y = start_y
 
-    text = "Level:  " + str(player.current_level +1)
+    text = "Level:  " + str(player.current_level + 1)
     print_text = font.render(text, 1, colour)
     win.blit(print_text, (x, y))
 
@@ -212,7 +220,7 @@ def redraw_game_window(player):
 
     # draw background
     background = level.background
-    win.blit(images_background[background], (0,0))
+    win.blit(images_background[background], (0, 0))
 
     # draw level
     level.draw(win)
@@ -256,12 +264,13 @@ def redraw_game_window(player):
 
     # show diagnostics (function will check for show/not show)
     if show_diagnostics is True:
-        show_diagnotics(win, font_diagnostics, show_portal_info, levels, player, tumbleweed_hit_pause)
+        show_diagnotics(win, font_diagnostics, show_portal_info, levels, player)
     else:
         show_stats(win, font_stats, levels, player)
 
     pygame.display.update()
 
+"""
 
 def check_kp_pause_counts():
     '''
@@ -326,6 +335,8 @@ def check_kp_pause_counts():
     if kp_key_states[KP_bar] > max_pause_needed:
         kp_key_states[KP_bar] = 0
 
+"""1 - done
+
 def create_random_level(levels, level_id):
     num_floors = random.randint(2, 5)
     num_enemies = random.randint(2, 8)
@@ -339,9 +350,11 @@ def create_random_level(levels, level_id):
     difficulty_multiplier = 1.0 + (0.2 * level_id)
     level = Level(level_id, num_floors, num_enemies, num_up_portals, num_down_portals, background, colour, difficulty_multiplier)
     levels.append(level)
+"""
+"""1 - done
 
 def create_levels(levels):
-    """Creates the levels"""
+    #Creates the levels
 
     # create first level (the first level is special - it has no down portal)
     level_id = 0
@@ -373,7 +386,7 @@ def create_levels(levels):
     levels.append(level)
 
 def action_enemy_touching_player(enemy_type, player, tumbleweed_hit_pause):
-    """Performs the enemy touching player action - changes score etc"""
+    #Performs the enemy touching player action - changes score etc
 
     score_change = 0
 
@@ -401,7 +414,7 @@ def action_enemy_touching_player(enemy_type, player, tumbleweed_hit_pause):
         show_message_text = str(score_change)
 
 def action_player_touching_loot(player, loot):
-    """Performs the player touching loot action - changes score etc"""
+    #Performs the player touching loot action - changes score etc
 
     global total_loot_grabbed
 
@@ -415,7 +428,7 @@ def action_player_touching_loot(player, loot):
 
 
 def action_player_shot_enemy(enemy_id, projectile):
-    """Performs the player shot enemy action - changes score etc"""
+    #Performs the player shot enemy action - changes score etc
 
     global total_enemies_shot
 
@@ -430,7 +443,7 @@ def action_player_shot_enemy(enemy_id, projectile):
     sound_grunt.play()
 
 def action_player_touching_portal(player):
-    """Performs the player using a portal action"""
+    #Performs the player using a portal action
 
     new_level_id = level.get_portal_target(portal_id)
     print("Level change to ", new_level_id)
@@ -442,10 +455,17 @@ def action_player_touching_portal(player):
     player.current_floor = new_level.get_num_floors()
     player.position_player_on_new_level()
 
+"""
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    """ main function """
 
+    # create the game object
+    game = Game()
+
+    """2 - done
+    
     # create the levels
     create_levels(levels)
 
@@ -473,7 +493,7 @@ if __name__ == '__main__':
     # y = level.get_floor_y(player.current_floor) - 30
     # loot_testing = Loot(1339, x, y, LOOT_DIAMOND, DIR_LEFT)
     # level.loots.append(loot_testing)
-
+    """
 
     tumbleweed_hit_pause = 0
 
@@ -495,29 +515,39 @@ if __name__ == '__main__':
 
             # timer event
             elif event.type == TIMER_EVENT_ENEMY_SPAWN_CHECK:
+                game.event_spawn_enemy()
+                """4 need  - done
                 level = levels[player.current_level]
                 spawned_enemy = level.check_if_spawning_enemy()
                 if spawned_enemy is True:
                     total_enemies += 1
+                """
 
-
+        """4 need - pending
         if player.num_lives == -99:
             run = False
+        """
 
         # check if any key press pause counts are needed
         check_kp_pause_counts()
 
+        """4 need - done
         level = levels[player.current_level]
-
+        
         # move bullets
         for bullet in bullets:
             if bullet.x < WINDOW_WIDTH and bullet.x > 0:
                 bullet.x += bullet.vel * level.difficulty_multiplier
             else:
                 bullets.pop(bullets.index(bullet))
+        """
 
         keys = pygame.key.get_pressed()
 
+        game.run()
+
+        """4 need - done
+        
         # move enemies
         hit_box_list = level.auto_move_enemies(level.difficulty_multiplier)
 
@@ -562,15 +592,18 @@ if __name__ == '__main__':
                 player.current_floor = current_floor
                 player.position_player_on_new_level()
 
+        """
         # if had pressed the slide key and now released it
-        if (player.is_sliding is True or player.slide_ended is True) and not keys[pygame.K_s]:
+        if (game.player.is_sliding is True or game.player.slide_ended is True) and not keys[pygame.K_s]:
             print("had pressed the slide key and now released it")
-            player.slide_ended = False
-            player.slide_move(False)
-            player.play_sound(SOUND_TYPE_PLAYER_SLIDE, False)
+            game.player.slide_ended = False
+            game.player.slide_move(False)
+            game.player.play_sound(SOUND_TYPE_PLAYER_SLIDE, False)
 
         # shoot key
         if keys[pygame.K_SPACE] and kp_key_states[KP_SPACE] == 0:
+            game.action_shoot()
+            """3 added to game
             if player.shoot_dir == DIR_LEFT:
                 facing = -1
             else:
@@ -590,25 +623,31 @@ if __name__ == '__main__':
                 bullet.projectile_sound()
                 player.num_bullets -= 1
                 print("Shoot!")
+            """
 
             kp_key_states[KP_SPACE] = 1
 
         # sliding
-        elif keys[pygame.K_s] and kp_key_states[KP_s] == 0 and player.slide_ended == False:
+        elif keys[pygame.K_s] and kp_key_states[KP_s] == 0 and game.player.slide_ended == False:
+            """2
             player.slide_move()
+            """
+            game.player.slide_move()
 
             kp_key_states[KP_s] = 1
 
         # pausing
         elif keys[pygame.K_p] and kp_key_states[KP_p] == 0:
-            pause = True
-            paused()
+            game.pause = True
+            game.paused()
 
             kp_key_states[KP_p] = 1
 
         # creating a new enemy (for testing)
         elif keys[pygame.K_e] and kp_key_states[KP_e] == 0:
             if DEV_MODE == True:
+                game.action_create_enemy()
+                """3 added to game - done
                 enemy_type = CHARACTER_TYPE_TUMBLEWEED_4
                 level = levels[player.current_level]
                 enemy_id = len(level.enemies)
@@ -624,11 +663,14 @@ if __name__ == '__main__':
 
                 print("creating enemy type: ", enemy_type)
                 level.enemies.append(enemy)
+                """
 
                 kp_key_states[KP_e] = 1
 
         # toggle playing the music
         elif keys[pygame.K_m] and kp_key_states[KP_m] == 0:
+            game.event_toggle_music()
+            """4 need - done
             if playing_music is True:
                 playing_music = False
                 pygame.mixer.music.stop()
@@ -641,11 +683,14 @@ if __name__ == '__main__':
             if DEV_MODE == True:
                 level = levels[player.current_level]
                 level.remove_all_enemies()
+            """
 
             kp_key_states[KP_m] = 1
 
         # toggle showing the diagnostics
         elif keys[pygame.K_d] and kp_key_states[KP_d] == 0:
+            game.event_toggle_diagnostics()
+            """4 need - done
             if show_diagnostics is True:
                 show_diagnostics = False
             else:
@@ -656,11 +701,14 @@ if __name__ == '__main__':
                     show_portal_info = False
                 else:
                     show_portal_info = True
+            """
 
             kp_key_states[KP_d] = 1
 
         #if keys[pygame.K_LEFT] and kp_key_states[KP_LEFT] == 0:
         if keys[pygame.K_LEFT]:
+            game.event_move_left()
+            """2 - done
             # calculate move so can compare for various results before moving
             level = levels[player.current_level]
             target_x, target_y, target_hit_box = player.calc_move_result(DIR_LEFT, level.difficulty_multiplier)
@@ -670,7 +718,8 @@ if __name__ == '__main__':
             # if not in portal just allow move
             if portal_id == -1 or player.is_jumping is True or player.is_sliding is True:
                 if portal_id != -1 and player.is_jumping is True:
-                    print("in portal but jumping or sliding so moving instead!")
+                    # print("in portal but jumping or sliding so moving instead!")
+                    pass
 
                 # if in ladder restrict horizontal movement to within the ladder
                 width = player.get_character_width()
@@ -685,12 +734,15 @@ if __name__ == '__main__':
 
             else:
                 action_player_touching_portal(player)
+            """
 
             kp_key_states[KP_LEFT] = 1
 
 
         #elif keys[pygame.K_RIGHT] and kp_key_states[KP_RIGHT] == 0:
         elif keys[pygame.K_RIGHT]:
+            game.event_move_right()
+            """2 - done
             # calculate move so can compare for various results before moving
             level = levels[player.current_level]
             target_x, target_y, target_hit_box = player.calc_move_result(DIR_RIGHT, level.difficulty_multiplier)
@@ -700,7 +752,8 @@ if __name__ == '__main__':
             # if not in portal just allow move
             if portal_id == -1 or player.is_jumping is True or player.is_sliding is True:
                 if portal_id != -1 and player.is_jumping is True:
-                    print("in portal but jumping or sliding so moving instead!")
+                    # print("in portal but jumping or sliding so moving instead!")
+                    pass
 
                 # if in ladder restrict horizontal movement to within the ladder
                 width = player.get_character_width()
@@ -713,11 +766,14 @@ if __name__ == '__main__':
                     action_player_touching_loot(player, loot)
 
             else:
-                action_player_touching_portal((player))
+                action_player_touching_portal(player)
+            """
 
             kp_key_states[KP_RIGHT] = 1
 
         elif keys[pygame.K_DOWN] and kp_key_states[KP_DOWN] == 0:
+            game.event_move_down()
+            """2 - done
             # calculate move so can compare for various results before moving
             level = levels[player.current_level]
             target_x, target_y, target_hit_box = player.calc_move_result(DIR_DOWN, level.difficulty_multiplier)
@@ -814,18 +870,25 @@ if __name__ == '__main__':
                 player.is_right = False
                 # player.is_sliding = False
                 player.walkCount = 0
-                kp_key_states[KP_DOWN] = 1
+            """
+            kp_key_states[KP_DOWN] = 1
+
         else:
-            # if the left key press is being pressed but is being supressed don't set to standing
+            # if the left key press is being pressed but is being suppressed don't set to standing
             #if keys[pygame.K_LEFT] and kp_key_states[KP_LEFT] == 0:
             if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+                game.event_move_set_to_standing()
+                """ added to game - done
                 player.is_standing = True
                 player.is_left = False
                 player.is_right = False
                 player.walkCount = 0
+                """
 
-        if not player.is_jumping:
+        if not game.player.is_jumping:
             if keys[pygame.K_UP] and kp_key_states[KP_UP] == 0:
+                game.event_move_up()
+                """2 - done
                 level = levels[player.current_level]
                 target_x, target_y, target_hit_box = player.calc_move_result(DIR_UP, level.difficulty_multiplier)
                 dims = player.get_image_idle_dims()
@@ -918,15 +981,23 @@ if __name__ == '__main__':
                 player.is_right = False
                 # player.is_sliding = False
                 player.walkCount = 0
+                """
                 kp_key_states[KP_UP] = 1
         else:
-            if player.facing_direction == DIR_LEFT:
+            game.action_continue_jump()
+            """2 - done
+            if game.player.facing_direction == DIR_LEFT:
                 direction = DIR_LEFT
             else:
                 direction = DIR_RIGHT
-            player.jump_move(direction)
+            game.player.jump_move(direction)
+            #player.jump_move(direction)
+            """
 
+        game.draw()
+        """2 - done
         redraw_game_window(player)
-    
+        """
+
     pygame.quit()
 
